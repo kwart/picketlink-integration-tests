@@ -148,6 +148,12 @@
 		</dependency>
 		<dependency>
 			<groupId>org.picketlink</groupId>
+			<artifactId>picketlink-jbas7-single</artifactId>
+			<version>${version.picketlink}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.picketlink</groupId>
 			<artifactId>
 				picketlink-integration-util-unit-tests
 			</artifactId>
