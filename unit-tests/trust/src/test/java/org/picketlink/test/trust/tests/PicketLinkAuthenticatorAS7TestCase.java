@@ -25,13 +25,13 @@ import java.io.File;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.TargetsContainer;
-import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.runner.RunWith;
 import org.picketlink.identity.federation.bindings.tomcat.PicketLinkAuthenticator;
 import org.picketlink.test.integration.util.PicketLinkIntegrationTests;
 import org.picketlink.test.integration.util.TargetContainers;
+import org.picketlink.test.trust.loginmodules.TestRequestUserLoginModule;
 
 /**
  * Test the {@link PicketLinkAuthenticator}
@@ -40,26 +40,29 @@ import org.picketlink.test.integration.util.TargetContainers;
  * @since Sep 13, 2011
  */
 @RunWith(PicketLinkIntegrationTests.class)
-@TargetContainers ({"jbas7"})
+@TargetContainers({ "jbas7" })
 public class PicketLinkAuthenticatorAS7TestCase extends AbstractPicketLinkAuthenticatorTestCase {
-    
+
     @Deployment(name = "authenticator", testable = false)
     @TargetsContainer("jboss")
     public static WebArchive createAuthenticatorDeployment() {
         WebArchive archive = ShrinkWrap.create(WebArchive.class);
-        
+
         archive.addAsWebInfResource(getTestFile("as7/WEB-INF/web.xml"));
         archive.addAsWebInfResource(getTestFile("as7/WEB-INF/jboss-web.xml"));
         archive.addAsManifestResource(new File("../../unit-tests/trust/target/test-classes/jboss-deployment-structure.xml"));
-        
+
         archive.addAsWebResource(getTestFile("index.jsp"));
         archive.addAsWebResource(getTestFile("error.html"));
         archive.addAsWebResource(getTestFile("login.html"));
-        
-        archive.addAsWebInfResource(new File("../../unit-tests/trust/target/test-classes/props/sts-users.properties"), ArchivePaths.create("classes/users.properties"));
-        archive.addAsWebInfResource(new File("../../unit-tests/trust/target/test-classes/props/sts-roles.properties"), ArchivePaths.create("classes/roles.properties"));
-        
+
+        archive.addClass(TestRequestUserLoginModule.class);
+        archive.addAsResource(new File("../../unit-tests/trust/target/test-classes/props/sts-users.properties"),
+                "users.properties");
+        archive.addAsResource(new File("../../unit-tests/trust/target/test-classes/props/sts-roles.properties"),
+                "roles.properties");
+
         return archive;
     }
-    
+
 }

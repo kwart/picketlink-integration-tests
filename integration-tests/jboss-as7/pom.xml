@@ -25,7 +25,7 @@
 		<dependency>
 			<groupId>org.picketlink.distribution</groupId>
 			<artifactId>picketlink-jbas7</artifactId>
-			<version>2.1.6-SNAPSHOT</version>
+			<version>${version.picketlink}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -63,6 +63,8 @@
 	<properties>
 		<binding.server>jboss-as7</binding.server>
 		<picketlink.binding>jbas7</picketlink.binding>
+
+		<jbas7.dist.zip>jboss-as-${version.jboss_as7}.zip</jbas7.dist.zip>
 		<jboss.as.home>${integration.tests.containers.dir}/jboss-as-${version.jboss_as7}</jboss.as.home>
 		<jboss.as.picketlink.lib.dir>${jboss.as.home}/modules/org/picketlink/main</jboss.as.picketlink.lib.dir>
 	</properties>
@@ -113,6 +115,9 @@
 <!-- 									</includes> -->
 <!-- 									<stylesheet>src/test/resources/xslt/changeBindingPorts.xslt</stylesheet> -->
 <!-- 								</transformationSet> -->
+
+<!-- TODO: Howto limit usage of following transformations? (e.g. don't use them in EAP) -->
+
 								<transformationSet>
 									<dir>${jboss.as.home}/modules/org/picketlink/main</dir>
 									<outputDir>${jboss.as.home}/modules/org/picketlink/main</outputDir>
@@ -121,6 +126,7 @@
 									</includes>
 									<stylesheet>src/test/resources/xslt/changePicketLinkModule.xslt</stylesheet>
 								</transformationSet>
+
 								<!-- This should be removed when AS7 is updated the jbossxacml module 
 									is updated with 2.0.8 -->
 								<transformationSet>

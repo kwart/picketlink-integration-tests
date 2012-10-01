@@ -22,7 +22,7 @@
 
 package org.picketlink.test.trust.tests;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
 
 import java.io.File;
 
@@ -38,10 +38,12 @@ import com.meterware.httpunit.WebRequest;
 import com.meterware.httpunit.WebResponse;
 
 /**
- * <p>Abstract class for testing the {@link PicketLinkAuthenticator}.</p>
+ * <p>
+ * Abstract class for testing the {@link PicketLinkAuthenticator}.
+ * </p>
  * 
  * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a>
- *
+ * 
  */
 @RunWith(PicketLinkIntegrationTests.class)
 public abstract class AbstractPicketLinkAuthenticatorTestCase {
@@ -51,17 +53,14 @@ public abstract class AbstractPicketLinkAuthenticatorTestCase {
         WebRequest serviceRequest1 = new GetMethodWebRequest(TestUtil.getTargetURL("/authenticator/?user=UserA"));
         WebConversation webConversation = new WebConversation();
         WebResponse webResponse = webConversation.getResponse(serviceRequest1);
-        String responseText = webResponse.getText();
-        
-        assertTrue(responseText.contains("UserA"));
+        assertEquals("Username should be the response value.", "UserA", webResponse.getText());
 
         WebRequest serviceRequest2 = new GetMethodWebRequest(TestUtil.getTargetURL("/authenticator/?user=UserB"));
         WebConversation webConversation2 = new WebConversation();
         WebResponse webResponse2 = webConversation2.getResponse(serviceRequest2);
-        String responseText2 = webResponse2.getText();
-        assertTrue(responseText2.contains("UserB"));
+        assertEquals("Username should be the response value.", "UserB", webResponse2.getText());
     }
-    
+
     protected static File getTestFile(String path) {
         return new File("../../unit-tests/trust/target/test-classes/picketlink-authenticator/" + path);
     }

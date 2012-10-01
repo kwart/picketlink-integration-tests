@@ -2,7 +2,6 @@
 	<security-domain>authenticator</security-domain>
 	<context-root>authenticator</context-root>
 	<valve>
-		<class-name>org.picketlink.identity.federation.bindings.tomcat.PicketLinkAuthenticator
-		</class-name>
+		<class-name>org.picketlink.identity.federation.bindings.tomcat.PicketLinkAuthenticator</class-name>
 	</valve>
 </jboss-web>

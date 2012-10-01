@@ -26,44 +26,34 @@ import javax.security.jacc.PolicyContext;
 import javax.security.jacc.PolicyContextException;
 import javax.servlet.http.HttpServletRequest;
 
-import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.security.auth.spi.UsersRolesLoginModule;
-import org.junit.runner.RunWith;
 
 /**
- * A test login module that just looks for a request param
- * "user"
+ * A test login module that just looks for a request param "user"
+ * 
  * @author Anil.Saldhana@redhat.com
  * @since Sep 13, 2011
  */
-public class TestRequestUserLoginModule extends UsersRolesLoginModule
-{
-   @Override
-   protected String[] getUsernameAndPassword() throws LoginException
-   {
-      //get the username from the request
-      /** The JACC PolicyContext key for the current Subject */
-      String WEB_REQUEST_KEY = "javax.servlet.http.HttpServletRequest";
-      try
-      {
-         String password = null;
-         HttpServletRequest request = (HttpServletRequest) PolicyContext.getContext(WEB_REQUEST_KEY);
-         String username = request.getParameter("user");
-         if(username != null && "UserA".equals(username))
-         {
-            password = "PassA";
-         }
-         else if(username != null && "UserB".equals(username))
-         {
-            password = "PassB";
-         }
-         return new String[] { username, password};
-      }
-      catch (PolicyContextException e)
-      { 
-         LoginException le = new LoginException();
-         le.initCause(e);
-         throw le;
-      }
-  }
+public class TestRequestUserLoginModule extends UsersRolesLoginModule {
+    @Override
+    protected String[] getUsernameAndPassword() throws LoginException {
+        //get the username from the request
+        /** The JACC PolicyContext key for the current Subject */
+        String WEB_REQUEST_KEY = "javax.servlet.http.HttpServletRequest";
+        try {
+            String password = null;
+            HttpServletRequest request = (HttpServletRequest) PolicyContext.getContext(WEB_REQUEST_KEY);
+            String username = request.getParameter("user");
+            if (username != null && "UserA".equals(username)) {
+                password = "PassA";
+            } else if (username != null && "UserB".equals(username)) {
+                password = "PassB";
+            }
+            return new String[] { username, password };
+        } catch (PolicyContextException e) {
+            LoginException le = new LoginException();
+            le.initCause(e);
+            throw le;
+        }
+    }
 }

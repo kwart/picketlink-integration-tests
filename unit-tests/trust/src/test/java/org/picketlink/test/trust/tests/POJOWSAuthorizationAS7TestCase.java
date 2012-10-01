@@ -39,24 +39,30 @@ import org.picketlink.test.integration.util.TargetContainers;
  * @since Oct 3, 2010
  */
 @RunWith(PicketLinkIntegrationTests.class)
-@TargetContainers({"jbas7"})
+@TargetContainers({ "jbas7" })
 public class POJOWSAuthorizationAS7TestCase extends AbstractPOJOWSAuthorizationTestCase {
 
     @Deployment(name = "pojo-test", testable = false)
     @TargetsContainer("jboss")
     public static WebArchive createWSTestDeployment() {
         WebArchive archive = ShrinkWrap.create(WebArchive.class);
-        
+
         archive.addAsWebInfResource(new File("../../unit-tests/trust/target/test-classes/pojo-test/WEB-INF/web.xml"));
         archive.addAsWebInfResource(new File("../../unit-tests/trust/target/test-classes/pojo-test/WEB-INF/jboss-web.xml"));
         archive.addAsWebInfResource(new File("../../unit-tests/trust/target/test-classes/pojo-test/WEB-INF/jboss-wsse.xml"));
-        archive.addAsWebInfResource(new File("../../unit-tests/trust/target/test-classes/authorize-handlers.xml"), ArchivePaths.create("classes/authorize-handlers.xml"));
-        archive.addAsWebInfResource(new File("../../unit-tests/trust/target/test-classes/org/picketlink/test/trust/ws/POJOBean.class"), ArchivePaths.create("classes/org/picketlink/test/trust/ws/POJOBean.class"));
+        archive.addAsWebInfResource(new File("../../unit-tests/trust/target/test-classes/authorize-handlers.xml"),
+                ArchivePaths.create("classes/authorize-handlers.xml"));
+        archive.addAsWebInfResource(new File(
+                "../../unit-tests/trust/target/test-classes/org/picketlink/test/trust/ws/POJOBean.class"), ArchivePaths
+                .create("classes/org/picketlink/test/trust/ws/POJOBean.class"));
         archive.addAsManifestResource(new File("../../unit-tests/trust/target/test-classes/jboss-deployment-structure.xml"));
-        
-        archive.addAsWebInfResource(new File("../../unit-tests/trust/target/test-classes/props/sts-users.properties"), ArchivePaths.create("classes/users.properties"));
-        archive.addAsWebInfResource(new File("../../unit-tests/trust/target/test-classes/props/sts-roles.properties"), ArchivePaths.create("classes/roles.properties"));
-        archive.addAsWebInfResource(new File("../../unit-tests/trust/target/test-classes/props/sts-config.properties"), ArchivePaths.create("classes/sts-config.properties"));
+
+        archive.addAsWebInfResource(new File("../../unit-tests/trust/target/test-classes/props/sts-users.properties"),
+                ArchivePaths.create("classes/users.properties"));
+        archive.addAsWebInfResource(new File("../../unit-tests/trust/target/test-classes/props/sts-roles.properties"),
+                ArchivePaths.create("classes/roles.properties"));
+        archive.addAsWebInfResource(new File("../../unit-tests/trust/target/test-classes/props/sts-config.properties"),
+                ArchivePaths.create("classes/sts-config.properties"));
 
         return archive;
     }
