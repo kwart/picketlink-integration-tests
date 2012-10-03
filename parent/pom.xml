@@ -6,7 +6,8 @@
 	<artifactId>picketlink-integration-tests-parent</artifactId>
 	<packaging>pom</packaging>
 	<properties>
-		<version.picketlink>2.1.3.Final</version.picketlink>
+		<version.picketlink>2.1.3.1-redhat-1</version.picketlink>
+		<version.picketlink.quickstarts>2.1.3.Final</version.picketlink.quickstarts>
 
 		<!-- Current version of JBoss AS7 used during the tests. -->
 		<version.jboss_as7>7.1.1.Final</version.jboss_as7>
