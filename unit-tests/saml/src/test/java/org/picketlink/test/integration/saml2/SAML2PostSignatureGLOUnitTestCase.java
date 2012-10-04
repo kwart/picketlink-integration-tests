@@ -77,21 +77,25 @@ public class SAML2PostSignatureGLOUnitTestCase extends AbstractSAMLIntegrationTe
         // Employee post Application Login
         System.out.println("Trying " + getEmployeeURL());
         webResponse = webConversation.getResponse(getEmployeeURL());
+        System.out.println(webResponse.getText());
         assertTrue(" Reached the employee index page ", webResponse.getText().contains("EmployeeDashboard"));
 
         // Logout from sales
         System.out.println("Trying " + getSalesURL() + LOGOUT_URL);
         webResponse = webConversation.getResponse(getSalesURL() + LOGOUT_URL);
+        System.out.println(webResponse.getText());
         assertTrue("Reached logged out page", webResponse.getText().contains("Logout"));
 
         // Hit the Sales Apps again
         System.out.println("Trying " + getSalesURL());
         webResponse = webConversation.getResponse(getSalesURL());
+        System.out.println(webResponse.getText());
         assertTrue(" Reached the Login page ", webResponse.getText().contains("Login"));
 
         // Hit the Employee Apps again
         System.out.println("Trying " + getEmployeeURL());
         webResponse = webConversation.getResponse(getEmployeeURL());
+        System.out.println(webResponse.getText());
         assertTrue(" Reached the Login page ", webResponse.getText().contains("Login"));
 
         webConversation.clearContents();

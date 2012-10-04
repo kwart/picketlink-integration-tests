@@ -26,7 +26,6 @@ import static org.picketlink.test.integration.util.PicketLinkConfigurationUtil.a
 import static org.picketlink.test.integration.util.TestUtil.getServerAddress;
 
 import org.jboss.arquillian.container.test.api.Deployment;
-import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.TargetsContainer;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
@@ -55,7 +54,7 @@ import com.meterware.httpunit.WebResponse;
  * @author Anil.Saldhana@redhat.com
  * @since Apr 8, 2010
  */
-@TargetContainers ({"jbas5", "jbas6", "jbas7", "tomcat6"})
+@TargetContainers({ "jbas5", "jbas6", "jbas7", "tomcat6" })
 public class SAML2MixedBindingGlobalLogOutUnitTestCase extends AbstractSAMLIntegrationTests {
 
     @Test
@@ -71,7 +70,7 @@ public class SAML2MixedBindingGlobalLogOutUnitTestCase extends AbstractSAMLInteg
         WebConversation webConversation = new WebConversation();
 
         WebResponse webResponse = webConversation.getResponse(serviceRequest1);
-        
+
         WebForm loginForm = webResponse.getForms()[0];
         loginForm.setParameter("j_username", "tomcat");
         loginForm.setParameter("j_password", "tomcat");
@@ -79,42 +78,49 @@ public class SAML2MixedBindingGlobalLogOutUnitTestCase extends AbstractSAMLInteg
         submitButton.click();
 
         webResponse = webConversation.getCurrentPage();
-        
+
         assertTrue(" Reached the sales index page ", webResponse.getText().contains("SalesTool"));
 
         // Employee post Application Login
         System.out.println("Trying " + EMPLOYEE_REDIRECT_URL);
         webResponse = webConversation.getResponse(EMPLOYEE_REDIRECT_URL);
+        System.out.println(webResponse.getText());
         assertTrue(" Reached the employee index page ", webResponse.getText().contains("EmployeeDashboard"));
 
         // Employee Redirect Valve Application Login
         System.out.println("Trying " + EMPLOYEE_REDIRECT_VALVE_URL);
         webResponse = webConversation.getResponse(EMPLOYEE_REDIRECT_VALVE_URL);
+        System.out.println(webResponse.getText());
         assertTrue(" Reached the employee index page ", webResponse.getText().contains("EmployeeDashboard"));
 
         // Sales Post Valve Application Login
         System.out.println("Trying " + SALES_POST_VALVE_URL);
         webResponse = webConversation.getResponse(SALES_POST_VALVE_URL);
+        System.out.println(webResponse.getText());
         assertTrue(" Reached the employee index page ", webResponse.getText().contains("SalesTool"));
 
         // Logout from sales
         System.out.println("Trying " + EMPLOYEE_REDIRECT_URL + LOGOUT_URL);
         webResponse = webConversation.getResponse(EMPLOYEE_REDIRECT_URL + LOGOUT_URL);
+        System.out.println(webResponse.getText());
         assertTrue("Reached logged out page", webResponse.getText().contains("Logout"));
 
         // Hit the Sales Apps again
         System.out.println("Trying " + SALES_POST_URL);
         webResponse = webConversation.getResponse(SALES_POST_URL);
+        System.out.println(webResponse.getText());
         assertTrue(" Reached the Login page ", webResponse.getText().contains("Login"));
 
         // Hit the Employee Apps again
         System.out.println("Trying " + EMPLOYEE_REDIRECT_URL);
         webResponse = webConversation.getResponse(EMPLOYEE_REDIRECT_URL);
+        System.out.println(webResponse.getText());
         assertTrue(" Reached the Login page ", webResponse.getText().contains("Login"));
 
         // Hit the Sales Valve Apps again
         System.out.println("Trying " + SALES_POST_VALVE_URL);
         webResponse = webConversation.getResponse(SALES_POST_VALVE_URL);
+        System.out.println(webResponse.getText());
         assertTrue(" Reached the Login page ", webResponse.getText().contains("Login"));
 
         webConversation.clearContents();
@@ -125,12 +131,12 @@ public class SAML2MixedBindingGlobalLogOutUnitTestCase extends AbstractSAMLInteg
     public static WebArchive createIDPDeployment() throws ConfigurationException, ProcessingException, ParsingException,
             InterruptedException {
         WebArchive idp = MavenArtifactUtil.getQuickstartsMavenArchive("idp");
-        
+
         addTrustedDomain(idp, getServerAddress());
-        
+
         return idp;
     }
-    
+
     @Deployment(name = "sales-post", testable = false)
     @TargetsContainer("jboss")
     public static WebArchive createSalesPostDeployment() {
