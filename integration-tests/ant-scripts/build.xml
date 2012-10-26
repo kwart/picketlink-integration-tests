@@ -45,9 +45,6 @@
 						</copy>
 					</else>
 				</if>
-
-				<copy todir="${jboss.as.picketlink.lib.dir}" file="${user.home}/.m2/repository/org/picketlink/picketlink-core/${version.picketlink}/picketlink-core-${version.picketlink}.jar" />
-				<copy todir="${jboss.as.picketlink.lib.dir}" file="${user.home}/.m2/repository/org/picketlink/distribution/picketlink-${picketlink.binding}/${version.picketlink}/picketlink-${picketlink.binding}-${version.picketlink}.jar" />
 			</then>
 		</if>
 
