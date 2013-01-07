@@ -68,7 +68,7 @@ import org.picketlink.test.trust.servlet.ServiceServlet;
 
 @RunWith(PicketLinkIntegrationTests.class)
 @TargetContainers({ "eap5" })
-public class Gateway2ServiceHttpUnitTestCase extends TrustTestsBase {
+public class Gateway2ServiceHttpUnitTestCase {
 
     private static final Logger log = Logger.getLogger(Gateway2ServiceHttpUnitTestCase.class);
 
