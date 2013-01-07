@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- XSLT file to add the SECURITY_DOMAIN picketlink authenticator to war-deployers-jboss-beans.xml -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-	xmlns:bd="urn:jboss:bean-deployer:2.0"
-	version="1.0">
+	xpath-default-namespace="urn:jboss:bean-deployer:2.0"
+	version="2.0">
 
 	<xsl:output method="xml" indent="yes" />
 
-	<xsl:template match="//bd:property[@name='authenticators']/bd:map/bd:entry[bd:key/text()='SECURITY_DOMAIN']" />
+	<xsl:template match="//property[@name='authenticators']/map/entry[key/text()='SECURITY_DOMAIN']" />
 
-	<xsl:template match="//bd:property[@name='authenticators']/bd:map">
+	<xsl:template match="//property[@name='authenticators']/map">
 		<map>
 			<xsl:copy-of select="@*"/>
             <entry>
