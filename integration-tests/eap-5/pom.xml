@@ -120,20 +120,28 @@
 						<goals>
 							<goal>transform</goal>
 						</goals>
-						<configuration>
-							<transformationSets>
-								<transformationSet>
-									<dir>${jboss.as.home}/server/default/deployers/jbossweb.deployer/META-INF</dir>
-									<outputDir>${jboss.as.home}/server/default/deployers/jbossweb.deployer/META-INF</outputDir>
-									<includes>
-										<include>war-deployers-jboss-beans.xml</include>
-									</includes>
-									<stylesheet>src/test/resources/addPicketLinkAuthenticator.xslt</stylesheet>
-								</transformationSet>
-							</transformationSets>
-						</configuration>
 					</execution>
 				</executions>
+				<configuration>
+					<transformationSets>
+						<transformationSet>
+							<dir>${jboss.as.home}/server/default/deployers/jbossweb.deployer/META-INF</dir>
+							<outputDir>${jboss.as.home}/server/default/deployers/jbossweb.deployer/META-INF</outputDir>
+							<includes>
+								<include>war-deployers-jboss-beans.xml</include>
+							</includes>
+							<stylesheet>src/test/resources/addPicketLinkAuthenticator.xslt</stylesheet>
+						</transformationSet>
+					</transformationSets>
+				</configuration>
+				<!-- Use the Saxon as a XSLT 2.0 processor  -->
+				<dependencies>
+					<dependency>
+						<groupId>net.sf.saxon</groupId>
+						<artifactId>saxon</artifactId>
+						<version>8.7</version>
+					</dependency>
+				</dependencies>
 			</plugin>			
 		</plugins>
 		<pluginManagement>

@@ -9,14 +9,14 @@
 	<xsl:template match="//property[@name='authenticators']/map/entry[key/text()='SECURITY_DOMAIN']" />
 
 	<xsl:template match="//property[@name='authenticators']/map">
-		<map>
+		<map xmlns="urn:jboss:bean-deployer:2.0">
 			<xsl:copy-of select="@*"/>
             <entry>
                <key>SECURITY_DOMAIN</key>
                <value>org.picketlink.identity.federation.bindings.tomcat.PicketLinkAuthenticator</value>
             </entry>
 			<xsl:apply-templates select="*" />
-         </map>  
+         </map>
 	</xsl:template>
 
 	<!-- Copy everything else. -->
