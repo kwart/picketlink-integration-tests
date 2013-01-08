@@ -108,6 +108,10 @@
 						<additionalClasspathElement>${jboss.as.home}/client/wsdl4j.jar</additionalClasspathElement>
 						<additionalClasspathElement>${jboss.as.home}/client/wstx.jar</additionalClasspathElement>
 					</additionalClasspathElements>
+					<systemPropertyVariables>
+						<jbossas.startup.timeout>240</jbossas.startup.timeout>
+						<jbossas.shutdown.timeout>90</jbossas.shutdown.timeout>
+					</systemPropertyVariables>
 				</configuration>
 			</plugin>
 			<plugin>

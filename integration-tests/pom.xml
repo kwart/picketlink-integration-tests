@@ -88,6 +88,14 @@
 									<name>maven.repo.local</name>
 									<value>${settings.localRepository}</value>
 								</property>
+								<property>
+									<name>jbossas.startup.timeout</name>
+									<value>240</value>
+								</property>
+								<property>
+									<name>jbossas.shutdown.timeout</name>
+									<value>90</value>
+								</property>
 							</systemProperties>
 							<reportNameSuffix>SAML-${binding.server}</reportNameSuffix>
 						</configuration>
