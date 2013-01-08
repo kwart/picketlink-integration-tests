@@ -79,7 +79,7 @@ public class PicketLinkConfigurationUtil {
 
         overridePicketLinkConfig(webArchive, picketlink, document);
     }
-    
+
     /**
      * <p>
      * Adds a new trusted domain to the <Trust><Domains> list.
@@ -100,10 +100,10 @@ public class PicketLinkConfigurationUtil {
 
         overridePicketLinkConfig(webArchive, picketlink, document);
     }
-    
+
     /**
      * <p>
-     * Adds a new alias to the keystore. Defaults to /WEB-INF/classes/jbid_test_keystore.jks. 
+     * Adds a new alias to the keystore. Defaults to /WEB-INF/classes/jbid_test_keystore.jks.
      * </p>
      * 
      * @param sp
@@ -115,7 +115,7 @@ public class PicketLinkConfigurationUtil {
 
     /**
      * <p>
-     * Adds a new alias to the keystore specified in the <code>jksPath</code> parameter. 
+     * Adds a new alias to the keystore specified in the <code>jksPath</code> parameter.
      * </p>
      * 
      * @param sp
@@ -132,7 +132,7 @@ public class PicketLinkConfigurationUtil {
         final Node keystore = getContent(sp, jksPath);
 
         char[] password = passwd.toCharArray();
-        
+
         try {
             final KeyStore jks = KeyStoreUtil.getKeyStore(keystore.getAsset().openStream(), password);
 
@@ -140,7 +140,7 @@ public class PicketLinkConfigurationUtil {
 
             jks.setCertificateEntry(alias, certificate);
 
-            File file = new File("/tmp/tmpjks.jks");
+            File file = File.createTempFile("tmpjks", ".jks");
 
             if (file.exists()) {
                 file.delete();
@@ -152,7 +152,7 @@ public class PicketLinkConfigurationUtil {
 
             stream.close();
 
-            final FileInputStream fileInputStream = new FileInputStream("/tmp/tmpjks.jks");
+            final FileInputStream fileInputStream = new FileInputStream(file);
 
             sp.delete(keystore.getPath());
 
@@ -192,7 +192,7 @@ public class PicketLinkConfigurationUtil {
 
         overridePicketLinkConfig(webArchive, picketlink, document);
     }
-    
+
     /**
      * <p>
      * Adds a new <KeyProvider><ValidatingAlias> to the configuration file specified in the <code>configFile</code> parameter.
@@ -222,14 +222,15 @@ public class PicketLinkConfigurationUtil {
     }
 
     /**
-     * Add AttributeProvider to picketlink-sts.xml config.
-     * Useful when you need pick roles from SAMLIssuingLoginModule later in SAMLRolesLoginModule.
+     * Add AttributeProvider to picketlink-sts.xml config. Useful when you need pick roles from SAMLIssuingLoginModule later in
+     * SAMLRolesLoginModule.
      * 
      * @param webArchive
      * @param configFile
      * @param tokenRoleAttributeName
      */
-    public static void addSAML20TokenRoleAttributeProvider(WebArchive webArchive, String configFile, String tokenRoleAttributeName) {
+    public static void addSAML20TokenRoleAttributeProvider(WebArchive webArchive, String configFile,
+            String tokenRoleAttributeName) {
         final Node picketlink = getContent(webArchive, configFile);
         final Document document = getPicketLinkConfigDocument(picketlink);
 
@@ -237,17 +238,20 @@ public class PicketLinkConfigurationUtil {
         NodeList nl = element.getElementsByTagName("TokenProvider");
         for (int i = 0; i < nl.getLength(); i++) {
             Element e = (Element) nl.item(i);
-            if (e.getNodeName().equals("TokenProvider") 
-                    && e.getAttribute("ProviderClass").equals("org.picketlink.identity.federation.core.wstrust.plugins.saml.SAML20TokenProvider")
+            if (e.getNodeName().equals("TokenProvider")
+                    && e.getAttribute("ProviderClass").equals(
+                            "org.picketlink.identity.federation.core.wstrust.plugins.saml.SAML20TokenProvider")
                     && e.getAttribute("TokenElement").equals("Assertion")) {
-                
+
                 Element prop1 = document.createElement("Property");
                 prop1.setAttribute("Key", "AttributeProvider");
-                prop1.setAttribute("Value", "org.picketlink.identity.federation.bindings.jboss.auth.SAML20TokenRoleAttributeProvider");
+                prop1.setAttribute("Value",
+                        "org.picketlink.identity.federation.bindings.jboss.auth.SAML20TokenRoleAttributeProvider");
                 Element prop2 = document.createElement("Property");
-                prop2.setAttribute("Key", "org.picketlink.identity.federation.bindings.jboss.auth.SAML20TokenRoleAttributeProvider.tokenRoleAttributeName");
+                prop2.setAttribute("Key",
+                        "org.picketlink.identity.federation.bindings.jboss.auth.SAML20TokenRoleAttributeProvider.tokenRoleAttributeName");
                 prop2.setAttribute("Value", tokenRoleAttributeName); // default "Role"
-                
+
                 e.appendChild(prop1);
                 e.appendChild(prop2);
                 break;
@@ -255,7 +259,7 @@ public class PicketLinkConfigurationUtil {
         }
         overridePicketLinkConfig(webArchive, picketlink, document);
     }
-    
+
     private static Document getPicketLinkConfigDocument(final Node picketlink) {
         final Document document;
 
