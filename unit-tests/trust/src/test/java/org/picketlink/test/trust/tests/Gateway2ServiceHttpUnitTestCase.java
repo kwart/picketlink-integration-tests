@@ -152,6 +152,15 @@ public class Gateway2ServiceHttpUnitTestCase {
 
     }
 
+    @Deployment(name = "validation-keystore.war", testable = false, order = 1)
+    @TargetsContainer("jboss")
+    public static WebArchive deployValidationKeystore() throws IOException {
+        WebArchive war = ShrinkWrap.create(WebArchive.class, "validation-keystore.war");
+        war.addAsWebResource(new File(
+                "../../unit-tests/trust/target/test-classes/lmtestapp/gateway2service-http/localValidationDomainKeyStore/stspub.jks"));
+        return war;
+    }
+
     @Deployment(name = "g2s-http-sec-domains.jar", testable = false, order = 2)
     @TargetsContainer("jboss")
     public static JavaArchive deployTestScenario1() throws IOException {
