@@ -17,9 +17,7 @@
  */
 package org.picketlink.test.integration.sts;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -220,7 +218,6 @@ public class PicketLinkSTSIntegrationUnitTestCase extends AbstractWSTrustIntegra
     public void testIssueSAML11OnBehalfOf() throws Exception {
         // issue a SAML 1.1 assertion for jduke.
         Element assertionElement = client.issueTokenOnBehalfOf(null, SAMLUtil.SAML11_TOKEN_TYPE, new Principal() {
-            @Override
             public String getName() {
                 return "jduke";
             }
@@ -248,7 +245,6 @@ public class PicketLinkSTSIntegrationUnitTestCase extends AbstractWSTrustIntegra
     public void testIssueSAML20OnBehalfOf() throws Exception {
         // issue a SAML 2.0 assertion for jduke.
         Element assertionElement = client.issueTokenOnBehalfOf(null, SAMLUtil.SAML2_TOKEN_TYPE, new Principal() {
-            @Override
             public String getName() {
                 return "jduke";
             }

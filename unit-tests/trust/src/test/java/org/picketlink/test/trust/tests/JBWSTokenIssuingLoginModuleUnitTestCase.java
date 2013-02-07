@@ -21,10 +21,8 @@
  */
 package org.picketlink.test.trust.tests;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.picketlink.test.integration.util.TestUtil.getServerAddress;
-import static org.picketlink.test.integration.util.TestUtil.getTargetURL;
+import static org.junit.Assert.*;
+import static org.picketlink.test.integration.util.TestUtil.*;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -35,9 +33,9 @@ import java.util.regex.Pattern;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.util.EntityUtils;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.TargetsContainer;
@@ -58,7 +56,7 @@ import org.picketlink.trust.jbossws.jaas.JBWSTokenIssuingLoginModule;
 
 /**
  * Unit test the {@link JBWSTokenIssuingLoginModule}
- *
+ * 
  * @author Anil.Saldhana@redhat.com
  * @author pskopek@redhat.com
  * @since Apr 25, 2011

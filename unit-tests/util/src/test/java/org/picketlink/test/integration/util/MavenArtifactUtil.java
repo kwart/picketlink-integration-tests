@@ -22,18 +22,20 @@
 
 package org.picketlink.test.integration.util;
 
+import java.util.Collection;
 import java.util.Map;
 
 import org.jboss.shrinkwrap.api.ArchivePath;
 import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
 import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
 
 /**
  * <p>
- * Utility class to retrieve artifacts from the local m2 repository used during the integration tests. 
+ * Utility class to retrieve artifacts from the local m2 repository used during the integration tests.
  * </p>
  * 
  * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a>
@@ -55,7 +57,7 @@ public class MavenArtifactUtil {
         
         return renameArtifact(artifactId, artifact);
     }
-    
+
     /**
      * <p>
      * Returns a {@link WebArchive} instance from the org.picketlink groupId.
@@ -74,8 +76,8 @@ public class MavenArtifactUtil {
 
     /**
      * <p>
-     * Rename a {@link WebArchive} to the value specified in the parameter <code>newName</code>.
-     * This method is useful when working with Apache Tomcat, for example, where the deployed file name is used as the application context path.
+     * Rename a {@link WebArchive} to the value specified in the parameter <code>newName</code>. This method is useful when
+     * working with Apache Tomcat, for example, where the deployed file name is used as the application context path.
      * </p>
      * 
      * @param newName
@@ -84,7 +86,7 @@ public class MavenArtifactUtil {
      */
     private static WebArchive renameArtifact(String newName, WebArchive artifact) {
         WebArchive renamedArtifact = ShrinkWrap.create(WebArchive.class, newName + ".war");
-        
+
         for (Map.Entry<ArchivePath, Node> content : artifact.getContent().entrySet()) {
             if (content.getValue().getAsset() != null) {
                 renamedArtifact.add(content.getValue().getAsset(), content.getKey());
@@ -97,4 +99,7 @@ public class MavenArtifactUtil {
         return DependencyResolvers.use(MavenDependencyResolver.class);
     }
 
+    public static Collection<JavaArchive> getArtifact(String gav) {
+        return getMavenArchiveResolver().artifact(gav).goOffline().resolveAs(JavaArchive.class);
+    }
 }

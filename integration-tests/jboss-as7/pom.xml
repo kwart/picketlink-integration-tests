@@ -9,6 +9,17 @@
 	</parent>
 	<artifactId>picketlink-integration-jbas7</artifactId>
 
+	<properties>
+		<binding.server>jboss-as7</binding.server>
+		<picketlink.binding>jbas7</picketlink.binding>		
+		<picketlink.skip.lib.copy>true</picketlink.skip.lib.copy>
+		<jbas7.dist.zip>jboss-eap-6.1.0.ER5.zip</jbas7.dist.zip>
+		<jboss.as.home>${integration.tests.containers.dir}/jboss-eap-6.1</jboss.as.home>
+		<jboss.as.picketlink.lib.dir>${jboss.as.home}/modules/system/layers/base/org/picketlink/main</jboss.as.picketlink.lib.dir>
+		<version.jboss-client>${version.jboss_as7}</version.jboss-client>
+		<version.remoting3>3.2.15.GA</version.remoting3>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.jboss.as</groupId>
@@ -26,6 +37,22 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
+		<dependency>
+			<groupId>org.jboss.ws</groupId>
+			<artifactId>jbossws-spi</artifactId>
+			<version>1.4.1.SP1</version>
+			<scope>test</scope>
+			<exclusions>
+				<exclusion>
+					<groupId>xalan</groupId>
+					<artifactId>xalan</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.jboss.remoting3</groupId>
+					<artifactId>jboss-remoting</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>		
 		<dependency>
 			<groupId>xalan</groupId>
 			<artifactId>xalan</artifactId>
@@ -80,17 +107,19 @@
 			<version>${version.remoting3}</version>
 			<scope>test</scope>
 		</dependency>
+		 <dependency>
+            		<groupId>org.jboss.as</groupId>
+            		<artifactId>jboss-as-ejb-client-bom</artifactId>
+			<version>7.2.0.Final</version>
+            		<type>pom</type>
+        	</dependency>
+        	<dependency>
+            		<groupId>org.jboss.as</groupId>
+            		<artifactId>jboss-as-jms-client-bom</artifactId>
+			<version>7.2.0.Final</version>
+            		<type>pom</type>
+        	</dependency>
 	</dependencies>
-
-	<properties>
-		<binding.server>jboss-as7</binding.server>
-		<picketlink.binding>jbas7</picketlink.binding>		
-		<picketlink.skip.lib.copy>false</picketlink.skip.lib.copy>
-		<jbas7.dist.zip>jboss-as-${version.jboss_as7}.zip</jbas7.dist.zip>
-		<jboss.as.home>${integration.tests.containers.dir}/jboss-as-${version.jboss_as7}</jboss.as.home>
-		<jboss.as.picketlink.lib.dir>${jboss.as.home}/modules/org/picketlink/main</jboss.as.picketlink.lib.dir>
-		<version.remoting3>3.2.3.GA</version.remoting3>
-	</properties>
 
 	<build>
 		<plugins>
@@ -194,46 +223,6 @@
 												<include>standalone.xml</include>
 											</includes>
 											<stylesheet>src/test/resources/xslt/addSecurityDomain.xslt</stylesheet>
-										</transformationSet>
-<!-- 										<transformationSet> -->
-<!-- 											<dir>${jboss.as.home}/standalone/configuration/</dir> -->
-<!-- 											<outputDir>${jboss.as.home}/standalone/configuration</outputDir> -->
-<!-- 											<includes> -->
-<!-- 												<include>standalone.xml</include> -->
-<!-- 											</includes> -->
-<!-- 											<stylesheet>src/test/resources/xslt/changeBindingPorts.xslt</stylesheet> -->
-<!-- 										</transformationSet> -->
-		 								<transformationSet>
-											<dir>${jboss.as.home}/modules/org/picketlink/main</dir>
-											<outputDir>${jboss.as.home}/modules/org/picketlink/main</outputDir>
-											<includes>
-												<include>module.xml</include>
-											</includes>
-											<stylesheet>src/test/resources/xslt/changePicketLinkModule.xslt</stylesheet>
-											<parameters>
-												<parameter>
-													<name>picketlink_version</name>
-													<value>${version.picketlink}</value>
-												</parameter>
-											</parameters>
-										</transformationSet>
-										This should be removed when AS7 is updated the jbossxacml module 
-											is updated with 2.0.8
-										<transformationSet>
-											<dir>${jboss.as.home}/modules/org/jboss/security/xacml/main</dir>
-											<outputDir>${jboss.as.home}/modules/org/jboss/security/xacml/main</outputDir>
-											<includes>
-												<include>module.xml</include>
-											</includes>
-											<stylesheet>src/test/resources/xslt/changeJBossXACMLModule.xslt</stylesheet>
-										</transformationSet>
-										<transformationSet>
-											<dir>${jboss.as.home}/modules/org/apache/xalan/main</dir>
-											<outputDir>${jboss.as.home}/modules/org/apache/xalan/main</outputDir>
-											<includes>
-												<include>module.xml</include>
-											</includes>
-											<stylesheet>src/test/resources/xslt/changeXalanModule.xslt</stylesheet>
 										</transformationSet>		
 									</transformationSets>
 								</configuration>
@@ -274,14 +263,6 @@
 											</includes>
 											<stylesheet>src/test/resources/xslt/addSecurityDomain.xslt</stylesheet>
 										</transformationSet>
-<!-- 										<transformationSet> -->
-<!-- 											<dir>${jboss.as.home}/standalone/configuration/</dir> -->
-<!-- 											<outputDir>${jboss.as.home}/standalone/configuration</outputDir> -->
-<!-- 											<includes> -->
-<!-- 												<include>standalone.xml</include> -->
-<!-- 											</includes> -->
-<!-- 											<stylesheet>src/test/resources/xslt/changeBindingPorts.xslt</stylesheet> -->
-<!-- 										</transformationSet> -->		
 									</transformationSets>
 								</configuration>
 							</execution>
