@@ -130,16 +130,42 @@
 			<version>1.0.2.Final</version>
 			<scope>test</scope>
 		</dependency>
+<!--
 		<dependency>
-			<groupId>org.picketlink</groupId>
-			<artifactId>picketlink-jbas5-single</artifactId>
+			<groupId>org.picketlink.distribution</groupId>
+			<artifactId>picketlink-jbas5</artifactId>
+			<version>${version.picketlink}</version>
+			<scope>test</scope>
+		</dependency>
+-->
+		<dependency>
+			<groupId>org.picketlink.distribution</groupId>
+			<artifactId>picketlink-jbas7</artifactId>
 			<version>${version.picketlink}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>org.picketlink</groupId>
-			<artifactId>picketlink-jbas7-single</artifactId>
-			<version>${version.picketlink}</version>
+			<groupId>org.picketbox</groupId>
+			<artifactId>picketbox</artifactId>
+			<version>${version.picketbox}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.security</groupId>
+			<artifactId>jboss-security-spi</artifactId>
+			<version>2.0.4</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.security</groupId>
+			<artifactId>jbosssx</artifactId>
+			<version>2.0.4</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.jboss.ws</groupId>
+			<artifactId>jbossws-common</artifactId>
+			<version>1.4.1.GA</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
