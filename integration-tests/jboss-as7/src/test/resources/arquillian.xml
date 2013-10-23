@@ -15,6 +15,7 @@
 				-Demployee.url=http://localhost:8080/employee/
 				-Demployee-redirect-valve.url=http://localhost:8080/employee-redirect-valve/
 				-Demployee-sig.url=http://localhost:8080/employee-sig/
+				-XX:MaxPermSize=256m
 				-XX:+HeapDumpOnOutOfMemoryError</property>
 		</configuration>
 	</container>
