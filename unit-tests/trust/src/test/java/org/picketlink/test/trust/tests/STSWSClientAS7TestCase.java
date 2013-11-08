@@ -51,6 +51,7 @@ public class STSWSClientAS7TestCase extends AbstractSTSWSClientTestCase {
         archive.addAsResource(new File("../../unit-tests/trust/target/test-classes/handlers.xml"));
         archive.addAsResource(new File("../../unit-tests/trust/target/test-classes/org/picketlink/test/trust/ws/WSTestBean.class"), ArchivePaths.create("org/picketlink/test/trust/ws/WSTestBean.class"));
         archive.addAsManifestResource(new File("../../unit-tests/trust/target/test-classes/jboss-deployment-structure.xml"));
+        archive.addAsManifestResource(new File("../../unit-tests/trust/target/test-classes/ws-testbean/jboss-webservices.xml"));
         
         archive.addAsResource(new File("../../unit-tests/trust/target/test-classes/props/sts-users.properties"), ArchivePaths.create("users.properties"));
         archive.addAsResource(new File("../../unit-tests/trust/target/test-classes/props/sts-roles.properties"), ArchivePaths.create("roles.properties"));
