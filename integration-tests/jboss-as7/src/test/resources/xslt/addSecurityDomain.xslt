@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- XSLT file to add the security domains to the standalone.xml used during the integration tests. -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" 
-                xmlns:as="urn:jboss:domain:1.4" 
+                xmlns:as="urn:jboss:domain:1.5" 
                 xmlns:sd="urn:jboss:domain:security:1.2" 
                 xmlns:r="urn:jboss:domain:remoting:1.1" 
                 version="1.0">

@@ -6,7 +6,7 @@
 	<artifactId>picketlink-integration-tests-parent</artifactId>
 	<packaging>pom</packaging>
 	<properties>
-		<version.picketlink>2.1.6.Final-redhat-2</version.picketlink>
+		<version.picketlink>2.1.9.SP2-redhat-1</version.picketlink>
 		<version.picketlink.quickstarts>2.1.6.Final</version.picketlink.quickstarts>
 		<version.picketbox>4.0.17.Final</version.picketbox>
 

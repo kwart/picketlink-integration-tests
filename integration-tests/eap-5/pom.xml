@@ -12,9 +12,7 @@
 	<properties>
 		<binding.server>jboss-as5</binding.server>
 		<picketlink.binding>jbas5</picketlink.binding>
-<!--
-		<picketlink.dist.dir>${integration.tests.containers.dir}/jboss-eap-5.2/picketlink/picketlink-federation</picketlink.dist.dir>
--->
+		<!-- <picketlink.dist.dir>${integration.tests.containers.dir}/jboss-eap-5.2/picketlink/picketlink-federation</picketlink.dist.dir> -->
 		<!-- property redefinition for ant-run with external build script -->
 		<eap5-dist-zip>${eap5-dist-zip}</eap5-dist-zip>
 		<eap5-dir-structure>${eap5-dir-structure}</eap5-dir-structure>
@@ -53,7 +51,7 @@
 			<artifactId>jboss-as-profileservice-client</artifactId>
 			<version>6.0.0.Final</version>
 			<type>pom</type>
-		</dependency>		
+		</dependency>
 		<dependency>
 			<groupId>org.picketlink.distribution</groupId>
 			<artifactId>picketlink-jbas5</artifactId>
@@ -72,11 +70,8 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<!--  dependency>
-			<groupId>trove</groupId>
-			<artifactId>trove</artifactId>
-			<version>1.0.2</version>
-		</dependency -->
+		<!-- dependency> <groupId>trove</groupId> <artifactId>trove</artifactId> 
+			<version>1.0.2</version> </dependency -->
 	</dependencies>
 
 	<build>
@@ -113,7 +108,8 @@
 		</plugins>
 		<pluginManagement>
 			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
 				<plugin>
 					<groupId>org.eclipse.m2e</groupId>
 					<artifactId>lifecycle-mapping</artifactId>
@@ -144,8 +140,45 @@
 						</lifecycleMappingMetadata>
 					</configuration>
 				</plugin>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-dependency-plugin</artifactId>
+					<version>2.1</version>
+					<inherited>true</inherited>
+					<executions>
+						<execution>
+							<id>copy-test-deps-to-eap5</id>
+							<phase>package</phase>
+							<goals>
+								<goal>copy</goal>
+							</goals>
+							<configuration>
+								<artifactItems>
+									<artifactItem>
+										<groupId>org.apache.httpcomponents</groupId>
+										<artifactId>httpclient</artifactId>
+										<version>4.2.1</version>
+										<type>jar</type>
+										<overWrite>true</overWrite>
+										<destFileName>httpclient.jar</destFileName>
+										<outputDirectory>${project.build.directory}/integration-tests/containers/${eap5-dir-structure}/common/lib</outputDirectory>
+									</artifactItem>
+									<artifactItem>
+										<groupId>org.apache.httpcomponents</groupId>
+										<artifactId>httpcore</artifactId>
+										<version>4.2.1</version>
+										<type>jar</type>
+										<overWrite>true</overWrite>
+										<destFileName>httpcore.jar</destFileName>
+										<outputDirectory>${project.build.directory}/integration-tests/containers/${eap5-dir-structure}/common/lib</outputDirectory>
+									</artifactItem>
+								</artifactItems>
+							</configuration>
+						</execution>
+					</executions>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
-	
+
 </project>
