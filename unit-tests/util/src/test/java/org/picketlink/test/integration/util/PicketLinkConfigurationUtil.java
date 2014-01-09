@@ -44,9 +44,9 @@ import org.jboss.shrinkwrap.api.Filter;
 import org.jboss.shrinkwrap.api.Node;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.picketlink.identity.federation.core.exceptions.ConfigurationException;
-import org.picketlink.identity.federation.core.exceptions.ProcessingException;
-import org.picketlink.identity.federation.core.parsers.config.SAMLConfigParser;
+import org.picketlink.common.exceptions.ConfigurationException;
+import org.picketlink.common.exceptions.ProcessingException;
+import org.picketlink.config.federation.parsers.SAMLConfigParser;
 import org.picketlink.identity.federation.core.saml.v2.util.DocumentUtil;
 import org.picketlink.identity.federation.core.util.KeyStoreUtil;
 import org.w3c.dom.Document;
@@ -86,7 +86,7 @@ public class PicketLinkConfigurationUtil {
      * </p>
      * 
      * @param webArchive
-     * @param domain
+     * @param identityURL
      */
     public static final void changeIdentityURL(WebArchive webArchive, String identityURL) {
         final Node picketlink = getPicketLinkConfigNode(webArchive);
@@ -267,6 +267,10 @@ public class PicketLinkConfigurationUtil {
                 return object.get().equals(path);
             }
         });
+
+        if (content.isEmpty()) {
+            throw new IllegalArgumentException("File " + path + " not found in the archive " + webArchive.getName());
+        }
 
         return content.values().iterator().next();
     }

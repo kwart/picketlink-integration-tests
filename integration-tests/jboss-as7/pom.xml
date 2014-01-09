@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>picketlink-integration-container</artifactId>
 		<groupId>org.picketlink</groupId>
-		<version>2.1.6.Final</version>
+		<version>2.5.3.Beta1</version>
 		<relativePath>..</relativePath>
 	</parent>
 	<artifactId>picketlink-integration-jbas7</artifactId>
@@ -13,6 +13,21 @@
 		<binding.server>jboss-as7</binding.server>
 		<picketlink.binding>jbas7</picketlink.binding>		
 		<picketlink.skip.lib.copy>true</picketlink.skip.lib.copy>
+
+        <!-- If picketlink.skip.lib.copy is true, this Boolean flag determines whether
+             to use classic PL installer to install PL as EAP module -->
+        <picketlink.installer>true</picketlink.installer>
+
+        <!-- If the above property is set to "true", this property determines name of the PL installer -->
+        <picketlink.installer.zip>picketlink-1.2.2.Final-installer.zip</picketlink.installer.zip>
+
+        <!-- Path to the PL install build.xml script within the installer .zip -->
+        <picketlink.installer.build.xml>picketlink-installer-1.2.2.Final/build.xml</picketlink.installer.build.xml>
+
+
+        <!-- Settings for Maven resolver in the tests. See MavenArtifactUtil.getMavenArchiveResolver() method -->
+        <picketlink.ts.maven.user.settings>/home/hmlnarik/src/picketlink/settings.xml</picketlink.ts.maven.user.settings>
+
 		<jbas7.dist.zip>jboss-eap-6.2.0.zip</jbas7.dist.zip>
 		<jboss.as.home>${integration.tests.containers.dir}/jboss-eap-6.2</jboss.as.home>
 		<jboss.as.picketlink.lib.dir>${jboss.as.home}/modules/system/layers/base/org/picketlink/main</jboss.as.picketlink.lib.dir>

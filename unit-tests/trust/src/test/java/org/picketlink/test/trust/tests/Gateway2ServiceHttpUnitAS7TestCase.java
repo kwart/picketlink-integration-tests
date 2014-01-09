@@ -34,9 +34,9 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.runner.RunWith;
-import org.picketlink.identity.federation.core.exceptions.ConfigurationException;
-import org.picketlink.identity.federation.core.exceptions.ParsingException;
-import org.picketlink.identity.federation.core.exceptions.ProcessingException;
+import org.picketlink.common.exceptions.ConfigurationException;
+import org.picketlink.common.exceptions.ParsingException;
+import org.picketlink.common.exceptions.ProcessingException;
 import org.picketlink.test.integration.util.MavenArtifactUtil;
 import org.picketlink.test.integration.util.PicketLinkConfigurationUtil;
 import org.picketlink.test.integration.util.PicketLinkIntegrationTests;
@@ -115,7 +115,7 @@ public class Gateway2ServiceHttpUnitAS7TestCase extends Gateway2ServiceHttpUnitC
     @TargetsContainer("jboss")
     public static WebArchive createSTSDeployment() throws GeneralSecurityException, IOException {
         WebArchive sts = TrustTestsBase.createSTSDeployment();
-        PicketLinkConfigurationUtil.addSAML20TokenRoleAttributeProvider(sts, "/WEB-INF/classes/picketlink-sts.xml", "Role");
+        PicketLinkConfigurationUtil.addSAML20TokenRoleAttributeProvider(sts, "/WEB-INF/classes/picketlink.xml", "Role");
         //sts.as(ZipExporter.class).exportTo(new File("picketlink-sts.war"), true);
         return sts;
     }

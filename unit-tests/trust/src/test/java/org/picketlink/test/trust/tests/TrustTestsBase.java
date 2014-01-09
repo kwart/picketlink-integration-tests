@@ -32,9 +32,9 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.TargetsContainer;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.runner.RunWith;
+import org.picketlink.common.exceptions.fed.WSTrustException;
 import org.picketlink.identity.federation.api.wstrust.WSTrustClient;
 import org.picketlink.identity.federation.api.wstrust.WSTrustClient.SecurityInfo;
-import org.picketlink.identity.federation.core.wstrust.WSTrustException;
 import org.picketlink.identity.federation.core.wstrust.plugins.saml.SAMLUtil;
 import org.picketlink.test.integration.util.MavenArtifactUtil;
 import org.picketlink.test.integration.util.PicketLinkIntegrationTests;
@@ -63,7 +63,7 @@ public abstract class TrustTestsBase {
     public static WebArchive createSTSDeployment() throws GeneralSecurityException, IOException {
         WebArchive sts = MavenArtifactUtil.getQuickstartsMavenArchive("picketlink-sts");
         
-        addValidatingAlias(sts, "/WEB-INF/classes/picketlink-sts.xml", getServerAddress(), getServerAddress());
+        addValidatingAlias(sts, "/WEB-INF/classes/picketlink.xml", getServerAddress(), getServerAddress());
         addKeyStoreAlias(sts, "/WEB-INF/classes/sts_keystore.jks", "sts", "testpass", getServerAddress());
         
         return sts;

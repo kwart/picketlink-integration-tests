@@ -36,8 +36,8 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.jboss.logging.Logger;
+import org.picketlink.common.util.Base64;
 import org.picketlink.identity.federation.bindings.jboss.subject.PicketLinkJBossSubjectInteraction;
-import org.picketlink.identity.federation.core.util.Base64;
 import org.picketlink.identity.federation.core.wstrust.SamlCredential;
 
 /**

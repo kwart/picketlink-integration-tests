@@ -38,10 +38,18 @@
  					</elseif>
 					<else>
 						<echo>PicketLink libraries copied from ${maven.repo.local}</echo>
-
-						<copy todir="${jboss.as.picketlink.lib.dir}" >
-							<fileset dir="${maven.repo.local}/org/picketlink/picketlink-core/${version.picketlink}" includes="picketlink-core-${version.picketlink}.jar"/>
-							<fileset dir="${maven.repo.local}/org/picketlink/distribution/picketlink-${picketlink.binding}/${version.picketlink}" includes="picketlink-${picketlink.binding}-${version.picketlink}.jar"/>
+                        <fail>Copying PicketLink 2.5 from local Maven repo is not yet implemented.</fail>
+						<copy todir="${jboss.as.picketlink.lib.dir}" flatten="true" >
+                            <fileset dir="${maven.repo.local}/org/picketlink">
+                                <include name="picketlink-api/${version.picketlink}/picketlink-api-${version.picketlink}.jar"/>
+                                <include name="picketlink-config/${version.picketlink}/picketlink-config-${version.picketlink}.jar"/>
+                                <include name="picketlink-federation/${version.picketlink}/picketlink-federation-${version.picketlink}.jar"/>
+                                <include name="picketlink-idm-api/${version.picketlink}/picketlink-idm-api-${version.picketlink}.jar"/>
+                                <include name="picketlink-idm-impl/${version.picketlink}/picketlink-idm-impl-${version.picketlink}.jar"/>
+                                <include name="picketlink-impl/${version.picketlink}/picketlink-impl-${version.picketlink}.jar"/>
+                                <include name="picketlink-jbas-common/${version.picketlink}/picketlink-jbas-common-${version.picketlink}.jar"/>
+                                <include name="picketlink-jbas7-single/${version.picketlink}/picketlink-jbas7-single-${version.picketlink}.jar"/>
+                            </fileset>
 						</copy>
 					</else>
 				</if>

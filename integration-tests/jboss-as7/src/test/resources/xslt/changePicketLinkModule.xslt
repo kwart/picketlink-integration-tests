@@ -9,12 +9,34 @@
 	<xsl:template match="//module:module[@name='org.picketlink']" />
 
 	<xsl:template match="/">
+        <!--
 		<module xmlns="urn:jboss:module:1.1" name="org.picketlink">
 			<resources>
-				<resource-root path="picketlink-jbas7-2.1.6.Final.jar" />
-				<resource-root path="picketlink-core-2.1.6.Final.jar" />
-				<resource-root path="picketlink-wstest-tests.jar" />
-			</resources>
+                <resource-root>
+                    <xsl:attribute name="path">picketlink-api-<xsl:value-of select="$picketlink_version"/>.jar</xsl:attribute>
+                </resource-root>
+                <resource-root>
+                    <xsl:attribute name="path">picketlink-config-<xsl:value-of select="$picketlink_version"/>.jar</xsl:attribute>
+                </resource-root>
+                <resource-root>
+                    <xsl:attribute name="path">picketlink-federation-<xsl:value-of select="$picketlink_version"/>.jar</xsl:attribute>
+                </resource-root>
+                <resource-root>
+                    <xsl:attribute name="path">picketlink-idm-api-<xsl:value-of select="$picketlink_version"/>.jar</xsl:attribute>
+                </resource-root>
+                <resource-root>
+                    <xsl:attribute name="path">picketlink-idm-impl-<xsl:value-of select="$picketlink_version"/>.jar</xsl:attribute>
+                </resource-root>
+                <resource-root>
+                    <xsl:attribute name="path">picketlink-impl-<xsl:value-of select="$picketlink_version"/>.jar</xsl:attribute>
+                </resource-root>
+                <resource-root>
+                    <xsl:attribute name="path">picketlink-jbas7-single-<xsl:value-of select="$picketlink_version"/>.jar</xsl:attribute>
+                </resource-root>
+                <resource-root>
+                    <xsl:attribute name="path">picketlink-jbas-common-<xsl:value-of select="$picketlink_version"/>.jar</xsl:attribute>
+                </resource-root>
+            </resources>
 
 			<dependencies>
 		        <module name="javax.api"/>
@@ -37,6 +59,7 @@
 				<module name="org.apache.cxf" />
 			</dependencies>
 		</module>
+		-->
 	</xsl:template>
 
 	<!-- Copy everything else. -->

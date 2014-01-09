@@ -5,7 +5,7 @@
 	<property name="JBAS_CONFIG_ROOT" location="${JBAS7_PROFILE_DIR}" />
 	<property name="JBAS7_DEPLOY" location="${JBAS7_PROFILE_DIR}/deployments" />
 
-	<target name="prepare-test-environment" depends="unzip-jboss">
+	<target name="prepare-test-environment" depends="unzip-jboss,install-picketlink">
 		<copy file="${basedir}/../../unit-tests/trust/src/test/resources/lmtestapp/gateway2service-http/localValidationDomainKeyStore/stspub.jks" todir="${JBAS7_PROFILE_DIR}/configuration" />
                 <copy file="${basedir}/../../unit-tests/trust/src/test/resources/props/sts-config.properties" todir="${JBAS7_PROFILE_DIR}/configuration" />
                 <copy file="${basedir}/../../unit-tests/trust/src/test/resources/props/ejb-sts-users.properties" todir="${JBAS7_PROFILE_DIR}/configuration" />
@@ -16,12 +16,13 @@
 	
 	<target name="unzip-jboss">
 		<echo>Unzip ${jbas7.dist.zip}</echo>
+        <delete dir="${jboss.as.home}" quiet="true" />
 		<unzip src="${basedir}/dist/${jbas7.dist.zip}" dest="${integration.tests.dir}/containers" />
 		<chmod dir="${integration.tests.dir}/containers" perm="ugo+rx" includes="**/*.sh" />
 <!--
 		<copy todir="${jboss.as.home}/modules/system/layers/base/org/jboss/security/xacml/main" file="${maven.repo.local}/org/jboss/security/jbossxacml/2.0.8.Final/jbossxacml-2.0.8.Final.jar" />
 		<copy todir="${jboss.as.home}/modules/system/layers/base/org/apache/xalan/main" file="${maven.repo.local}/xalan/xalan/2.7.1/xalan-2.7.1.jar" />
-		
+
 		<copy todir="${jboss.as.home}/modules/system/layers/base/org/picketlink/main" file="${basedir}/../../unit-tests/trust/target/picketlink-wstest-tests.jar" />
 		<replace file="${jboss.as.home}/modules/system/layers/base/org/picketlink/main/module.xml">
 			  <replacetoken><![CDATA[</resources>]]></replacetoken>
@@ -29,5 +30,32 @@
 	</resources>]]></replacevalue>
 		</replace>-->
 	</target>
+
+    <target name="install-picketlink" if="${picketlink.installer}">
+        <echo>Unzip and install PicketLink</echo>
+
+        <unzip src="${basedir}/dist/${picketlink.installer.zip}" dest="${integration.tests.dir}/pl-installer" />
+        <ant antfile="${integration.tests.dir}/pl-installer/${picketlink.installer.build.xml}" useNativeBasedir="true" >
+            <target name="prepare"/>
+            <target name="backup-as7-files"/>
+            <target name="install-picketlink"/>
+            <property name="jboss.as.dist.dir" value="${jboss.as.home}" />
+        </ant>
+
+        <!-- Hack required to convince tested quickstarts to find appropriate picketlink sources. Remove once fixed. -->
+        <xslt style="${basedir}/src/test/resources/xslt/addJavaxBindXmlDep.xsl"
+              in="${jboss.as.home}/modules/system/layers/base/org/picketlink/common/main/module.xml"
+              out="${jboss.as.home}/modules/system/layers/base/org/picketlink/common/main/module2.xml" />
+        <move file="${jboss.as.home}/modules/system/layers/base/org/picketlink/common/main/module2.xml"
+              tofile="${jboss.as.home}/modules/system/layers/base/org/picketlink/common/main/module.xml"
+              overwrite="true" />
+
+        <xslt style="${basedir}/src/test/resources/xslt/addOrgPicketlinkDep.xsl"
+              in="${jboss.as.home}/modules/system/layers/base/org/picketlink/main/module.xml"
+              out="${jboss.as.home}/modules/system/layers/base/org/picketlink/main/module2.xml" />
+        <move file="${jboss.as.home}/modules/system/layers/base/org/picketlink/main/module2.xml"
+              tofile="${jboss.as.home}/modules/system/layers/base/org/picketlink/main/module.xml"
+              overwrite="true" />
+    </target>
 
 </project>
