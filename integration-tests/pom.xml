@@ -131,7 +131,7 @@
 										<artifactItems>
 											<artifactItem>
 												<groupId>org.picketlink</groupId>
-												<artifactId>picketlink-integration-util-unit-tests</artifactId>
+												<artifactId>picketlink-integration-util-tests</artifactId>
 												<version>${project.version}</version>
 												<type>test-jar</type>
 												<overWrite>true</overWrite>
@@ -139,7 +139,7 @@
 											</artifactItem>
 											<artifactItem>
 												<groupId>org.picketlink</groupId>
-												<artifactId>picketlink-integration-saml-unit-tests</artifactId>
+												<artifactId>picketlink-integration-saml-tests</artifactId>
 												<version>${project.version}</version>
 												<type>test-jar</type>
 												<overWrite>true</overWrite>
@@ -147,7 +147,7 @@
 											</artifactItem>
 											<artifactItem>
 												<groupId>org.picketlink</groupId>
-												<artifactId>picketlink-integration-ws-trust-unit-tests</artifactId>
+												<artifactId>picketlink-integration-ws-trust-tests</artifactId>
 												<version>${project.version}</version>
 												<type>test-jar</type>
 												<overWrite>true</overWrite>
@@ -155,7 +155,7 @@
 											</artifactItem>
 											<artifactItem>
 												<groupId>org.picketlink</groupId>
-												<artifactId>picketlink-integration-xacml-unit-tests</artifactId>
+												<artifactId>picketlink-integration-xacml-tests</artifactId>
 												<version>${project.version}</version>
 												<type>test-jar</type>
 												<overWrite>true</overWrite>
@@ -163,7 +163,7 @@
 											</artifactItem>
 											<artifactItem>
 												<groupId>org.picketlink</groupId>
-												<artifactId>picketlink-integration-trust-unit-tests</artifactId>
+												<artifactId>picketlink-integration-trust-tests</artifactId>
 												<version>${project.version}</version>
 												<type>test-jar</type>
 												<overWrite>true</overWrite>
@@ -200,7 +200,7 @@
 										<artifactItems>
 											<artifactItem>
 												<groupId>org.picketlink</groupId>
-												<artifactId>picketlink-integration-util-unit-tests</artifactId>
+												<artifactId>picketlink-integration-util-tests</artifactId>
 												<version>${project.version}</version>
 												<type>test-jar</type>
 												<overWrite>true</overWrite>
@@ -208,7 +208,7 @@
 											</artifactItem>
 											<artifactItem>
 												<groupId>org.picketlink</groupId>
-												<artifactId>picketlink-integration-saml-unit-tests</artifactId>
+												<artifactId>picketlink-integration-saml-tests</artifactId>
 												<version>${project.version}</version>
 												<type>test-jar</type>
 												<overWrite>true</overWrite>
@@ -244,7 +244,7 @@
 										<artifactItems>
 											<artifactItem>
 												<groupId>org.picketlink</groupId>
-												<artifactId>picketlink-integration-util-unit-tests</artifactId>
+												<artifactId>picketlink-integration-util-tests</artifactId>
 												<version>${project.version}</version>
 												<type>test-jar</type>
 												<overWrite>true</overWrite>
@@ -252,7 +252,7 @@
 											</artifactItem>
 											<artifactItem>
 												<groupId>org.picketlink</groupId>
-												<artifactId>picketlink-integration-ws-trust-unit-tests</artifactId>
+												<artifactId>picketlink-integration-ws-trust-tests</artifactId>
 												<version>${project.version}</version>
 												<type>test-jar</type>
 												<overWrite>true</overWrite>
@@ -288,7 +288,7 @@
 										<artifactItems>
 											<artifactItem>
 												<groupId>org.picketlink</groupId>
-												<artifactId>picketlink-integration-util-unit-tests</artifactId>
+												<artifactId>picketlink-integration-util-tests</artifactId>
 												<version>${project.version}</version>
 												<type>test-jar</type>
 												<overWrite>true</overWrite>
@@ -296,7 +296,7 @@
 											</artifactItem>
 											<artifactItem>
 												<groupId>org.picketlink</groupId>
-												<artifactId>picketlink-integration-xacml-unit-tests</artifactId>
+												<artifactId>picketlink-integration-xacml-tests</artifactId>
 												<version>${project.version}</version>
 												<type>test-jar</type>
 												<overWrite>true</overWrite>
@@ -332,7 +332,7 @@
 										<artifactItems>
 											<artifactItem>
 												<groupId>org.picketlink</groupId>
-												<artifactId>picketlink-integration-util-unit-tests</artifactId>
+												<artifactId>picketlink-integration-util-tests</artifactId>
 												<version>${project.version}</version>
 												<type>test-jar</type>
 												<overWrite>true</overWrite>
@@ -340,7 +340,7 @@
 											</artifactItem>
 											<artifactItem>
 												<groupId>org.picketlink</groupId>
-												<artifactId>picketlink-integration-trust-unit-tests</artifactId>
+												<artifactId>picketlink-integration-trust-tests</artifactId>
 												<version>${project.version}</version>
 												<type>test-jar</type>
 												<overWrite>true</overWrite>

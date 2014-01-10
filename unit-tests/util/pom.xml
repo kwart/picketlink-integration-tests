@@ -7,7 +7,7 @@
 		<version>2.5.3.Beta1</version>
 		<relativePath>../../parent</relativePath>
 	</parent>
-	<artifactId>picketlink-integration-util-unit-tests</artifactId>
+	<artifactId>picketlink-integration-util-tests</artifactId>
 	<dependencies>
        <dependency>
             <groupId>org.jboss.as</groupId>

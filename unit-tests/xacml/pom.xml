@@ -7,7 +7,7 @@
 		<version>2.5.3.Beta1</version>
 		<relativePath>../../parent</relativePath>
 	</parent>
-	<artifactId>picketlink-integration-xacml-unit-tests</artifactId>
+	<artifactId>picketlink-integration-xacml-tests</artifactId>
 	<build>
 		<plugins>
 			<plugin>
@@ -23,7 +23,7 @@
 		<dependency>
 			<groupId>org.picketlink</groupId>
 			<artifactId>
-				picketlink-integration-util-unit-tests
+				picketlink-integration-util-tests
 			</artifactId>
 			<version>${project.version}</version>
 			<type>test-jar</type>
