@@ -1,0 +1,48 @@
+/core-service=management/security-realm=SAMLRealm:add
+/core-service=management/security-realm=SAMLRealm/authentication=jaas:add(name=ejb-remoting-sts)
+
+/subsystem=remoting/connector=remoting-connector:write-attribute(name=security-realm,value=SAMLRealm)
+
+/subsystem=security/security-domain=idp:add(cache-type=default)
+/subsystem=security/security-domain=idp/authentication=classic:add
+/subsystem=security/security-domain=idp/authentication=classic/login-module=UsersRoles:add(code=UsersRoles, flag=required, module-options=[("usersProperties"=>"users.properties"), ("rolesProperties"=>"roles.properties")])
+
+/subsystem=security/security-domain=picketlink-sts:add(cache-type=default)
+/subsystem=security/security-domain=picketlink-sts/authentication=classic:add
+/subsystem=security/security-domain=picketlink-sts/authentication=classic/login-module=UsersRoles:add(code=UsersRoles, flag=required, module-options=[("usersProperties"=>"users.properties"), ("rolesProperties"=>"roles.properties")])
+
+/subsystem=security/security-domain=sp:add(cache-type=default)
+/subsystem=security/security-domain=sp/authentication=classic:add
+/subsystem=security/security-domain=sp/authentication=classic/login-module=org.picketlink.identity.federation.bindings.jboss.auth.SAML2LoginModule:add(code=org.picketlink.identity.federation.bindings.jboss.auth.SAML2LoginModule, flag=required)
+
+/subsystem=security/security-domain=authenticator:add(cache-type=default)
+/subsystem=security/security-domain=authenticator/authentication=classic:add
+/subsystem=security/security-domain=authenticator/authentication=classic/login-module=org.picketlink.test.trust.loginmodules.TestRequestUserLoginModule:add(code=org.picketlink.test.trust.loginmodules.TestRequestUserLoginModule, flag=required, module-options=[("usersProperties"=>"users.properties"), ("rolesProperties"=>"roles.properties")])
+
+/subsystem=security/security-domain=sts:add(cache-type=default)
+/subsystem=security/security-domain=sts/authentication=classic:add
+/subsystem=security/security-domain=sts/authentication=classic/login-module=org.picketlink.identity.federation.bindings.jboss.auth.SAML2STSLoginModule:add(code=org.picketlink.identity.federation.bindings.jboss.auth.SAML2STSLoginModule, flag=required, module-options=[("configFile"=>"sts-config.properties"), ("password-stacking"=>"useFirstPass")])
+/subsystem=security/security-domain=sts/authentication=classic/login-module=UsersRoles:add(code=UsersRoles, flag=required, module-options=[("usersProperties"=>"users.properties"), ("rolesProperties"=>"roles.properties"), ("password-stacking"=>"useFirstPass")])
+
+/subsystem=security/security-domain=localValidationDomain:add()
+/subsystem=security/security-domain=localValidationDomain/jsse=classic:add(keystore={password=keypass,type=JKS,url="file:///${jboss.server.config.dir}/stspub.jks"},server-alias=sts)
+
+/subsystem=security/security-domain=gateway:add(cache-type=default)
+/subsystem=security/security-domain=gateway/authentication=classic:add
+/subsystem=security/security-domain=gateway/authentication=classic/login-module=org.picketlink.test.trust.loginmodules.TokenSupplierTestLoginModule:add(code=org.picketlink.test.trust.loginmodules.TokenSupplierTestLoginModule, flag=required, module-options=[("map.token.key"=>"ClientID"), ("ClientID"=>"test-token-value:g2s-http"), ("password-stacking"=>"useFirstPass")])
+/subsystem=security/security-domain=gateway/authentication=classic/login-module=org.picketlink.trust.jbossws.jaas.JBWSTokenIssuingLoginModule:add(code=org.picketlink.trust.jbossws.jaas.JBWSTokenIssuingLoginModule, flag=required, module-options=[("endpointAddress"=>"http://localhost:8080/picketlink-sts/PicketLinkSTS"), ("serviceName"=>"PicketLinkSTS"), ("portName"=>"PicketLinkSTSPort"), ("inject.callerprincipal"=>"true"), ("map.token.key"=>"ClientID"), ("soapBinding"=>"http://www.w3.org/2003/05/soap/bindings/HTTP/"), ("isBatch"=>"false"), ("wspAppliesTo"=>"http://services.testcorp.org/provider1"), ("wsaIssuer"=>"http://services.testcorp.org/provider1"), ("roleKey"=>"Membership"), ("username"=>"UserA"), ("password"=>"PassA")])
+/subsystem=security/security-domain=gateway/authentication=classic/login-module=org.picketlink.trust.jbossws.jaas.SAMLRoleLoginModule:add(code=org.picketlink.trust.jbossws.jaas.SAMLRoleLoginModule, flag=required)
+
+/subsystem=security/security-domain=service:add(cache-type=default)
+/subsystem=security/security-domain=service/authentication=classic:add
+/subsystem=security/security-domain=service/authentication=classic/login-module=org.picketlink.identity.federation.bindings.jboss.auth.SAML2STSLoginModule:add(code=org.picketlink.identity.federation.bindings.jboss.auth.SAML2STSLoginModule, flag=required, module-options=[("password-stacking"=>"useFirstPass"), ("cache.invalidation"=>"true"), ("localValidation"=>"true"), ("localValidationSecurityDomain"=>"localValidationDomain"), ("tokenEncodingType"=>"gzip"), ("samlTokenHttpHeader"=>"Auth"), ("samlTokenHttpHeaderRegEx"=>".*\"(.*)\".*"), ("samlTokenHttpHeaderRegExGroup"=>"1")])
+/subsystem=security/security-domain=service/authentication=classic/login-module=org.picketlink.trust.jbossws.jaas.SAMLRoleLoginModule:add(code=org.picketlink.trust.jbossws.jaas.SAMLRoleLoginModule, flag=required)
+/subsystem=security/security-domain=service/jsse=classic:add(keystore={password=keypass,type=JKS,url="file:///${jboss.server.config.dir}/stspub.jks"},server-alias=sts)
+
+/subsystem=security/security-domain=ejb-remoting-sts:add(cache-type=default)
+/subsystem=security/security-domain=ejb-remoting-sts/authentication=classic:add
+/subsystem=security/security-domain=ejb-remoting-sts/authentication=classic/login-module=org.picketlink.identity.federation.bindings.jboss.auth.SAML2STSLoginModule:add(code=org.picketlink.identity.federation.bindings.jboss.auth.SAML2STSLoginModule, flag=required, module=org.picketlink, module-options=[("password-stacking"=>"useFirstPass"), ("configFile"=>"${jboss.server.config.dir}/sts-config.properties")])
+/subsystem=security/security-domain=ejb-remoting-sts/authentication=classic/login-module=UsersRoles:add(code=UsersRoles, flag=required, module-options=[("password-stacking"=>"useFirstPass"), ("usersProperties"=>"${jboss.server.config.dir}/ejb-sts-users.properties"), ("rolesProperties"=>"${jboss.server.config.dir}/ejb-sts-roles.properties")])
+
+:shutdown()
+
