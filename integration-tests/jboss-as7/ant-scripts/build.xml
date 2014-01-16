@@ -42,7 +42,7 @@
             <property name="jboss.as.dist.dir" value="${jboss.as.home}" />
         </ant>
 
-        <!-- Hack required to convince tested quickstarts to find appropriate picketlink sources. Remove once fixed. -->
+        <!-- Hack required to convince PicketLink to find appropriate dependencies. Remove once fixed. -->
         <xslt style="${basedir}/src/test/resources/xslt/addJavaxBindXmlDep.xsl"
               in="${jboss.as.home}/modules/system/layers/base/org/picketlink/common/main/module.xml"
               out="${jboss.as.home}/modules/system/layers/base/org/picketlink/common/main/module2.xml" />
@@ -50,11 +50,13 @@
               tofile="${jboss.as.home}/modules/system/layers/base/org/picketlink/common/main/module.xml"
               overwrite="true" />
 
-        <xslt style="${basedir}/src/test/resources/xslt/addOrgPicketlinkDep.xsl"
-              in="${jboss.as.home}/modules/system/layers/base/org/picketlink/main/module.xml"
-              out="${jboss.as.home}/modules/system/layers/base/org/picketlink/main/module2.xml" />
-        <move file="${jboss.as.home}/modules/system/layers/base/org/picketlink/main/module2.xml"
-              tofile="${jboss.as.home}/modules/system/layers/base/org/picketlink/main/module.xml"
+
+        <!-- Hack required to convince tests to find PicketLink. Remove once this is fixed in installer. -->
+        <xslt style="${basedir}/src/test/resources/xslt/addPicketlinkExtension.xsl"
+              in="${jboss.as.home}/standalone/configuration/standalone.xml"
+              out="${jboss.as.home}/standalone/configuration/standalone2.xml" />
+        <move file="${jboss.as.home}/standalone/configuration/standalone2.xml"
+              tofile="${jboss.as.home}/standalone/configuration/standalone.xml"
               overwrite="true" />
     </target>
 

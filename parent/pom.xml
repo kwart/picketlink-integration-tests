@@ -2,8 +2,8 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.picketlink</groupId>
-	<version>2.5.3.Beta1</version>
 	<artifactId>picketlink-integration-tests-parent</artifactId>
+    <version>2.5-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<properties>
 		<version.picketlink>2.5.3.Beta1</version.picketlink>
@@ -24,11 +24,16 @@
 
 		<!-- Test dependencies version. -->
 		<version.arqillian_jboss_as>7.1.1.Final</version.arqillian_jboss_as>
-		<version.arquillian>1.0.0.CR7</version.arquillian>
-		<version.arquillian_drone>1.0.0.CR4</version.arquillian_drone>
+		<version.arquillian>1.0.1.Final</version.arquillian>
+		<version.arquillian_drone>1.0.1.Final</version.arquillian_drone>
+        <version.arquillian.rest.extension>1.0.0.Final-SNAPSHOT</version.arquillian.rest.extension>
 		<version.junit>4.8.1</version.junit>
+        <version.com.jayway.restassured>1.8.1</version.com.jayway.restassured>
+        <version.resteasy>2.3.7.Final</version.resteasy>
+        <version.jackson>1.9.9</version.jackson>
 		<eap5-dist-zip>jboss-eap-noauth-5.2.0.zip</eap5-dist-zip>
 		<eap5-dir-structure>jboss-eap-5.2/jboss-as</eap5-dir-structure>
+        <version.org.jboss.spec.javaee6>3.0.2.Final</version.org.jboss.spec.javaee6>
 	</properties>
 
 	<dependencyManagement>
@@ -37,43 +42,37 @@
 				<groupId>org.picketlink</groupId>
 				<artifactId>picketlink-api</artifactId>
 				<version>${version.picketlink}</version>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.picketlink</groupId>
-				<artifactId>picketlink-config</artifactId>
-				<version>${version.picketlink}</version>
-				<scope>test</scope>
+				<scope>provided</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.picketlink</groupId>
 				<artifactId>picketlink-federation</artifactId>
 				<version>${version.picketlink}</version>
-				<scope>test</scope>
+				<scope>provided</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.picketlink</groupId>
 				<artifactId>picketlink-impl</artifactId>
 				<version>${version.picketlink}</version>
-				<scope>test</scope>
+				<scope>provided</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.picketlink</groupId>
 				<artifactId>picketlink-idm-api</artifactId>
 				<version>${version.picketlink}</version>
-				<scope>test</scope>
+				<scope>provided</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.picketlink</groupId>
 				<artifactId>picketlink-idm-impl</artifactId>
 				<version>${version.picketlink}</version>
-				<scope>test</scope>
+				<scope>provided</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.picketlink</groupId>
 				<artifactId>picketlink-idm-simple-schema</artifactId>
 				<version>${version.picketlink}</version>
-				<scope>test</scope>
+				<scope>provided</scope>
 			</dependency>
 
 			<!-- Test dependencies -->
@@ -84,6 +83,12 @@
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
+            <dependency>
+                <groupId>org.jboss.arquillian</groupId>
+                <artifactId>arquillian-junit-container</artifactId>
+                <version>${arquillian-version}</version>
+                <scope>test</scope>
+            </dependency>
 			<dependency>
 				<groupId>junit</groupId>
 				<artifactId>junit</artifactId>
@@ -97,14 +102,6 @@
 		<dependency>
 			<groupId>org.picketlink</groupId>
 			<artifactId>picketlink-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.picketlink</groupId>
-			<artifactId>picketlink-config</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.picketlink</groupId>
-			<artifactId>picketlink-federation</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.picketlink</groupId>
@@ -122,6 +119,10 @@
 			<groupId>org.picketlink</groupId>
 			<artifactId>picketlink-idm-simple-schema</artifactId>
 		</dependency>
+        <dependency>
+            <groupId>org.picketlink</groupId>
+            <artifactId>picketlink-federation</artifactId>
+        </dependency>
 
 		<!-- Test dependencies -->
 		<dependency>
@@ -170,6 +171,7 @@
 			<groupId>org.jboss.logging</groupId>
 			<artifactId>jboss-logging</artifactId>
 			<version>3.1.1.GA</version>
+            <scope>provided</scope>
 		</dependency>
 		
 		<dependency>
@@ -183,6 +185,7 @@
   			<groupId>ant-contrib</groupId>
   			<artifactId>ant-contrib</artifactId>
   			<version>1.0b3</version>
+            <scope>provided</scope>
   		</dependency>
 	</dependencies>
 
