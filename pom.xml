@@ -28,6 +28,9 @@
 
 				<!-- Integration test modules -->
 				<module>integration-tests</module>
+                <module>integration-tests/idm-aerogear-security</module>
+
+                <!-- Server projects -->
 				<module>integration-tests/jboss-as7</module>
 				<module>integration-tests/jboss-as5</module>
 <!-- 				<module>integration-tests/jboss-as5-cxf</module> -->
@@ -68,6 +71,9 @@
 
 				<!-- Integration test modules -->
 				<module>integration-tests</module>
+                <module>integration-tests/idm-aerogear-security</module>
+
+                <!-- Server projects -->
 				<module>integration-tests/jboss-as7</module>
 			</modules>
 		</profile>

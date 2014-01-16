@@ -1,0 +1,75 @@
+version: 1
+
+dn: dc=jboss,dc=org
+objectclass: dcObject
+objectclass: organization
+o: JBoss
+dc: JBoss
+
+dn: ou=People,dc=jboss,dc=org
+objectclass: top
+objectclass: organizationalUnit
+ou: People
+
+dn: ou=Agent,dc=jboss,dc=org
+objectclass: top
+objectclass: organizationalUnit
+ou: Agent
+
+dn: ou=CustomTypes,dc=jboss,dc=org
+objectclass: top
+objectclass: organizationalUnit
+ou: CustomTypes
+
+dn: ou=Roles,dc=jboss,dc=org
+objectclass: top
+objectclass: organizationalUnit
+ou: Roles
+
+dn: ou=Groups,dc=jboss,dc=org
+objectclass: top
+objectclass: organizationalUnit
+ou: Groups
+
+# Here start the data needed to execute the tests
+# FIXME - for some reason, it is not a good idea to put anything cn: user into LDAP database
+
+# Roles
+dn: cn=admin,ou=Roles,dc=jboss,dc=org
+objectclass: groupOfNames
+objectclass: top
+cn: admin
+ou: Roles
+member: uid=admin,ou=People,dc=jboss,dc=org
+
+dn: cn=developer,ou=Roles,dc=jboss,dc=org
+objectclass: groupOfNames
+objectclass: top
+cn: developer
+ou: Roles
+member: uid=developer,ou=People,dc=jboss,dc=org
+
+# Users 
+
+dn: uid=admin,ou=People,dc=jboss,dc=org
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: top
+uid: admin
+userpassword: 123
+cn: Almighty
+sn: Admin
+mail: admin@aerogear.org
+ou: People
+
+dn: uid=developer,ou=People,dc=jboss,dc=org
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+objectClass: top
+uid: developer
+userpassword: 123
+cn: Mighty
+sn: Developer
+mail: developer@aerogear.org
+ou: People
+
