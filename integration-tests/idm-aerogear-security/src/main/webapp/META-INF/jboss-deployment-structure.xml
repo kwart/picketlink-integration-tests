@@ -3,8 +3,6 @@
     <deployment>
         <!-- Add picketlink module dependency -->
         <dependencies>
-            <module name="org.jboss.resteasy.resteasy-jaxrs"/>
-
             <module name="org.picketlink.core"/>
             <module name="org.picketlink.idm.schema"/>
         </dependencies>
