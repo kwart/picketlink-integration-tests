@@ -8,13 +8,18 @@ import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/*
+import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.ALLOW_RESOURCE_SERVICE_RESTART;
+import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.OPERATION_HEADERS;
+*/
+
 public class InstallPicketLinkFileBasedSetupTask implements ServerSetupTask {
 
     private static final Logger log = Logger.getLogger(InstallPicketLinkFileBasedSetupTask.class.getSimpleName());
 
     @Override
     public void setup(ManagementClient managementClient, String containerId) throws Exception {
-        File workingDir = File.createTempFile("pl-idm", "workingdir");
+        File workingDir = File.createTempFile("pl-idm-aerogear-security", "workingdir");
         workingDir.delete();
         if (workingDir.mkdirs()) {
             workingDir.deleteOnExit();
@@ -50,6 +55,7 @@ public class InstallPicketLinkFileBasedSetupTask implements ServerSetupTask {
         step4.get("supportsAll").set(true);
 
         ModelNode op = ModelUtil.createCompositeNode(step1, step2, step3, step4);
+//        allowServiceRestart(op);
 
         // add picketlink subsystem
         boolean success = ModelUtil.execute(managementClient, op);
@@ -65,6 +71,7 @@ public class InstallPicketLinkFileBasedSetupTask implements ServerSetupTask {
         log.log(Level.INFO, "Deinstalling File Based Partition Manager from AS/EAP container");
 
         ModelNode op = ModelUtil.createOpNode("subsystem=picketlink/identity-management=picketlink-files", "remove");
+//        allowServiceRestart(op);
 
         // remove picketlink subsystem
         boolean success = ModelUtil.execute(managementClient, op);
@@ -74,4 +81,11 @@ public class InstallPicketLinkFileBasedSetupTask implements ServerSetupTask {
         // FIXME reload is not working due to https://bugzilla.redhat.com/show_bug.cgi?id=900065
         // managementClient.getControllerClient().execute(ModelUtil.createOpNode(null, "reload"));
     }
+/*
+
+    private ModelNode allowServiceRestart(ModelNode op) {
+        op.get(OPERATION_HEADERS).get(ALLOW_RESOURCE_SERVICE_RESTART).set(true);
+        return op;
+    }
+*/
 }

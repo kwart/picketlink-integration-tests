@@ -21,7 +21,10 @@ import org.jboss.aerogear.jaxrs.demo.service.UserValidationException;
 import org.jboss.aerogear.jaxrs.demo.user.SimpleUser;
 import org.jboss.aerogear.jaxrs.demo.utils.Utils;
 import org.picketlink.idm.IdentityManager;
+import org.picketlink.idm.RelationshipManager;
 import org.picketlink.idm.credential.Password;
+import org.picketlink.idm.model.basic.BasicModel;
+import org.picketlink.idm.model.basic.Role;
 import org.picketlink.idm.model.basic.User;
 
 import javax.ejb.Stateless;
@@ -37,6 +40,9 @@ public class UserRegistratorImpl implements UserRegistrator {
     @Inject
     private IdentityManager identityManager;
 
+    @Inject
+    private RelationshipManager relationshipManager;
+
     public SimpleUser register(SimpleUser userToRegister) throws UserValidationException {
 
         // first we validate him
@@ -49,6 +55,17 @@ public class UserRegistratorImpl implements UserRegistrator {
         // we set credentials & update him
         Password password = new Password(userToRegister.getPassword());
         this.identityManager.updateCredential(user, password);
+
+        if (userToRegister.getRoles() != null && ! userToRegister.getRoles().isEmpty()) {
+            for (String sRole : userToRegister.getRoles().split("\\s*,\\s*")) {
+                Role role = BasicModel.getRole(identityManager, sRole);
+                if (role == null) {
+                    role = new Role(sRole);
+                    identityManager.add(role);
+                }
+                BasicModel.grantRole(relationshipManager, user, role);
+            }
+        }
 
         return userToRegister;
     }

@@ -1,8 +1,11 @@
 package org.jboss.aerogear.jaxrs.rest.test;
 
+import org.jboss.arquillian.container.test.api.ContainerController;
+import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.as.arquillian.api.ServerSetupTask;
 import org.jboss.as.arquillian.container.ManagementClient;
 import org.jboss.dmr.ModelNode;
+//import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.*;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -12,6 +15,9 @@ public class InstallPicketLinkLdapBasedSetupTask implements ServerSetupTask {
     private static final Logger log = Logger.getLogger(InstallPicketLinkLdapBasedSetupTask.class.getSimpleName());
 
     private LDAPTestUtil ldapUtil;
+
+    @ArquillianResource
+    protected ContainerController container;
 
     @Override
     public void setup(ManagementClient managementClient, String containerId) throws Exception {
@@ -164,6 +170,7 @@ public class InstallPicketLinkLdapBasedSetupTask implements ServerSetupTask {
                 identityType, relationshipType, agentMapping, agentMappingAttr, userMapping, userMappingAttr1,
                 userMappingAttr2, userMappingAttr3, userMappingAttr4, roleMapping, roleMappingAttr,
                 groupMapping, groupMappingAttr, grantMapping, grantMappingAttr);
+//        allowServiceRestart(op);
 
         // add picketlink subsystem
         boolean success = ModelUtil.execute(managementClient, op);
@@ -183,6 +190,7 @@ public class InstallPicketLinkLdapBasedSetupTask implements ServerSetupTask {
         log.log(Level.INFO, "Deinstalling LDAP Based Partition Manager from AS/EAP container");
 
         ModelNode op = ModelUtil.createOpNode("subsystem=picketlink/identity-management=picketlink-ldap", "remove");
+//        allowServiceRestart(op);
 
         // remove picketlink subsystem
         boolean success = ModelUtil.execute(managementClient, op);
@@ -193,4 +201,11 @@ public class InstallPicketLinkLdapBasedSetupTask implements ServerSetupTask {
         // managementClient.getControllerClient().execute(ModelUtil.createOpNode(null, "reload"));
     }
 
+/*
+    private ModelNode allowServiceRestart(ModelNode op) {
+        op.get(OPERATION_HEADERS).get(ALLOW_RESOURCE_SERVICE_RESTART).set(true);
+        return op;
+    }
+
+*/
 }

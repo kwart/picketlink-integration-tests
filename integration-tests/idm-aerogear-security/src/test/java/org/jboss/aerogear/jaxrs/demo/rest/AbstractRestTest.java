@@ -14,11 +14,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.aerogear.jaxrs.rest.test;
+package org.jboss.aerogear.jaxrs.demo.rest;
 
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Header;
+import com.jayway.restassured.specification.RequestSpecification;
+import org.apache.http.util.EntityUtils;
 import org.jboss.aerogear.jaxrs.demo.rest.endpoint.LoginEndpoint;
 import org.jboss.aerogear.jaxrs.demo.rest.endpoint.RegistrationEndpoint;
 import org.jboss.aerogear.jaxrs.demo.user.SimpleUser;
@@ -32,10 +34,12 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.json.simple.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
+import org.picketlink.idm.model.Attribute;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 import java.io.File;
+import java.io.Serializable;
 import java.net.URL;
 
 
@@ -44,6 +48,8 @@ import java.net.URL;
  * 
  */
 public class AbstractRestTest {
+
+    public static final String REST_APP_URI_BASE = "rest";
 
     @ArquillianResource
     private URL context;
@@ -55,7 +61,7 @@ public class AbstractRestTest {
 
     @Test
     @InSequence(0)
-    public void testSanity(@ArquillianResteasyResource("rest") LoginEndpoint loginEndpoint) {
+    public void testSanity(@ArquillianResteasyResource(REST_APP_URI_BASE) LoginEndpoint loginEndpoint) {
         Assert.assertNotNull("context must not be null", context);
         Assert.assertNotNull("loginEndpoint must not be null", loginEndpoint);
         Assert.assertEquals("Hello", loginEndpoint.hello());
@@ -63,7 +69,7 @@ public class AbstractRestTest {
 
     @Test
     @InSequence(1)
-    public void testRegistration(@ArquillianResteasyResource("rest") RegistrationEndpoint registrationEndpoint) {
+    public void testRegistration(@ArquillianResteasyResource(REST_APP_URI_BASE) RegistrationEndpoint registrationEndpoint) {
         Assert.assertNotNull("registrationEndpoint must not be null", registrationEndpoint);
         Response response = registrationEndpoint.register(getUser("someuser", "someuser@email.com", "mypassword"));
         Assert.assertEquals(Status.OK.getStatusCode(), response.getStatus());
@@ -71,7 +77,7 @@ public class AbstractRestTest {
 
     @Test
     @InSequence(2)
-    public void testDuplicateRegistration(@ArquillianResteasyResource("rest") RegistrationEndpoint registrationEndpoint) {
+    public void testDuplicateRegistration(@ArquillianResteasyResource(REST_APP_URI_BASE) RegistrationEndpoint registrationEndpoint) {
         Assert.assertNotNull("registrationEndpoint must not be null", registrationEndpoint);
         Response response = registrationEndpoint.register(getUser("someuser", "someuser@email.com", "mypassword"));
         Assert.assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
@@ -79,7 +85,7 @@ public class AbstractRestTest {
 
     @Test
     @InSequence(3)
-    public void testNotSpecifiedFields(@ArquillianResteasyResource("rest") RegistrationEndpoint registrationEndpoint) {
+    public void testNotSpecifiedFields(@ArquillianResteasyResource(REST_APP_URI_BASE) RegistrationEndpoint registrationEndpoint) {
         Assert.assertNotNull("registrationEndpoint must not be null", registrationEndpoint);
         Response response = registrationEndpoint.register(getUser("someuser", null, null));
         Assert.assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
@@ -87,7 +93,7 @@ public class AbstractRestTest {
 
     @Test
     @InSequence(4)
-    public void loginIncompleteUser(@ArquillianResteasyResource("rest") LoginEndpoint loginEndpoint) {
+    public void loginIncompleteUser(@ArquillianResteasyResource(REST_APP_URI_BASE) LoginEndpoint loginEndpoint) {
         Assert.assertNotNull("loginEndpoint must not be null", loginEndpoint);
         Response response = loginEndpoint.login(getUser("someuser", null, null));
         Assert.assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
@@ -95,7 +101,7 @@ public class AbstractRestTest {
 
     @Test
     @InSequence(5)
-    public void loginNotRegisteredUser(@ArquillianResteasyResource("rest") LoginEndpoint loginEndpoint) {
+    public void loginNotRegisteredUser(@ArquillianResteasyResource(REST_APP_URI_BASE) LoginEndpoint loginEndpoint) {
         Assert.assertNotNull("loginEndpoint must not be null", loginEndpoint);
         Response response = loginEndpoint.login(getUser("nonregistered", "someemail@email.com", "whatever"));
         Assert.assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
@@ -103,7 +109,7 @@ public class AbstractRestTest {
 
     @Test
     @InSequence(6)
-    public void loginUserWithWrongPassword(@ArquillianResteasyResource("rest") LoginEndpoint loginEndpoint) {
+    public void loginUserWithWrongPassword(@ArquillianResteasyResource(REST_APP_URI_BASE) LoginEndpoint loginEndpoint) {
         Assert.assertNotNull("loginEndpoint must not be null", loginEndpoint);
         Response response = loginEndpoint.login(getUser("someuser", null, "wrongpassword"));
         Assert.assertEquals(Status.UNAUTHORIZED.getStatusCode(), response.getStatus());
@@ -132,7 +138,7 @@ public class AbstractRestTest {
         request.cookie("JSESSIONID", cookie);
         Assert.assertEquals("Expected HTTP status OK", Status.OK.getStatusCode(), request.post().getStatus());
     }
-    
+
     private SimpleUser getUser(String loginName, String email, String password) {
         SimpleUser user = new SimpleUser();
         user.setLoginName(loginName);
@@ -141,4 +147,5 @@ public class AbstractRestTest {
         user.setCreatedDate(null);
         return user;
     }
+
 }

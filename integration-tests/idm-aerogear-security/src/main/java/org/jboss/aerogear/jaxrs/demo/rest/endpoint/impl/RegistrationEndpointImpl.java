@@ -61,6 +61,7 @@ public class RegistrationEndpointImpl implements RegistrationEndpoint {
         try {
             if (BasicModel.getUser(this.identityManager, userToRegister.getLoginName()) == null) {
                 registeredUser = userRegistrator.register(userToRegister);
+
                 return Response.ok().entity(registeredUser).build();
             } else {
                 response.put("error", "This username already exists. Try another one!");

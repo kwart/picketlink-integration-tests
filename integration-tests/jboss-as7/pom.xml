@@ -1,17 +1,21 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<parent>
+
+    <parent>
 		<artifactId>picketlink-integration-container</artifactId>
 		<groupId>org.picketlink</groupId>
         <version>2.5-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
+
 	<artifactId>picketlink-integration-jbas7</artifactId>
 
 	<properties>
 		<binding.server>jboss-as7</binding.server>
-		<picketlink.binding>jbas7</picketlink.binding>		
+		<picketlink.binding>jbas7</picketlink.binding>
+
+        <!-- Boolean flag determining whether copying of the PL libraries from local maven repository should be skipped -->
 		<picketlink.skip.lib.copy>true</picketlink.skip.lib.copy>
 
         <!-- If picketlink.skip.lib.copy is true, this Boolean flag determines whether
@@ -28,8 +32,12 @@
         <!-- Settings for Maven resolver in the tests. See MavenArtifactUtil.getMavenArchiveResolver() method -->
         <picketlink.ts.maven.user.settings>/path/to/picketlink/settings.xml</picketlink.ts.maven.user.settings>
 
+        <!-- Name of the EAP zip distribution file -->
 		<jbas7.dist.zip>jboss-eap-6.2.0.zip</jbas7.dist.zip>
+
+        <!-- Root of the extracted EAP installation -->
 		<jboss.as.home>${integration.tests.containers.dir}/jboss-eap-6.2</jboss.as.home>
+
 		<jboss.as.picketlink.lib.dir>${jboss.as.home}/modules/system/layers/base/org/picketlink/main</jboss.as.picketlink.lib.dir>
 		<version.jboss-client>${version.jboss_as7}</version.jboss-client>
 		<version.remoting3>3.2.15.GA</version.remoting3>
