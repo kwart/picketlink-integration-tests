@@ -24,7 +24,9 @@ package org.picketlink.test.trust.tests;
 import java.io.File;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
+import java.security.Provider;
 import java.security.Security;
+import java.util.Locale;
 import java.util.Properties;
 
 import javax.ejb.EJBAccessException;
@@ -37,10 +39,10 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.container.test.api.TargetsContainer;
 import org.jboss.logging.Logger;
-import org.jboss.shrinkwrap.api.ArchivePaths;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.Assume;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.picketlink.identity.federation.bindings.jboss.auth.SAML2STSLoginModule;
@@ -50,8 +52,6 @@ import org.picketlink.test.integration.util.TargetContainers;
 import org.picketlink.test.trust.ejb.EchoService;
 import org.picketlink.test.trust.ejb.EchoServiceImpl;
 import org.w3c.dom.Element;
-//import com.sun.security.sasl.Provider;
-import java.security.Provider;
 
 /**
  * <p>
@@ -62,7 +62,7 @@ import java.security.Provider;
  */
 @RunWith(PicketLinkIntegrationTests.class)
 @RunAsClient
-@TargetContainers({"jbas7", "eap6"})
+@TargetContainers({ "jbas7", "eap6" })
 public class EJBAuthorizationAS7TestCase extends TrustTestsBase {
 
     private static final Logger log = Logger.getLogger(EJBAuthorizationAS7TestCase.class);
@@ -76,14 +76,6 @@ public class EJBAuthorizationAS7TestCase extends TrustTestsBase {
         archive.addClass(EchoServiceImpl.class);
         archive.addAsManifestResource(new File(EJBAuthorizationAS7TestCase.class.getClassLoader()
                 .getResource("jboss-deployment-structure.xml").getPath()));
-        /*
-        archive.addAsResource(
-                new File(EJBAuthorizationAS7TestCase.class.getClassLoader().getResource("props/sts-users.properties").getPath()),
-                ArchivePaths.create("users.properties"));
-        archive.addAsResource(
-                new File(EJBAuthorizationAS7TestCase.class.getClassLoader().getResource("props/sts-roles.properties").getPath()),
-                ArchivePaths.create("roles.properties"));
-    */
         return archive;
     }
 
@@ -95,9 +87,11 @@ public class EJBAuthorizationAS7TestCase extends TrustTestsBase {
 
     @Test
     public void testSuccessfulEJBInvocation() throws Exception {
+        // https://bugzilla.redhat.com/show_bug.cgi?id=1056622
+        Assume.assumeTrue(!System.getProperty("java.vendor").toUpperCase(Locale.ENGLISH).contains("IBM"));
+
         // add the JDK SASL Provider that allows to use the PLAIN SASL Client
-    	addProvider();
-        //Security.addProvider(new Provider());
+        addProvider();
 
         Element assertion = getAssertionFromSTS("UserA", "PassA");
 
@@ -110,7 +104,6 @@ public class EJBAuthorizationAS7TestCase extends TrustTestsBase {
         jndiProps.setProperty("jboss.naming.client.connect.options.org.xnio.Options.SASL_POLICY_NOPLAINTEXT", "false");
         jndiProps.setProperty("javax.security.sasl.policy.noplaintext", "false");
 
-
         String assertionString = DocumentUtil.getNodeAsString(assertion);
 
         jndiProps.setProperty(Context.SECURITY_PRINCIPAL, "UserA");
@@ -119,20 +112,23 @@ public class EJBAuthorizationAS7TestCase extends TrustTestsBase {
         // create the JNDI Context and perform the authentication using the SAML2STSLoginModule
         Context context = new InitialContext(jndiProps);
 
-     //   String remoteJNDIContext = createRemoteEjbJndiContext("", "ejb-test", "", EchoServiceImpl.class.getSimpleName(), EchoService.class.getName(), false);
+        // String remoteJNDIContext = createRemoteEjbJndiContext("", "ejb-test", "", EchoServiceImpl.class.getSimpleName(),
+        // EchoService.class.getName(), false);
         String remoteJNDIContext = "ejb-test//EchoServiceImpl!org.picketlink.test.trust.ejb.EchoService";
-        log.debug("remoteJNDIContext="+remoteJNDIContext);
+        log.debug("remoteJNDIContext=" + remoteJNDIContext);
         // lookup the EJB
         EchoService object = (EchoService) context.lookup(remoteJNDIContext);
         // If everything is ok the Principal name will be added to the message
         Assert.assertEquals("Hi UserA", object.echo("Hi "));
     }
 
-    @Test(expected = EJBAccessException.class)
+    @Test
     public void testNotAuthorizedEJBInvocation() throws Exception {
+        // https://bugzilla.redhat.com/show_bug.cgi?id=1056622
+        Assume.assumeTrue(!System.getProperty("java.vendor").toUpperCase(Locale.ENGLISH).contains("IBM"));
+
         // add the JDK SASL Provider that allows to use the PLAIN SASL Client
         addProvider();
-    	//Security.addProvider(new Provider());
 
         // issue a new SAML Assertion using the PicketLink STS
         Element assertion = getAssertionFromSTS("UserA", "PassA");
@@ -147,7 +143,7 @@ public class EJBAuthorizationAS7TestCase extends TrustTestsBase {
         jndiProps.setProperty("javax.security.sasl.policy.noplaintext", "false");
 
         String assertionString = DocumentUtil.getNodeAsString(assertion);
-        
+
         // provide the user principal and credential. The credential is the previously issued SAML assertion
         jndiProps.setProperty(Context.SECURITY_PRINCIPAL, "UserA");
         jndiProps.setProperty(Context.SECURITY_CREDENTIALS, assertionString);
@@ -155,58 +151,56 @@ public class EJBAuthorizationAS7TestCase extends TrustTestsBase {
         // create the JNDI Context and perform the authentication using the SAML2STSLoginModule
         Context context = new InitialContext(jndiProps);
 
-     //   String remoteJNDIContext = createRemoteEjbJndiContext("", "ejb-test", "", EchoServiceImpl.class.getSimpleName(), EchoService.class.getName(), false);
+        // String remoteJNDIContext = createRemoteEjbJndiContext("", "ejb-test", "", EchoServiceImpl.class.getSimpleName(),
+        // EchoService.class.getName(), false);
         String remoteJNDIContext = "ejb-test//EchoServiceImpl!org.picketlink.test.trust.ejb.EchoService";
 
-        log.debug("remoteJNDIContext="+remoteJNDIContext);
+        log.debug("remoteJNDIContext=" + remoteJNDIContext);
         // lookup the EJB
         EchoService object = (EchoService) context.lookup(remoteJNDIContext);
-
-        // If everything is ok the Principal name will be added to the message
-        Assert.assertEquals("Hi UserA", object.echoUnchecked("Hi "));
+        try {
+            object.echoUnchecked("Hi ");
+            Assert.fail("EJBAccessException was expected.");
+        } catch (EJBAccessException e) {
+            // OK
+        }
     }
 
     /**
-     * Creates JNDI context string based on given parameters.
-     * See details at https://docs.jboss.org/author/display/AS71/EJB+invocations+from+a+remote+client+using+JNDI
+     * Creates JNDI context string based on given parameters. See details at
+     * https://docs.jboss.org/author/display/AS71/EJB+invocations+from+a+remote+client+using+JNDI
      *
-     * @param appName - typically the ear name without the .ear
-     *                - could be empty string when deploying just jar with EJBs
+     * @param appName - typically the ear name without the .ear - could be empty string when deploying just jar with EJBs
      * @param moduleName - jar file name without trailing .jar
-     * @param distinctName - AS7 allows each deployment to have an (optional) distinct name
-     *                     - could be empty string when not specified
+     * @param distinctName - AS7 allows each deployment to have an (optional) distinct name - could be empty string when not
+     *        specified
      * @param beanName - The EJB name which by default is the simple class name of the bean implementation class
      * @param viewClassName - the remote view is fully qualified class name of @Remote EJB interface
      * @param isStateful - if the bean is stateful set to true
      *
      * @return - JNDI context string to use in your client JNDI lookup
      */
-    public static String createRemoteEjbJndiContext(
-            String appName,
-            String moduleName,
-            String distinctName,
-            String beanName,
-            String viewClassName,
-            boolean isStateful) {
+    public static String createRemoteEjbJndiContext(String appName, String moduleName, String distinctName, String beanName,
+            String viewClassName, boolean isStateful) {
 
         return "ejb:" + appName + "/" + moduleName + "/" + distinctName + "/" + beanName + "!" + viewClassName
                 + (isStateful ? "?stateful" : "");
     }
-    
+
     private void addProvider() {
+        try {
+            Provider provider = (Provider) Class.forName("com.sun.security.sasl.Provider").getConstructor().newInstance();
+            Security.addProvider(provider);
+        } catch (Exception e) {
             try {
-                Provider provider = (Provider) Class.forName("com.sun.security.sasl.Provider").getConstructor().newInstance();
+                Provider provider = (Provider) Class.forName("com.ibm.security.sasl.IBMSASL").getConstructor().newInstance();
                 Security.addProvider(provider);
-            } catch (Exception e) {
-                try {
-                    Provider provider = (Provider) Class.forName("com.ibm.security.sasl.IBMSASL").getConstructor().newInstance();
-                    Security.addProvider(provider);
-                } catch (Exception ex) {
-                    System.err
-                            .println("Unable to register com.sun.security.sasl.Provider or com.ibm.security.sasl.IBMSASL security provider.");
-                    e.printStackTrace();
-                }
+            } catch (Exception ex) {
+                System.err
+                        .println("Unable to register com.sun.security.sasl.Provider or com.ibm.security.sasl.IBMSASL security provider.");
+                e.printStackTrace();
             }
+        }
     }
 
 }
