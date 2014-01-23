@@ -13,6 +13,7 @@
 	<properties>
 		<integration.tests.dir>${basedir}/target/integration-tests</integration.tests.dir>
 		<integration.tests.containers.dir>${integration.tests.dir}/containers</integration.tests.containers.dir>
+		<arquillian.container>jboss</arquillian.container>
 	</properties>
 
 	<build>
@@ -53,6 +54,62 @@
 				<artifactId>maven-failsafe-plugin</artifactId>
 				<version>2.12</version>
 				<executions>
+                    <execution>
+                        <id>integration-test-manual-mode</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>**/*ManualTestCase.java</include>
+                            </includes>
+                            <systemProperties>
+                                <property>
+                                    <name>project.artifactId</name>
+                                    <value>${project.artifactId}</value>
+                                </property>
+                                <property>
+                                    <name>project.version</name>
+                                    <value>${project.version}</value>
+                                </property>
+                                <property>
+                                    <name>version.picketlink</name>
+                                    <value>${version.picketlink}</value>
+                                </property>
+                                <property>
+                                    <name>version.picketlink.quickstarts</name>
+                                    <value>${version.picketlink.quickstarts}</value>
+                                </property>
+                                <property>
+                                    <name>binding</name>
+                                    <value>${binding.server}</value>
+                                </property>
+                                <property>
+                                    <name>jboss.as.home</name>
+                                    <value>${jboss.as.home}</value>
+                                </property>
+                                <property>
+                                    <name>maven.repo.local</name>
+                                    <value>${settings.localRepository}</value>
+                                </property>
+                                <property>
+                                    <name>picketlink.ts.maven.user.settings</name>
+                                    <value>${picketlink.ts.maven.user.settings}</value>
+                                </property>
+                                <property>
+                                    <name>JAVA_OPTS</name>
+                                    <value>${env.JAVA_OPTS}</value>
+                                </property>
+                                <property>
+                                    <name>arquillian.container</name>
+                                    <value>server-manual</value>
+                                </property>
+                            </systemProperties>
+                            <reportNameSuffix>SAML-${binding.server}</reportNameSuffix>
+                        </configuration>
+                    </execution>
+
 					<execution>
 						<id>integration-test</id>
 						<goals>
@@ -63,6 +120,9 @@
 							<includes>
 								<include>**/*TestCase.java</include>
 							</includes>
+							<excludes>
+								<exclude>**/*ManualTestCase.java</exclude>
+							</excludes>
 							<systemProperties>
 								<property>
 									<name>project.artifactId</name>
@@ -398,8 +458,9 @@
 		</profile>
 
 		<profile>
-			<id>idm-aerogear-tests</id>
+			<id>idm-aerogear-security-tests</id>
             <activation><activeByDefault>false</activeByDefault></activation>
+
             <dependencies>
                 <dependency>
                     <groupId>org.picketlink</groupId>
@@ -426,16 +487,18 @@
                             <configuration>
                                 <failOnWarning>false</failOnWarning>
                             </configuration>
+<!--
                             <executions>
                                 <execution>
                                     <id>process-test-classes-dependency-analyze</id>
-                                    <!-- needs all code to be compiled -->
+                                    &lt;!&ndash; needs all code to be compiled &ndash;&gt;
                                     <phase>process-classes</phase>
                                     <goals>
                                         <goal>tree</goal>
                                     </goals>
                                 </execution>
                             </executions>
+-->
                         </plugin>
 
                         <plugin>

@@ -14,7 +14,6 @@
         </extensions>
 	</xsl:template>
 
-	<!-- If the extension is already defined, remove it to configure it again. -->
 	<xsl:template match="//as:server/as:profile">
 		<profile>
 			<xsl:apply-templates select="@* | *" />
