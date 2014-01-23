@@ -23,7 +23,7 @@
 		<version.tomcat_6>6.0.26</version.tomcat_6>
 
 		<!-- Test dependencies version. -->
-		<version.arqillian_jboss_as>7.1.1.Final</version.arqillian_jboss_as>
+		<version.arqillian_jboss_as>7.2.0.Final</version.arqillian_jboss_as>
 		<version.arquillian>1.0.1.Final</version.arquillian>
 		<version.arquillian_drone>1.0.1.Final</version.arquillian_drone>
         <version.arquillian.rest.extension>1.0.0.Final-SNAPSHOT</version.arquillian.rest.extension>

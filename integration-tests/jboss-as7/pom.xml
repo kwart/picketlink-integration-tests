@@ -30,7 +30,7 @@
 
 
         <!-- Settings for Maven resolver in the tests. See MavenArtifactUtil.getMavenArchiveResolver() method -->
-        <picketlink.ts.maven.user.settings>/path/to/picketlink/settings.xml</picketlink.ts.maven.user.settings>
+        <picketlink.ts.maven.user.settings></picketlink.ts.maven.user.settings>
 
         <!-- Name of the EAP zip distribution file -->
 		<jbas7.dist.zip>jboss-eap-6.2.0.zip</jbas7.dist.zip>
