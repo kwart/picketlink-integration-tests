@@ -14,8 +14,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.aerogear.jaxrs.demo.user;
+package org.jboss.aerogear.jaxrs.rest.producer;
 
+import org.jboss.aerogear.jaxrs.demo.user.UserRoles;
 import org.picketlink.idm.IdentityManager;
 import org.picketlink.idm.PartitionManager;
 import org.picketlink.idm.RelationshipManager;
@@ -29,28 +30,32 @@ import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.inject.Inject;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 @Singleton
 @Startup
 public class PicketLinkDefaultUsers {
 
-    final String DEFAULT_JOHN_LOGIN_NAME = "john";
-    final String DEFAULT_JOHN_EMAIL = "john@doe.com";
-    final String DEFAULT_JOHN_FIRST_NAME = "John";
-    final String DEFAULT_JOHN_LAST_NAME = "Doe";
-    final String DEFAULT_JOHN_PASSWORD = "123";
+    public static final String DEFAULT_JOHN_LOGIN_NAME = "john";
+    public static final String DEFAULT_JOHN_EMAIL = "john@doe.com";
+    public static final String DEFAULT_JOHN_FIRST_NAME = "John";
+    public static final String DEFAULT_JOHN_LAST_NAME = "Doe";
+    public static final String DEFAULT_JOHN_PASSWORD = "123";
 
-    final String DEFAULT_AGNES_LOGIN_NAME = "agnes";
-    final String DEFAULT_AGNES_EMAIL = "agnes@agnes.com";
-    final String DEFAULT_AGNES_FIRST_NAME = "Agnes";
-    final String DEFAULT_AGNES_LAST_NAME = "Doe";
-    final String DEFAULT_AGNES_PASSWORD = "123";
+    public static final String DEFAULT_AGNES_LOGIN_NAME = "agnes";
+    public static final String DEFAULT_AGNES_EMAIL = "agnes@agnes.com";
+    public static final String DEFAULT_AGNES_FIRST_NAME = "Agnes";
+    public static final String DEFAULT_AGNES_LAST_NAME = "Doe";
+    public static final String DEFAULT_AGNES_PASSWORD = "123";
 
     @Inject
     private PartitionManager partitionManager;
 
     private IdentityManager identityManager;
     private RelationshipManager relationshipManager;
+
+    public static final Logger LOG = Logger.getLogger(PicketLinkDefaultUsers.class.getName());
 
     /**
      * <p>
@@ -59,6 +64,7 @@ public class PicketLinkDefaultUsers {
      */
     @PostConstruct
     public void create() {
+        LOG.log(Level.INFO, "PartitionManager: {0}", partitionManager);
 
         // this need to be here since APE from tests cleans it so that partition does not exist anymore
         Realm defaultRealm = partitionManager.getPartition(Realm.class, Realm.DEFAULT_REALM);

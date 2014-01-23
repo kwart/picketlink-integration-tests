@@ -6,24 +6,24 @@ import com.jayway.restassured.response.Header;
 import com.jayway.restassured.specification.RequestSpecification;
 import org.jboss.aerogear.jaxrs.demo.rest.endpoint.RegistrationEndpoint;
 import org.jboss.aerogear.jaxrs.demo.user.SimpleUser;
-import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.aerogear.jaxrs.demo.user.UserRoles;
 import org.jboss.arquillian.extension.rest.client.ArquillianResteasyResource;
 import org.jboss.arquillian.junit.InSequence;
 import org.jboss.arquillian.test.api.ArquillianResource;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.json.simple.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
 
 import javax.ws.rs.core.Response;
-import java.io.File;
 import java.net.URL;
+import java.util.logging.Logger;
 
 /**
  * Created by hmlnarik on 1/17/14.
  */
 public class AbstractSecureAnnotationTest {
+
+    private static final Logger LOG = Logger.getLogger(AbstractSecureAnnotationTest.class.getSimpleName());
 
     public static final String REST_APP_URI_BASE = "rest";
 
@@ -35,12 +35,14 @@ public class AbstractSecureAnnotationTest {
 
     public static final String REST_PROTECTED_URI_BASE = REST_APP_URI_BASE + "/protected";
 
-    @ArquillianResource
+    public static final String DEPLOYMENT_NAME = "testSecureAnnotationDeployment";
+    public static final String SERVER_QUALIFIER = "server-manual";
+
     private URL context;
 
-    @Deployment(testable = false)
-    public static WebArchive getDeployment() {
-        return ShrinkWrap.createFromZipFile(WebArchive.class, new File("../../integration-tests/idm-aerogear-security/target/aerogear-rest-test.war"));
+    private void setContext(URL url) {
+        Assert.assertNotNull("url must not be null", url);
+        this.context = url;
     }
 
     protected String loginAdmin() {
@@ -48,27 +50,34 @@ public class AbstractSecureAnnotationTest {
         jsonObject.put("loginName", USER_NAME_ADMIN);
         jsonObject.put("password", PASSWORD_ADMIN);
 
+        Assert.assertNotNull("context must not be null", this.context);
+
         com.jayway.restassured.response.Response response = RestAssured.given()
                 .contentType(ContentType.JSON)
                 .header(new Header("Accept", "application/JSON"))
                 .body(jsonObject.toJSONString())
-                .post("{root}" + REST_APP_URI_BASE + "/auth/login", context.toExternalForm());
+                .post("{root}" + REST_APP_URI_BASE + "/auth/login", this.context.toExternalForm());
 
+        Assert.assertNotNull("response must not be null", response);
         Assert.assertEquals("login", Response.Status.OK.getStatusCode(), response.getStatusCode());
 
         return response.getCookie("JSESSIONID");
     }
 
-    protected String loginDeveloper() {
+    protected String loginUser() {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("loginName", USER_NAME_DEVELOPER);
         jsonObject.put("password", PASSWORD_DEVELOPER);
+
+        Assert.assertNotNull("context must not be null", this.context);
 
         com.jayway.restassured.response.Response response = RestAssured.given()
                 .contentType(ContentType.JSON)
                 .header(new Header("Accept", "application/JSON"))
                 .body(jsonObject.toJSONString())
-                .post("{root}" + REST_APP_URI_BASE + "/auth/login", context.toExternalForm());
+                .post("{root}" + REST_APP_URI_BASE + "/auth/login", this.context.toExternalForm());
+
+        Assert.assertNotNull("response must not be null", response);
 
         return response.getCookie("JSESSIONID");
     }
@@ -76,13 +85,16 @@ public class AbstractSecureAnnotationTest {
     protected int logout(String cookie) {
         JSONObject jsonObject = new JSONObject();
 
+        Assert.assertNotNull("context must not be null", this.context);
+
         com.jayway.restassured.response.Response response = RestAssured.given()
                 .contentType(ContentType.JSON)
                 .header(new Header("Accept", "application/JSON"))
                 .body(jsonObject.toJSONString())
                 .cookie("JSESSIONID", cookie)
-                .post("{root}" + REST_APP_URI_BASE + "/auth/logout", context.toExternalForm());
+                .post("{root}" + REST_APP_URI_BASE + "/auth/logout", this.context.toExternalForm());
 
+        Assert.assertNotNull("response must not be null", response);
         Assert.assertEquals("logout", Response.Status.OK.getStatusCode(), response.getStatusCode());
 
         return response.getStatusCode();
@@ -97,9 +109,12 @@ public class AbstractSecureAnnotationTest {
             spec = spec.cookie("JSESSIONID", cookie);
         }
 
-        com.jayway.restassured.response.Response response = spec
-                .get("{root}" + REST_PROTECTED_URI_BASE + "/" + method, context.toExternalForm());
+        Assert.assertNotNull("context must not be null", this.context);
 
+        com.jayway.restassured.response.Response response = spec
+                .get("{root}" + REST_PROTECTED_URI_BASE + "/" + method, this.context.toExternalForm());
+
+        Assert.assertNotNull("response must not be null", response);
         Assert.assertEquals("Expecting response code 200 (OK).", Response.Status.OK.getStatusCode(), response.getStatusCode());
         Assert.assertEquals(method, response.body().asString());
 
@@ -117,8 +132,10 @@ public class AbstractSecureAnnotationTest {
             spec = spec.cookie("JSESSIONID", cookie);
         }
 
+        Assert.assertNotNull("context must not be null", this.context);
+
         com.jayway.restassured.response.Response response = spec
-                .get("{root}" + REST_PROTECTED_URI_BASE + "/" + method, context.toExternalForm());
+                .get("{root}" + REST_PROTECTED_URI_BASE + "/" + method, this.context.toExternalForm());
 
         Assert.assertEquals("Expecting response code 401 (UNAUTHORIZED).", Response.Status.UNAUTHORIZED.getStatusCode(), response.getStatusCode());
 
@@ -129,9 +146,9 @@ public class AbstractSecureAnnotationTest {
 
     @Test
     @InSequence(101)
-    public void registerDeveloper(@ArquillianResteasyResource(REST_APP_URI_BASE) RegistrationEndpoint registrationEndpoint) {
+    public void registerUser(@ArquillianResteasyResource(REST_APP_URI_BASE) RegistrationEndpoint registrationEndpoint) {
         Assert.assertNotNull("registrationEndpoint must not be null", registrationEndpoint);
-        Response response = registrationEndpoint.register(getUser(USER_NAME_DEVELOPER, "developer@email.com", PASSWORD_DEVELOPER, "developer"));
+        Response response = registrationEndpoint.register(getUser(USER_NAME_DEVELOPER, "developer@email.com", PASSWORD_DEVELOPER, UserRoles.USER));
         Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
 
@@ -139,44 +156,52 @@ public class AbstractSecureAnnotationTest {
     @InSequence(102)
     public void registerAdmin(@ArquillianResteasyResource(REST_APP_URI_BASE) RegistrationEndpoint registrationEndpoint) {
         Assert.assertNotNull("registrationEndpoint must not be null", registrationEndpoint);
-        Response response = registrationEndpoint.register(getUser(USER_NAME_ADMIN, "admin@email.com", PASSWORD_ADMIN, "admin"));
+        Response response = registrationEndpoint.register(getUser(USER_NAME_ADMIN, "admin@email.com", PASSWORD_ADMIN, UserRoles.ADMIN));
         Assert.assertEquals(Response.Status.OK.getStatusCode(), response.getStatus());
     }
 
 
     @Test
     @InSequence(111)
-    public void testPublicMethod() throws Exception {
+    public void testPublicMethod(@ArquillianResource URL url) throws Exception {
+        setContext(url);
+
         assertAccessAllowed("publicMethod", null);
         assertAccessAllowed("publicMethod", loginAdmin());
-        assertAccessAllowed("publicMethod", loginDeveloper());
+        assertAccessAllowed("publicMethod", loginUser());
     }
 
     @Test
     @InSequence(112)
-    public void testAdminRestrictedMethod() throws Exception {
+    public void testAdminRestrictedMethod(@ArquillianResource URL url) throws Exception {
+        setContext(url);
+
         assertAccessUnauthorized("adminRestrictedMethod", null);
-        assertAccessUnauthorized("adminRestrictedMethod", loginDeveloper());
+        assertAccessUnauthorized("adminRestrictedMethod", loginUser());
 
         assertAccessAllowed("adminRestrictedMethod", loginAdmin());
     }
 
     @Test
     @InSequence(113)
-    public void testDeveloperRestrictedMethod() throws Exception {
-        assertAccessUnauthorized("developerRestrictedMethod", null);
-        assertAccessUnauthorized("developerRestrictedMethod", loginAdmin());
+    public void testUserRestrictedMethod(@ArquillianResource URL url) throws Exception {
+        setContext(url);
 
-        assertAccessAllowed("developerRestrictedMethod", loginDeveloper());
+        assertAccessUnauthorized("userRestrictedMethod", null);
+        assertAccessUnauthorized("userRestrictedMethod", loginAdmin());
+
+        assertAccessAllowed("userRestrictedMethod", loginUser());
     }
 
     @Test
     @InSequence(114)
-    public void testAdminOrDeveloperRestrictedMethod() throws Exception {
-        assertAccessUnauthorized("adminOrDeveloperRestrictedMethod", null);
+    public void testAdminOrUserRestrictedMethod(@ArquillianResource URL url) throws Exception {
+        setContext(url);
 
-        assertAccessAllowed("adminOrDeveloperRestrictedMethod", loginAdmin());
-        assertAccessAllowed("adminOrDeveloperRestrictedMethod", loginDeveloper());
+        assertAccessUnauthorized("adminOrUserRestrictedMethod", null);
+
+        assertAccessAllowed("adminOrUserRestrictedMethod", loginAdmin());
+        assertAccessAllowed("adminOrUserRestrictedMethod", loginUser());
     }
 
 

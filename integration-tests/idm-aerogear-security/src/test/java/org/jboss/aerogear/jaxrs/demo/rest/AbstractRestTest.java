@@ -19,27 +19,20 @@ package org.jboss.aerogear.jaxrs.demo.rest;
 import com.jayway.restassured.RestAssured;
 import com.jayway.restassured.http.ContentType;
 import com.jayway.restassured.response.Header;
-import com.jayway.restassured.specification.RequestSpecification;
-import org.apache.http.util.EntityUtils;
 import org.jboss.aerogear.jaxrs.demo.rest.endpoint.LoginEndpoint;
 import org.jboss.aerogear.jaxrs.demo.rest.endpoint.RegistrationEndpoint;
 import org.jboss.aerogear.jaxrs.demo.user.SimpleUser;
-import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.extension.rest.client.ArquillianResteasyResource;
 import org.jboss.arquillian.junit.InSequence;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.resteasy.client.ClientRequest;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
-import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.resteasy.client.ClientResponse;
 import org.json.simple.JSONObject;
 import org.junit.Assert;
 import org.junit.Test;
-import org.picketlink.idm.model.Attribute;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
-import java.io.File;
-import java.io.Serializable;
 import java.net.URL;
 
 
@@ -51,18 +44,12 @@ public class AbstractRestTest {
 
     public static final String REST_APP_URI_BASE = "rest";
 
-    @ArquillianResource
-    private URL context;
-
-    @Deployment(testable = false)
-    public static WebArchive getDeployment() {
-        return ShrinkWrap.createFromZipFile(WebArchive.class, new File("../../integration-tests/idm-aerogear-security/target/aerogear-rest-test.war"));
-    }
+    public static final String DEPLOYMENT_NAME = "restTestDeployment";
+    public static final String SERVER_QUALIFIER = "server-manual";
 
     @Test
     @InSequence(0)
     public void testSanity(@ArquillianResteasyResource(REST_APP_URI_BASE) LoginEndpoint loginEndpoint) {
-        Assert.assertNotNull("context must not be null", context);
         Assert.assertNotNull("loginEndpoint must not be null", loginEndpoint);
         Assert.assertEquals("Hello", loginEndpoint.hello());
     }
@@ -107,8 +94,10 @@ public class AbstractRestTest {
         Assert.assertEquals(Status.BAD_REQUEST.getStatusCode(), response.getStatus());
     }
 
+    // This test must be executed as the last one in LDAP testing because of
+    // https://issues.apache.org/jira/browse/DIRSERVER-1548 bug
     @Test
-    @InSequence(6)
+    @InSequence(6000)
     public void loginUserWithWrongPassword(@ArquillianResteasyResource(REST_APP_URI_BASE) LoginEndpoint loginEndpoint) {
         Assert.assertNotNull("loginEndpoint must not be null", loginEndpoint);
         Response response = loginEndpoint.login(getUser("someuser", null, "wrongpassword"));
@@ -118,7 +107,7 @@ public class AbstractRestTest {
     @SuppressWarnings("unchecked")
     @Test
     @InSequence(7)
-    public void loginAndLogoutUser(@ArquillianResteasyResource("rest/auth/logout") ClientRequest request) throws Exception {
+    public void loginAndLogoutUser(@ArquillianResteasyResource("rest/auth/logout") ClientRequest request, @ArquillianResource URL context) throws Exception {
         Assert.assertNotNull("request must not be null", request);
 
         JSONObject jsonObject = new JSONObject();
@@ -135,8 +124,10 @@ public class AbstractRestTest {
         
         Assert.assertNotNull("Cookie must not be null", cookie);
         
-        request.cookie("JSESSIONID", cookie);
-        Assert.assertEquals("Expected HTTP status OK", Status.OK.getStatusCode(), request.post().getStatus());
+        ClientResponse logoutResponse = request
+          .cookie("JSESSIONID", cookie)
+          .post();
+        Assert.assertEquals("Expected HTTP status OK, got: " + logoutResponse.getEntity(String.class), Status.OK.getStatusCode(), logoutResponse.getStatus());
     }
 
     private SimpleUser getUser(String loginName, String email, String password) {

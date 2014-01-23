@@ -1,5 +1,8 @@
 package org.jboss.aerogear.jaxrs.secure.rest.endpoint;
 
+import org.jboss.aerogear.jaxrs.demo.user.UserRoles;
+import org.jboss.aerogear.security.authz.Secure;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 
@@ -18,11 +21,12 @@ public interface ProtectedEndpoint {
     String adminRestrictedMethod();
 
     @GET
-    @Path("/developerRestrictedMethod")
-    String developerRestrictedMethod();
+    @Path("/userRestrictedMethod")
+//    @Secure({UserRoles.USER})
+    String userRestrictedMethod();
 
     @GET
-    @Path("/adminOrDeveloperRestrictedMethod")
-    String adminOrDeveloperRestrictedMethod();
+    @Path("/adminOrUserRestrictedMethod")
+    String adminOrUserRestrictedMethod();
 
 }

@@ -9,6 +9,8 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.*;
+
 /**
  * @author Dominik Pospisil <dpospisi@redhat.com>
  */
@@ -24,12 +26,16 @@ public class ModelUtil {
     }
 
     public static ModelNode createCompositeNode(ModelNode... steps) {
-        ModelNode comp = new ModelNode();
-        comp.get("operation").set("composite");
+        ModelNode compositeOp = new ModelNode();
+        compositeOp.get(OP).set(COMPOSITE);
+        compositeOp.get(OP_ADDR).setEmptyList();
+
+        ModelNode opSteps = compositeOp.get(STEPS);
         for (ModelNode step : steps) {
-            comp.get("steps").add(step);
+            opSteps.add(step);
         }
-        return comp;
+
+        return compositeOp;
     }
 
     public static boolean execute(ManagementClient client, ModelNode operation) {
@@ -57,15 +63,16 @@ public class ModelUtil {
         ModelNode op = new ModelNode();
 
         // set address
-        ModelNode list = op.get("address").setEmptyList();
+        ModelNode list = op.get(OP_ADDR).setEmptyList();
+
         if (address != null) {
             String[] pathSegments = address.split("/");
             for (String segment : pathSegments) {
-                String[] elements = segment.split("=");
+                String[] elements = segment.split("=", 2);
                 list.add(elements[0], elements[1]);
             }
         }
-        op.get("operation").set(operation);
+        op.get(OP).set(operation);
         return op;
     }
 }

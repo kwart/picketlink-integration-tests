@@ -49,7 +49,7 @@ cn: developer
 ou: Roles
 member: uid=developer,ou=People,dc=jboss,dc=org
 
-# Users 
+# Users
 
 dn: uid=admin,ou=People,dc=jboss,dc=org
 objectClass: inetOrgPerson
