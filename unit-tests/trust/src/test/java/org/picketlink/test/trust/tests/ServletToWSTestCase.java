@@ -22,11 +22,14 @@
 package org.picketlink.test.trust.tests;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
 
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.methods.PostMethod;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.TargetsContainer;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -63,10 +66,13 @@ public class ServletToWSTestCase {
 
     @Test
     public void testServlet2WS() throws Exception {
-        HttpClient client = new HttpClient();
-        PostMethod post = new PostMethod(TestUtil.getTargetURL("/binary-test/TestWSInvokingServlet"));
-        post.addRequestHeader("TEST_HEADER", "somevalue");
-        int result = client.executeMethod(post);
-        assertEquals(200, result);
+        HttpClient client = new DefaultHttpClient();
+
+        HttpPost post = new HttpPost(TestUtil.getTargetURL("/binary-test/TestWSInvokingServlet"));
+        post.addHeader("TEST_HEADER", "somevalue");
+        HttpResponse result = client.execute(post);
+        assertNotNull(result);
+        assertNotNull(result.getStatusLine());
+        assertEquals(200, result.getStatusLine().getStatusCode());
     }
 }

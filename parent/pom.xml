@@ -6,12 +6,14 @@
     <version>2.5-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
 		<version.picketlink>2.5.3.Beta1</version.picketlink>
 		<version.picketlink.quickstarts>2.1.9.Final</version.picketlink.quickstarts>
 		<version.picketbox>4.0.17.Final</version.picketbox>
 
 		<!-- Current version of JBoss AS7 used during the tests. -->
-		<version.jboss_as7>7.1.3.Final</version.jboss_as7>
+		<version.jboss_as7>7.2.0.Final</version.jboss_as7>
 		<version.jboss-client>${version.jboss_as7}</version.jboss-client>
 		<!-- Current version of JBoss AS5 used during the tests. -->
 		<version.jboss_as5>5.1.0.GA</version.jboss_as5>
@@ -159,12 +161,6 @@
 			<groupId>rhino</groupId>
 			<artifactId>js</artifactId>
 			<version>1.6R7</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>commons-httpclient</groupId>
-			<artifactId>commons-httpclient</artifactId>
-			<version>3.1</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

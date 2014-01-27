@@ -122,12 +122,10 @@
         </dependency>
         <dependency>
             <groupId>org.jboss.as</groupId>
-            		<artifactId>jboss-as-jms-client-bom</artifactId>
+            <artifactId>jboss-as-jms-client-bom</artifactId>
 			<version>7.2.0.Final</version>
-            		<type>pom</type>
+            <type>pom</type>
         	</dependency>
-
-
         <dependency>
             <groupId>org.jboss.resteasy</groupId>
             <artifactId>resteasy-jaxrs</artifactId>
