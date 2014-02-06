@@ -90,7 +90,6 @@
         <dependency>
             <groupId>org.picketlink</groupId>
             <artifactId>picketlink-idm-simple-schema</artifactId>
-            <version>${version.picketlink}</version>
             <scope>test</scope>
         </dependency>
 
