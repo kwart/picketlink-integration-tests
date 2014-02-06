@@ -20,7 +20,7 @@
 				<mkdir dir="${jboss.as.picketlink.lib.dir}" />
 
 				<if>
- 					<istrue value="${picketlink.skip.lib.copy}"/>
+					<istrue value="${picketlink.skip.lib.copy}"/>
 					<then>
 						<echo message="Picketlink libraries are not copied to the container." />
 					</then>
@@ -31,11 +31,11 @@
 							<copy todir="${jboss.as.picketlink.lib.dir}">
 								<fileset dir="${picketlink.dist.dir}">
 									<include name="picketlink-core-*.jar"/>
-									<include name="picketlink-${picketlink.binding}-*.jar"/>	
+									<include name="picketlink-${picketlink.binding}-*.jar"/>
 								</fileset>
 							</copy>
 						</then>
- 					</elseif>
+					</elseif>
 					<else>
 						<echo>PicketLink libraries copied from ${maven.repo.local}</echo>
 
@@ -62,5 +62,18 @@
 		</if>
 	</target>
 
+	<target name="download-binary-distribution">
+		<echo>Download of binary distrubution ${download.from.url}</echo>
+		<if>
+			<available file="${download.to.dir}/${target.file}" type="file" />
+			<then>
+				<echo>${target.file} already in place, skipping download</echo>
+			</then>
+			<else>
+				<get src="${download.from.url}" dest="${download.to.dir}/${target.file}" verbose="off" />
+				<echo>${target.file} downloaded to ${download.to.dir}</echo>
+			</else>
+		</if>
+	</target>
 
 </project>

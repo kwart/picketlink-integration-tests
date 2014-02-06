@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>picketlink-integration-container</artifactId>
 		<groupId>org.picketlink</groupId>
-		<version>2.1.6.Final</version>
+		<version>2.1.10-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
 	<artifactId>picketlink-integration-eap5</artifactId>
@@ -12,10 +12,9 @@
 	<properties>
 		<binding.server>jboss-as5</binding.server>
 		<picketlink.binding>jbas5</picketlink.binding>
-		<!-- <picketlink.dist.dir>${integration.tests.containers.dir}/jboss-eap-5.2/picketlink/picketlink-federation</picketlink.dist.dir> -->
-		<!-- property redefinition for ant-run with external build script -->
-		<eap5-dist-zip>${eap5-dist-zip}</eap5-dist-zip>
-		<eap5-dir-structure>${eap5-dir-structure}</eap5-dir-structure>
+		<!--
+		<picketlink.dist.dir>${integration.tests.containers.dir}/${eap5-dir-structure}/../picketlink/picketlink-federation</picketlink.dist.dir>
+		 -->
 		<!-- newly defined properties -->
 		<jboss.as.home>${integration.tests.containers.dir}/${eap5-dir-structure}</jboss.as.home>
 		<jboss.as.picketlink.lib.dir>${jboss.as.home}/common/lib</jboss.as.picketlink.lib.dir>
@@ -70,8 +69,6 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		<!-- dependency> <groupId>trove</groupId> <artifactId>trove</artifactId> 
-			<version>1.0.2</version> </dependency -->
 	</dependencies>
 
 	<build>
@@ -103,8 +100,45 @@
 						<additionalClasspathElement>${jboss.as.home}/client/wsdl4j.jar</additionalClasspathElement>
 						<additionalClasspathElement>${jboss.as.home}/client/wstx.jar</additionalClasspathElement>
 					</additionalClasspathElements>
+					<systemPropertyVariables>
+						<jbossas.startup.timeout>240</jbossas.startup.timeout>
+						<jbossas.shutdown.timeout>90</jbossas.shutdown.timeout>
+					</systemPropertyVariables>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>xml-maven-plugin</artifactId>
+				<version>1.0</version>
+				<executions>
+					<execution>
+						<phase>process-test-classes</phase>
+						<goals>
+							<goal>transform</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<transformationSets>
+						<transformationSet>
+							<dir>${jboss.as.home}/server/default/deployers/jbossweb.deployer/META-INF</dir>
+							<outputDir>${jboss.as.home}/server/default/deployers/jbossweb.deployer/META-INF</outputDir>
+							<includes>
+								<include>war-deployers-jboss-beans.xml</include>
+							</includes>
+							<stylesheet>src/test/resources/addPicketLinkAuthenticator.xslt</stylesheet>
+						</transformationSet>
+					</transformationSets>
+				</configuration>
+				<!-- Use the Saxon as a XSLT 2.0 processor  -->
+				<dependencies>
+					<dependency>
+						<groupId>net.sf.saxon</groupId>
+						<artifactId>saxon</artifactId>
+						<version>8.7</version>
+					</dependency>
+				</dependencies>
+			</plugin>			
 		</plugins>
 		<pluginManagement>
 			<plugins>
@@ -136,46 +170,28 @@
 										<ignore></ignore>
 									</action>
 								</pluginExecution>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.codehaus.mojo
+										</groupId>
+										<artifactId>
+											xml-maven-plugin
+										</artifactId>
+										<versionRange>
+											[1.0,)
+										</versionRange>
+										<goals>
+											<goal>transform</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
 							</pluginExecutions>
 						</lifecycleMappingMetadata>
 					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-dependency-plugin</artifactId>
-					<version>2.1</version>
-					<inherited>true</inherited>
-					<executions>
-						<execution>
-							<id>copy-test-deps-to-eap5</id>
-							<phase>package</phase>
-							<goals>
-								<goal>copy</goal>
-							</goals>
-							<configuration>
-								<artifactItems>
-									<artifactItem>
-										<groupId>org.apache.httpcomponents</groupId>
-										<artifactId>httpclient</artifactId>
-										<version>4.2.1</version>
-										<type>jar</type>
-										<overWrite>true</overWrite>
-										<destFileName>httpclient.jar</destFileName>
-										<outputDirectory>${project.build.directory}/integration-tests/containers/${eap5-dir-structure}/common/lib</outputDirectory>
-									</artifactItem>
-									<artifactItem>
-										<groupId>org.apache.httpcomponents</groupId>
-										<artifactId>httpcore</artifactId>
-										<version>4.2.1</version>
-										<type>jar</type>
-										<overWrite>true</overWrite>
-										<destFileName>httpcore.jar</destFileName>
-										<outputDirectory>${project.build.directory}/integration-tests/containers/${eap5-dir-structure}/common/lib</outputDirectory>
-									</artifactItem>
-								</artifactItems>
-							</configuration>
-						</execution>
-					</executions>
 				</plugin>
 			</plugins>
 		</pluginManagement>

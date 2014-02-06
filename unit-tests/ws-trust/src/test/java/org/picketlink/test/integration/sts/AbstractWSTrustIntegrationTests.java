@@ -20,11 +20,14 @@ public abstract class AbstractWSTrustIntegrationTests {
     @Deployment(name = "picketlink-sts", testable = false)
     @TargetsContainer("jboss")
     public static WebArchive createSTSDeployment() throws GeneralSecurityException, IOException {
+        if (Boolean.getBoolean("picketlink.sts.skipDeploy")) {
+            return null;
+        }
         WebArchive sts = MavenArtifactUtil.getQuickstartsMavenArchive("picketlink-sts");
-        
+
         addValidatingAlias(sts, "/WEB-INF/classes/picketlink-sts.xml", getServerAddress(), getServerAddress());
         addKeyStoreAlias(sts, "/WEB-INF/classes/sts_keystore.jks", "sts", "testpass", getServerAddress());
-        
+
         return sts;
     }
 

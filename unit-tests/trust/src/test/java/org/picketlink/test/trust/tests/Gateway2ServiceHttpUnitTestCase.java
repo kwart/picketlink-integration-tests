@@ -21,9 +21,12 @@
  */
 package org.picketlink.test.trust.tests;
 
-import static org.junit.Assert.*;
-import static org.picketlink.test.integration.util.PicketLinkConfigurationUtil.*;
-import static org.picketlink.test.integration.util.TestUtil.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.picketlink.test.integration.util.PicketLinkConfigurationUtil.addKeyStoreAlias;
+import static org.picketlink.test.integration.util.PicketLinkConfigurationUtil.addValidatingAlias;
+import static org.picketlink.test.integration.util.TestUtil.getServerAddress;
+import static org.picketlink.test.integration.util.TestUtil.getTargetURL;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -45,6 +48,8 @@ import org.jboss.logging.Logger;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.jboss.shrinkwrap.resolver.api.DependencyResolvers;
+import org.jboss.shrinkwrap.resolver.api.maven.MavenDependencyResolver;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.picketlink.identity.federation.core.exceptions.ConfigurationException;
@@ -69,7 +74,7 @@ import org.picketlink.test.trust.servlet.ServiceServlet;
 
 @RunWith(PicketLinkIntegrationTests.class)
 @TargetContainers({ "eap5" })
-public class Gateway2ServiceHttpUnitTestCase extends TrustTestsBase {
+public class Gateway2ServiceHttpUnitTestCase {
 
     private static final Logger log = Logger.getLogger(Gateway2ServiceHttpUnitTestCase.class);
 
@@ -77,8 +82,8 @@ public class Gateway2ServiceHttpUnitTestCase extends TrustTestsBase {
     public void testG2S_http_compressedTokenScenario() throws Exception {
         String encodedURL = java.net.URLEncoder.encode(getTargetURL("/service/incoming"), "UTF-8");
         log.debug("encoded target URL=" + encodedURL);
-        assertServiceApp("/gateway/request?action=forward&serviceServerUrl=" + getTargetURL("/service/incoming")
-                + "&compression=true", "UserA", "PassA");
+        assertServiceApp("/gateway/request?action=forward&serviceServerUrl=" + encodedURL + "&compression=true", "UserA",
+                "PassA");
     }
 
     @Test
@@ -153,6 +158,15 @@ public class Gateway2ServiceHttpUnitTestCase extends TrustTestsBase {
 
     }
 
+    @Deployment(name = "validation-keystore.war", testable = false, order = 1)
+    @TargetsContainer("jboss")
+    public static WebArchive deployValidationKeystore() throws IOException {
+        WebArchive war = ShrinkWrap.create(WebArchive.class, "validation-keystore.war");
+        war.addAsWebResource(new File(
+                "../../unit-tests/trust/target/test-classes/lmtestapp/gateway2service-http/localValidationDomainKeyStore/stspub.jks"));
+        return war;
+    }
+
     @Deployment(name = "g2s-http-sec-domains.jar", testable = false, order = 2)
     @TargetsContainer("jboss")
     public static JavaArchive deployTestScenario1() throws IOException {
@@ -160,20 +174,22 @@ public class Gateway2ServiceHttpUnitTestCase extends TrustTestsBase {
         ts.addClass(TokenSupplierTestLoginModule.class);
         ts.addAsManifestResource(new File(
                 "../../unit-tests/trust/target/test-classes/lmtestapp/gateway2service-http/jboss-beans.xml"));
-        // ts.as(ZipExporter.class).exportTo(new File(ts.getName()), true);
         return ts;
     }
 
     @Deployment(name = "gateway.war", testable = false, order = 4)
     @TargetsContainer("jboss")
     public static WebArchive deployGatewayApp() throws IOException {
+        MavenDependencyResolver resolver = DependencyResolvers.use(MavenDependencyResolver.class)
+                .loadMetadataFromPom("pom.xml");
+
         WebArchive war = ShrinkWrap.create(WebArchive.class, "gateway.war");
         war.addClass(GatewayServlet.class);
+        war.addAsLibraries(resolver.artifact("org.apache.httpcomponents:httpclient").resolveAsFiles());
         war.addAsWebInfResource(new File(
                 "../../unit-tests/trust/target/test-classes/lmtestapp/gateway2service-http/gateway/jboss-web.xml"));
         war.addAsWebInfResource(new File(
                 "../../unit-tests/trust/target/test-classes/lmtestapp/gateway2service-http/gateway/web.xml"));
-        // war.as(ZipExporter.class).exportTo(new File(war.getName()), true);
         return war;
     }
 
@@ -188,7 +204,6 @@ public class Gateway2ServiceHttpUnitTestCase extends TrustTestsBase {
                 "../../unit-tests/trust/target/test-classes/lmtestapp/gateway2service-http/service/web.xml"));
         war.addAsWebInfResource(new File(
                 "../../unit-tests/trust/target/test-classes/lmtestapp/gateway2service-http/service/context.xml"));
-        // war.as(ZipExporter.class).exportTo(new File(war.getName()), true);
         return war;
     }
 
@@ -206,8 +221,6 @@ public class Gateway2ServiceHttpUnitTestCase extends TrustTestsBase {
         addValidatingAlias(sts, "/WEB-INF/classes/picketlink-sts.xml", getServerAddress(), getServerAddress());
         addKeyStoreAlias(sts, "/WEB-INF/classes/sts_keystore.jks", "sts", "testpass", getServerAddress());
         PicketLinkConfigurationUtil.addSAML20TokenRoleAttributeProvider(sts, "/WEB-INF/classes/picketlink-sts.xml", "Role");
-
-        // sts.as(ZipExporter.class).exportTo(new File("picketlink-sts.war"), true);
 
         return sts;
     }

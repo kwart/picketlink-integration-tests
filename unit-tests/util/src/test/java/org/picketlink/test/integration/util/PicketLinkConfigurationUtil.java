@@ -132,7 +132,7 @@ public class PicketLinkConfigurationUtil {
         final Node keystore = getContent(sp, jksPath);
 
         char[] password = passwd.toCharArray();
-        
+
         try {
             final KeyStore jks = KeyStoreUtil.getKeyStore(keystore.getAsset().openStream(), password);
 

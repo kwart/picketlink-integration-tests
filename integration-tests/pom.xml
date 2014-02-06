@@ -4,7 +4,7 @@
 	<parent>
 		<artifactId>picketlink-integration-tests-parent</artifactId>
 		<groupId>org.picketlink</groupId>
-		<version>2.1.6.Final</version>
+		<version>2.1.10-SNAPSHOT</version>
 		<relativePath>../parent</relativePath>
 	</parent>
 	<artifactId>picketlink-integration-container</artifactId>
@@ -21,7 +21,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-antrun-plugin</artifactId>
 				<inherited>true</inherited>
-				<version>1.6</version>
+				<version>1.7</version>
 				<!-- This execution prepares a distribution package for the subsystem. -->
 				<executions>
 					<execution>
@@ -93,13 +93,21 @@
 									<value>${settings.localRepository}</value>
 								</property>
 								<property>
+									<name>jbossas.startup.timeout</name>
+									<value>240</value>
+								</property>
+								<property>
+									<name>jbossas.shutdown.timeout</name>
+									<value>90</value>
+								</property>
+								<property>
 									<name>JAVA_OPTS</name>
 									<value>${env.JAVA_OPTS}</value>
-                                                                </property>
-                                                                <property>
-                                                                        <name>smproperty</name>
-                                                                        <value>${smproperty}</value>
-                                                                </property>
+								</property>
+								<property>
+									<name>smproperty</name>
+									<value>${smproperty}</value>
+								</property>
 							</systemProperties>
 							<reportNameSuffix>SAML-${binding.server}</reportNameSuffix>
 						</configuration>
