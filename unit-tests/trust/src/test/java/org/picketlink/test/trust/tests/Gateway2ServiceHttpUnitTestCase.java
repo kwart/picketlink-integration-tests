@@ -23,15 +23,12 @@ package org.picketlink.test.trust.tests;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.picketlink.test.integration.util.PicketLinkConfigurationUtil.addKeyStoreAlias;
-import static org.picketlink.test.integration.util.PicketLinkConfigurationUtil.addValidatingAlias;
 import static org.picketlink.test.integration.util.TestUtil.getServerAddress;
 import static org.picketlink.test.integration.util.TestUtil.getTargetURL;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -55,8 +52,6 @@ import org.junit.runner.RunWith;
 import org.picketlink.identity.federation.core.exceptions.ConfigurationException;
 import org.picketlink.identity.federation.core.exceptions.ParsingException;
 import org.picketlink.identity.federation.core.exceptions.ProcessingException;
-import org.picketlink.test.integration.util.MavenArtifactUtil;
-import org.picketlink.test.integration.util.PicketLinkConfigurationUtil;
 import org.picketlink.test.integration.util.PicketLinkIntegrationTests;
 import org.picketlink.test.integration.util.TargetContainers;
 import org.picketlink.test.trust.loginmodules.TokenSupplierTestLoginModule;
@@ -74,7 +69,7 @@ import org.picketlink.test.trust.servlet.ServiceServlet;
 
 @RunWith(PicketLinkIntegrationTests.class)
 @TargetContainers({ "eap5" })
-public class Gateway2ServiceHttpUnitTestCase {
+public class Gateway2ServiceHttpUnitTestCase extends TrustTestsBase {
 
     private static final Logger log = Logger.getLogger(Gateway2ServiceHttpUnitTestCase.class);
 
@@ -211,18 +206,6 @@ public class Gateway2ServiceHttpUnitTestCase {
     public static JavaArchive createWSTestDeployment() throws ConfigurationException, ProcessingException, ParsingException,
             InterruptedException {
         return null;
-    }
-
-    @Deployment(name = "picketlink-sts", testable = false)
-    @TargetsContainer("jboss")
-    public static WebArchive createSTSDeployment() throws GeneralSecurityException, IOException {
-        WebArchive sts = MavenArtifactUtil.getQuickstartsMavenArchive("picketlink-sts");
-
-        addValidatingAlias(sts, "/WEB-INF/classes/picketlink-sts.xml", getServerAddress(), getServerAddress());
-        addKeyStoreAlias(sts, "/WEB-INF/classes/sts_keystore.jks", "sts", "testpass", getServerAddress());
-        PicketLinkConfigurationUtil.addSAML20TokenRoleAttributeProvider(sts, "/WEB-INF/classes/picketlink-sts.xml", "Role");
-
-        return sts;
     }
 
 }

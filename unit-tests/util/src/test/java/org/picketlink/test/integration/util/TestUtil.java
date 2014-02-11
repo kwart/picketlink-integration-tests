@@ -22,9 +22,14 @@
 
 package org.picketlink.test.integration.util;
 
+import static org.picketlink.test.integration.util.PicketLinkConfigurationUtil.addKeyStoreAlias;
+import static org.picketlink.test.integration.util.PicketLinkConfigurationUtil.addValidatingAlias;
+
+import org.jboss.shrinkwrap.api.spec.WebArchive;
+
 /**
- * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a>
  *
+ * @author <a href="mailto:psilva@redhat.com">Pedro Silva</a>
  */
 public class TestUtil {
 
@@ -37,6 +42,18 @@ public class TestUtil {
 
     public static String getServerAddress() {
         return System.getProperty(TEST_CONTAINER_BIND_ADDRESS, "localhost");
+    }
+
+    public static WebArchive createSTSDeployment() {
+        if (Boolean.getBoolean("picketlink.sts.skipDeploy")) {
+            return null;
+        }
+        WebArchive sts = MavenArtifactUtil.getQuickstartsMavenArchive("picketlink-sts");
+
+        addValidatingAlias(sts, "/WEB-INF/classes/picketlink.xml", getServerAddress(), getServerAddress());
+        addKeyStoreAlias(sts, "/WEB-INF/classes/sts_keystore.jks", "sts", "testpass", getServerAddress());
+
+        return sts;
     }
 
 }

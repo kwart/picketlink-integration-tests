@@ -21,10 +21,6 @@
  */
 package org.picketlink.test.trust.tests;
 
-import static org.picketlink.test.integration.util.PicketLinkConfigurationUtil.addKeyStoreAlias;
-import static org.picketlink.test.integration.util.PicketLinkConfigurationUtil.addValidatingAlias;
-import static org.picketlink.test.integration.util.TestUtil.getServerAddress;
-
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 
@@ -36,7 +32,6 @@ import org.picketlink.identity.federation.api.wstrust.WSTrustClient;
 import org.picketlink.identity.federation.api.wstrust.WSTrustClient.SecurityInfo;
 import org.picketlink.identity.federation.core.wstrust.WSTrustException;
 import org.picketlink.identity.federation.core.wstrust.plugins.saml.SAMLUtil;
-import org.picketlink.test.integration.util.MavenArtifactUtil;
 import org.picketlink.test.integration.util.PicketLinkIntegrationTests;
 import org.picketlink.test.integration.util.TestUtil;
 import org.w3c.dom.Element;
@@ -60,15 +55,7 @@ public abstract class TrustTestsBase {
     @Deployment(name = "picketlink-sts", testable = false)
     @TargetsContainer("jboss")
     public static WebArchive createSTSDeployment() throws GeneralSecurityException, IOException {
-        if (Boolean.getBoolean("picketlink.sts.skipDeploy")) {
-            return null;
-        }
-        WebArchive sts = MavenArtifactUtil.getQuickstartsMavenArchive("picketlink-sts");
-
-        addValidatingAlias(sts, "/WEB-INF/classes/picketlink-sts.xml", getServerAddress(), getServerAddress());
-        addKeyStoreAlias(sts, "/WEB-INF/classes/sts_keystore.jks", "sts", "testpass", getServerAddress());
-
-        return sts;
+        return TestUtil.createSTSDeployment();
     }
 
     /**

@@ -21,8 +21,10 @@
  */
 package org.picketlink.test.trust.tests;
 
-import static org.junit.Assert.*;
-import static org.picketlink.test.integration.util.TestUtil.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+import static org.picketlink.test.integration.util.TestUtil.getServerAddress;
+import static org.picketlink.test.integration.util.TestUtil.getTargetURL;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -45,9 +47,6 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.picketlink.identity.federation.core.exceptions.ConfigurationException;
-import org.picketlink.identity.federation.core.exceptions.ParsingException;
-import org.picketlink.identity.federation.core.exceptions.ProcessingException;
 import org.picketlink.test.integration.util.PicketLinkIntegrationTests;
 import org.picketlink.test.integration.util.TargetContainers;
 import org.picketlink.test.trust.loginmodules.TokenSupplierTestLoginModule;
@@ -157,12 +156,6 @@ public class JBWSTokenIssuingLoginModuleUnitTestCase extends TrustTestsBase {
         war.addAsWebInfResource(new File("../../unit-tests/trust/target/test-classes/lmtestapp/web.xml"));
         // war.as(ZipExporter.class).exportTo(new File("test-app-2.war"), true);
         return war;
-    }
-
-    // just to override
-    public static JavaArchive createWSTestDeployment() throws ConfigurationException, ProcessingException, ParsingException,
-            InterruptedException {
-        return null;
     }
 
 }
