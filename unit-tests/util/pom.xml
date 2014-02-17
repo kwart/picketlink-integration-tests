@@ -21,18 +21,6 @@
             <version>${version.jboss_as7}</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>commons-lang</groupId>
-            <artifactId>commons-lang</artifactId>
-            <version>${version.commons-lang}</version>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>commons-io</groupId>
-            <artifactId>commons-io</artifactId>
-            <version>${version.commons-io}</version>
-            <scope>test</scope>
-        </dependency>
 	</dependencies>
 	<build>
 		<plugins>

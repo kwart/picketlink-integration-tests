@@ -1,4 +1,0 @@
-<arquillian>
-	<container qualifier="jboss" default="true">
-	</container>
-</arquillian>

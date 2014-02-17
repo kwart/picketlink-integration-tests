@@ -15,6 +15,9 @@
 			<property name="profileName">default</property>
 			<property name="httpPort">8080</property>
 			<property name="rmiPort">1099</property>
+<!--
+				-Xrunjdwp:transport=dt_socket,address=8787,server=y,suspend=y
+ -->
 			<property name="javaVmArguments">-XX:MaxPermSize=512m 
 				-Didp.url=http://localhost:8080/idp/
 				-Didp-sig.url=http://localhost:8080/idp-sig/

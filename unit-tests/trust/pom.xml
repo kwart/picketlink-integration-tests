@@ -187,7 +187,7 @@
         <dependency>
             <groupId>org.jboss.as</groupId>
             <artifactId>jboss-as-arquillian-container-remote</artifactId>
-            <version>7.1.1.Final</version>
+            <version>${version.arqillian_jboss_as}</version>
             <scope>test</scope> 
         </dependency>
         <dependency>

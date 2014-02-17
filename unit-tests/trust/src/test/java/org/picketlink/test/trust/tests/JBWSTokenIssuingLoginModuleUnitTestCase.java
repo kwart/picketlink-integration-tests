@@ -159,10 +159,4 @@ public class JBWSTokenIssuingLoginModuleUnitTestCase extends TrustTestsBase {
         return war;
     }
 
-    // just to override
-    public static JavaArchive createWSTestDeployment() throws ConfigurationException, ProcessingException, ParsingException,
-            InterruptedException {
-        return null;
-    }
-
 }

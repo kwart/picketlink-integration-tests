@@ -51,22 +51,14 @@ import org.w3c.dom.Element;
 public abstract class TrustTestsBase {
     
     /**
-     * picketlink-sts.war deployment creation. 
-     * All methods overriding this class should annotate their deployment like this:
-     *   @Deployment(name = "picketlink-sts", testable = false)
-     *   @TargetsContainer("jboss")  
+     * If you don't want to deploy PL STS, set system property: -Dpicketlink.sts.skipDeploy=true
      * 
      * @return WebArchive of STS deployment.
      * @throws GeneralSecurityException
      * @throws IOException
      */
     public static WebArchive createSTSDeployment() throws GeneralSecurityException, IOException {
-        WebArchive sts = MavenArtifactUtil.getQuickstartsMavenArchive("picketlink-sts");
-        
-        addValidatingAlias(sts, "/WEB-INF/classes/picketlink.xml", getServerAddress(), getServerAddress());
-        addKeyStoreAlias(sts, "/WEB-INF/classes/sts_keystore.jks", "sts", "testpass", getServerAddress());
-        
-        return sts;
+        return TestUtil.createSTSDeployment();
     }
 
     /**
@@ -79,8 +71,8 @@ public abstract class TrustTestsBase {
      */
     protected Element getAssertionFromSTS(String username, String password) throws Exception {
         // Step 1: Get a SAML2 Assertion Token from the STS
-        WSTrustClient client = new WSTrustClient("PicketLinkSTS", "PicketLinkSTSPort", TestUtil.getTargetURL("/picketlink-sts/PicketLinkSTS"), new SecurityInfo(username,
-                password));
+        WSTrustClient client = new WSTrustClient("PicketLinkSTS", "PicketLinkSTSPort",
+                TestUtil.getTargetURL("/picketlink-sts/PicketLinkSTS"), new SecurityInfo(username, password));
         Element assertion = null;
         try {
             System.out.println("Invoking token service to get SAML assertion for " + username);

@@ -55,7 +55,7 @@
      <constructor>
           <parameter>localValidationDomain</parameter>
      </constructor>
-     <property name="keyStoreURL">file://${jboss.server.home.dir}/conf/stspub.jks</property>
+     <property name="keyStoreURL">http://${jboss.bind.address}:8080/validation-keystore/stspub.jks</property>
      <property name="keyStorePass">keypass</property>
      <property name="keyStoreAlias">sts</property>
      <property name="securityManagement"><inject bean="JNDIBasedSecurityManagement"/></property>
