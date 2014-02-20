@@ -40,7 +40,7 @@ import org.picketlink.test.integration.util.TargetContainers;
  * @since Sep 13, 2011
  */
 @RunWith(PicketLinkIntegrationTests.class)
-@TargetContainers ({"jbas7"})
+@TargetContainers ({"jbas7", "eap6"})
 public class PicketLinkAuthenticatorAS7TestCase extends AbstractPicketLinkAuthenticatorTestCase {
     
     @Deployment(name = "authenticator", testable = false)

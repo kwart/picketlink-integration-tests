@@ -22,7 +22,7 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-antrun-plugin</artifactId>
 				<inherited>true</inherited>
-				<version>1.6</version>
+				<version>1.7</version>
 				<!-- This execution prepares a distribution package for the subsystem. -->
 				<executions>
 					<execution>
@@ -34,6 +34,7 @@
 						<configuration>
 							<target>
 								<property name="maven.repo.local" value="${settings.localRepository}" />
+								<property name="picketlink.dist.dir" value="${picketlink.dist.dir}" />
 								<echo>Preparing Environment for ${picketlink.binding} Integration Tests</echo>
 								<ant antfile="${basedir}/ant-scripts/build.xml" target="prepare-test-environment" />
 							</target>

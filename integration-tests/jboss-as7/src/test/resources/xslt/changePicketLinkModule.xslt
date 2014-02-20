@@ -3,7 +3,9 @@
 	the integration tests. -->
 <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
 	xmlns:module="urn:jboss:module:1.1" version="1.0">
-
+	
+	<xsl:param name="picketlink_version" />
+	
 	<xsl:output method="xml" indent="yes" />
 
 	<xsl:template match="//module:module[@name='org.picketlink']" />

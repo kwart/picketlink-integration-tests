@@ -40,7 +40,7 @@ import org.picketlink.test.integration.util.TargetContainers;
  * @author Anil Saldhana
  * @since Oct 3, 2010
  */
-@TargetContainers ({"jbas7"})
+@TargetContainers ({"jbas7", "eap6"})
 public class STSWSClientAS7TestCase extends AbstractSTSWSClientTestCase {
     
     @Deployment(name = "ws-testbean", testable = false)
