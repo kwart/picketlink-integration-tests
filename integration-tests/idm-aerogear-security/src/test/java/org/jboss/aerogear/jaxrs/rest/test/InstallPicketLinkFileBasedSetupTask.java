@@ -1,5 +1,6 @@
 package org.jboss.aerogear.jaxrs.rest.test;
 
+import org.picketlink.test.integration.util.ModelUtil;
 import org.jboss.as.arquillian.api.ServerSetupTask;
 import org.jboss.as.arquillian.container.ManagementClient;
 import org.jboss.as.controller.PathAddress;

@@ -1,4 +1,4 @@
-package org.jboss.aerogear.jaxrs.rest.test;
+package org.picketlink.test.integration.util;
 
 import org.jboss.as.arquillian.container.ManagementClient;
 import org.jboss.dmr.ModelNode;
