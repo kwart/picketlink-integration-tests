@@ -13,7 +13,6 @@
     <artifactId>picketlink-integration-idp-tests</artifactId>
 
     <properties>
-        <version.commons-io>2.4</version.commons-io>
         <version.jboss-ejb3-ext-api>2.1.0</version.jboss-ejb3-ext-api>
     </properties>
 
@@ -47,10 +46,6 @@
                 <version>2.12</version>
                 <configuration>
                     <skip>true</skip>
-                    <additionalClasspathElements>
-                        <!-- The tests are run from within a container's directory -->
-                        <additionalClasspathElement>${project.build.outputDirectory}</additionalClasspathElement>
-                    </additionalClasspathElements>
                 </configuration>
             </plugin>
         </plugins>
@@ -97,14 +92,7 @@
             <groupId>org.picketlink</groupId>
             <artifactId>picketlink-integration-util-tests</artifactId>
             <version>${project.version}</version>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.picketlink</groupId>
-            <artifactId>picketlink-idm-simple-schema</artifactId>
-            <version>${version.picketlink}</version>
+			<type>test-jar</type>
             <scope>test</scope>
         </dependency>
     </dependencies>

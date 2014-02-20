@@ -361,6 +361,11 @@ public abstract class AbstractSecurityDomainsServerSetupTask implements ServerSe
         securityComponentNode.get(OP_ADDR).add(JSSE, CLASSIC);
         addSecureStore(jsse.getTrustStore(), TRUSTSTORE, securityComponentNode);
         addSecureStore(jsse.getKeyStore(), KEYSTORE, securityComponentNode);
+
+        if (jsse.getClientAuth() != null) {
+            securityComponentNode.get("client-auth").set(jsse.getClientAuth());
+        }
+
         securityComponentNode.get(OPERATION_HEADERS).get(ALLOW_RESOURCE_SERVICE_RESTART).set(true);
         return securityComponentNode;
     }

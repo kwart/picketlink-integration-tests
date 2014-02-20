@@ -69,7 +69,7 @@
                                     <name>project.artifactId</name>
                                     <value>${project.artifactId}</value>
                                 </property>
-                                <property>
+								<property>
                                     <name>project.version</name>
                                     <value>${project.version}</value>
                                 </property>
@@ -532,6 +532,72 @@
 												<classifier>classes</classifier>
 												<overWrite>true</overWrite>
 												<outputDirectory>${basedir}/target/classes</outputDirectory>
+											</artifactItem>
+										</artifactItems>
+									</configuration>
+								</execution>
+							</executions>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+			</build>
+		</profile>
+
+		<profile>
+			<id>idp-tests</id>
+            <activation><activeByDefault>false</activeByDefault></activation>
+
+            <dependencies>
+                <dependency>
+                    <groupId>org.jboss.arquillian.extension</groupId>
+                    <artifactId>arquillian-rest-client-impl-2x</artifactId>
+                    <version>${version.arquillian.rest.extension}</version>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>apache-lang</groupId>
+                    <artifactId>commons-lang</artifactId>
+                    <version>2.1</version>
+                    <scope>test</scope>
+                </dependency>
+            </dependencies>
+
+			<build>
+				<pluginManagement>
+					<plugins>
+                        <plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-dependency-plugin</artifactId>
+							<version>2.8</version>
+							<inherited>true</inherited>
+                            <configuration>
+                                <failOnWarning>false</failOnWarning>
+                            </configuration>
+							<executions>
+                                <execution>
+									<id>unpack-idp-tests-classes</id>
+									<phase>process-test-classes</phase>
+									<goals>
+										<goal>unpack</goal>
+									</goals>
+									<configuration>
+										<artifactItems>
+											<artifactItem>
+												<groupId>org.picketlink</groupId>
+												<artifactId>picketlink-integration-util-tests</artifactId>
+												<version>${project.version}</version>
+												<type>test-jar</type>
+												<overWrite>true</overWrite>
+												<outputDirectory>${basedir}/target/test-classes</outputDirectory>
+											</artifactItem>
+
+											<artifactItem>
+												<groupId>org.picketlink</groupId>
+												<artifactId>picketlink-integration-idp-tests</artifactId>
+												<version>${project.version}</version>
+												<type>test-jar</type>
+												<overWrite>true</overWrite>
+												<outputDirectory>${basedir}/target/test-classes</outputDirectory>
 											</artifactItem>
 										</artifactItems>
 									</configuration>

@@ -31,6 +31,7 @@ public class JSSE {
 
     private final SecureStore keyStore;
     private final SecureStore trustStore;
+    private final Boolean clientAuth;
 
     // Constructors ----------------------------------------------------------
 
@@ -42,6 +43,7 @@ public class JSSE {
     private JSSE(Builder builder) {
         this.keyStore = builder.keyStore;
         this.trustStore = builder.trustStore;
+        this.clientAuth = builder.clientAuth;
     }
 
     // Public methods --------------------------------------------------------
@@ -64,11 +66,21 @@ public class JSSE {
         return trustStore;
     }
 
+    /**
+     * Get the client-auth flag.
+     *
+     * @return the client-auth flag.
+     */
+    public Boolean getClientAuth() {
+        return clientAuth;
+    }
+
     // Embedded classes ------------------------------------------------------
 
     public static class Builder {
         private SecureStore keyStore;
         private SecureStore trustStore;
+        private Boolean clientAuth;
 
         public Builder keyStore(SecureStore keyStore) {
             this.keyStore = keyStore;
@@ -77,6 +89,11 @@ public class JSSE {
 
         public Builder trustStore(SecureStore trustStore) {
             this.trustStore = trustStore;
+            return this;
+        }
+
+        public Builder clientAuth(Boolean clientAuth) {
+            this.clientAuth = clientAuth;
             return this;
         }
 

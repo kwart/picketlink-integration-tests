@@ -36,6 +36,8 @@
 		<eap5-dist-zip>jboss-eap-noauth-5.2.0.zip</eap5-dist-zip>
 		<eap5-dir-structure>jboss-eap-5.2/jboss-as</eap5-dir-structure>
         <version.org.jboss.spec.javaee6>3.0.2.Final</version.org.jboss.spec.javaee6>
+        <version.commons-io>2.4</version.commons-io>
+        <version.commons-lang>2.6</version.commons-lang>
 	</properties>
 
 	<dependencyManagement>
