@@ -42,3 +42,6 @@ PutObjectStoreDirHere
 # ignore mvn-rpmbuild repo
 /.m2
 jboss-eap-6*.zip
+
+dist
+!.dontLetGitDeleteThisFolder

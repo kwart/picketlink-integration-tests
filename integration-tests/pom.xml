@@ -190,6 +190,12 @@
                     <version>${version.arquillian.rest.extension}</version>
                     <scope>test</scope>
                 </dependency>
+                <dependency>
+                    <groupId>apache-lang</groupId>
+                    <artifactId>commons-lang</artifactId>
+                    <version>2.1</version>
+                    <scope>test</scope>
+                </dependency>
             </dependencies>
 
             <build>
@@ -244,6 +250,14 @@
 											<artifactItem>
 												<groupId>org.picketlink</groupId>
 												<artifactId>picketlink-integration-trust-tests</artifactId>
+												<version>${project.version}</version>
+												<type>test-jar</type>
+												<overWrite>true</overWrite>
+												<outputDirectory>${basedir}/target/test-classes</outputDirectory>
+											</artifactItem>
+											<artifactItem>
+												<groupId>org.picketlink</groupId>
+												<artifactId>picketlink-integration-idp-tests</artifactId>
 												<version>${project.version}</version>
 												<type>test-jar</type>
 												<overWrite>true</overWrite>
