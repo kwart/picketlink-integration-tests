@@ -23,7 +23,6 @@
 package org.picketlink.test.integration.util;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -245,6 +244,55 @@ public class PicketLinkConfigurationUtil {
         overridePicketLinkConfig(webArchive, picketlink, document);
     }
     
+    /**
+     * <p>
+     * Adds a new <param> element with child elements <param-name> and
+     * <param-value> to valve in jboss-web.xml
+     * </p>
+     * 
+     * @param webArchive
+     * @param paramName
+     * @param paramValue
+     * @throws ConfigurationException
+     * @throws ProcessingException
+     */
+    public static void addValveParameter(WebArchive webArchive, String paramName, String paramValue) throws ProcessingException,
+            ConfigurationException {
+        final Node jbossWeb = getJbossWebNode(webArchive);
+        final Document document = getJbossWebDocument(jbossWeb);
+
+        Element element = DocumentUtil.getElement(document, new QName("valve"));
+
+        if (element != null) {
+
+            Element paramElement = document.createElement("param");
+            element.appendChild(paramElement);
+
+            Element paramNameElement = document.createElement("param-name");
+            paramNameElement.setTextContent(paramName);
+            paramElement.appendChild(paramNameElement);
+
+            Element paramValueElement = document.createElement("param-value");
+            paramValueElement.setTextContent(paramValue);
+            paramElement.appendChild(paramValueElement);
+        }
+        overridePicketLinkConfig(webArchive, jbossWeb, document);
+    }
+
+    /**
+     * Returns content of picketlink.xml file from webArchive
+     * 
+     * @param webArchive
+     * @return String content of configuration file
+     * @throws ProcessingException
+     * @throws ConfigurationException
+     */
+    public static String getPicketLinkConfiguration(WebArchive webArchive) throws ProcessingException, ConfigurationException {
+        final Node picketlink = getPicketLinkConfigNode(webArchive);
+        return DocumentUtil.getDocumentAsString(getPicketLinkConfigDocument(picketlink));
+
+    }
+
     private static Document getPicketLinkConfigDocument(final Node picketlink) {
         final Document document;
 
@@ -258,6 +306,22 @@ public class PicketLinkConfigurationUtil {
 
     private static Node getPicketLinkConfigNode(WebArchive webArchive) {
         return getContent(webArchive, "/WEB-INF/picketlink.xml");
+    }
+
+    private static Document getJbossWebDocument(final Node jbossWeb) {
+        final Document document;
+
+        try {
+            document = DocumentUtil.getDocument(jbossWeb.getAsset().openStream());
+        } catch (Exception e) {
+            throw new RuntimeException("Error getting jboss-web.xml from WebArchive.", e);
+        }
+        return document;
+    }
+
+    private static Node getJbossWebNode(WebArchive webArchive) {
+
+        return getContent(webArchive, "/WEB-INF/jboss-web.xml");
     }
 
     private static Node getContent(WebArchive webArchive, final String path) {
