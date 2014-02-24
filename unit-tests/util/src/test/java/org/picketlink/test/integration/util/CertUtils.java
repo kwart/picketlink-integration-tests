@@ -24,6 +24,7 @@ package org.picketlink.test.integration.util;
 
 import java.io.IOException;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
@@ -79,7 +80,11 @@ public class CertUtils {
      * @return Key store object
      * @throws IOException
      * @throws GeneralSecurityException
-     * @throws ReflectiveOperationException
+     * @throws ClassNotFoundException 
+     * @throws NoSuchMethodException      
+     * @throws InvocationTargetException 
+     * @throws IllegalAccessException 
+     * @throws InstantiationException        
      */
     public static KeyStore generateSelfSignedCertificate(
       KeyStore keyStore,
@@ -91,7 +96,9 @@ public class CertUtils {
       String country,
       String alias,
       char[] keyPass)
-      throws IOException, GeneralSecurityException, ReflectiveOperationException {
+ throws IOException,
+            GeneralSecurityException, ClassNotFoundException, NoSuchMethodException, InstantiationException, IllegalAccessException,
+            InvocationTargetException {
         Class certAndKeyGenClass, x500NameClass;
         Constructor certAndKeyGen_constructor, x500Name_constructor;
         Method certAndKeyGen_generate, certAndKeyGen_getPrivateKey, certAndKeyGen_getSelfCertificate;
