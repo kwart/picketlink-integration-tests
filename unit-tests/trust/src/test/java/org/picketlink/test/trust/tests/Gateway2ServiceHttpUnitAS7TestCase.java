@@ -33,6 +33,7 @@ import org.jboss.logging.Logger;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.picketlink.common.exceptions.ConfigurationException;
 import org.picketlink.common.exceptions.ParsingException;
@@ -58,6 +59,7 @@ import org.picketlink.test.trust.servlet.ServiceServlet;
 @ServerSetup({})
 @RunWith(PicketLinkIntegrationTests.class)
 @TargetContainers({"jbas7","eap6"})
+@Ignore("bz#1064331")
 public class Gateway2ServiceHttpUnitAS7TestCase extends Gateway2ServiceHttpUnitCommon {
 
     protected static final Logger log = Logger.getLogger(Gateway2ServiceHttpUnitAS7TestCase.class);
