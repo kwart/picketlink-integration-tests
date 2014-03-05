@@ -41,6 +41,30 @@
             </plugin>
 -->
 
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-dependency-plugin</artifactId>
+            <version>2.8</version>
+            <executions>
+               <execution>
+                  <goals>
+                     <goal>copy</goal>
+                  </goals>
+                  <configuration>
+                     <!-- Configure the plugin to copy the jar containing javax.annotation.*
+                        to a folder named "endorsed" within the project's build directory -->
+                     <artifactItems>
+                        <artifactItem>
+                           <groupId>org.jboss.spec.javax.annotation</groupId>
+                           <artifactId>jboss-annotations-api_1.1_spec</artifactId>
+                        </artifactItem>
+                     </artifactItems>
+                     <outputDirectory>${project.build.directory}/endorsed</outputDirectory>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-war-plugin</artifactId>
@@ -61,6 +85,7 @@
                 <configuration>
                     <source>1.6</source>
                     <target>1.6</target>
+                    <compilerArgument>-Djava.endorsed.dirs=${project.build.directory}/endorsed</compilerArgument>
                 </configuration>
             </plugin>
 
@@ -68,6 +93,9 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.12</version>
                 <configuration>
+<!--
+                    <argLine>-Djava.endorsed.dirs=${project.build.directory}/endorsed</argLine>
+-->
                     <skip>true</skip>
                     <additionalClasspathElements>
                         <!-- The tests are run from within a container's directory -->
@@ -79,6 +107,13 @@
    </build>
 
     <dependencies>
+		<dependency>
+			<groupId>org.jboss.spec.javax.annotation</groupId>
+			<artifactId>jboss-annotations-api_1.1_spec</artifactId>
+			<version>1.0.1.Final</version>
+			<scope>provided</scope>
+		</dependency>
+		
         <dependency>
             <groupId>org.picketlink</groupId>
             <artifactId>picketlink-integration-util-tests</artifactId>
