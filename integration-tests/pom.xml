@@ -160,7 +160,11 @@
 								<property>
 									<name>JAVA_OPTS</name>
 									<value>${env.JAVA_OPTS}</value>
-								</property>
+                                                                </property>
+                                                                <property>
+                                                                        <name>smproperty</name>
+                                                                        <value>${smproperty}</value>
+                                                                </property>
 							</systemProperties>
 							<reportNameSuffix>SAML-${binding.server}</reportNameSuffix>
 						</configuration>

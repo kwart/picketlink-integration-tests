@@ -20,7 +20,7 @@
 
         <!-- If picketlink.skip.lib.copy is true, this Boolean flag determines whether
              to use classic PL installer to install PL as EAP module -->
-        <picketlink.installer>true</picketlink.installer>
+        <picketlink.installer>false</picketlink.installer>
 
         <!-- If the above property is set to "true", this property determines name of the PL installer -->
         <picketlink.installer.zip>picketlink-1.2.2.Final-installer.zip</picketlink.installer.zip>
@@ -33,10 +33,10 @@
         <picketlink.ts.maven.user.settings></picketlink.ts.maven.user.settings>
 
         <!-- Name of the EAP zip distribution file -->
-		<jbas7.dist.zip>jboss-eap-6.2.0.zip</jbas7.dist.zip>
+		<jbas7.dist.zip>jboss-eap-6.3.zip</jbas7.dist.zip>
 
         <!-- Root of the extracted EAP installation -->
-		<jboss.as.home>${integration.tests.containers.dir}/jboss-eap-6.2</jboss.as.home>
+		<jboss.as.home>${integration.tests.containers.dir}/jboss-eap-6.3</jboss.as.home>
 
 		<jboss.as.picketlink.lib.dir>${jboss.as.home}/modules/system/layers/base/org/picketlink/main</jboss.as.picketlink.lib.dir>
 		<version.jboss-client>${version.jboss_as7}</version.jboss-client>
@@ -287,124 +287,4 @@
 			</plugins>
 		</pluginManagement>
 	</build>
-
-	<profiles>
-		<profile>
-			<id>jbas7.profile</id>
-			<activation>
-                <activeByDefault>true</activeByDefault>
-            </activation>
-
-			<build>
-				<plugins>
-					<!-- This plugin execute some transformations in the standalone.xml fo 
-						the JBoss AS7 installation in order to run the integration tests. -->
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>xml-maven-plugin</artifactId>
-						<version>1.0</version>						
-						<executions>						
-							<execution>
-								<phase>process-test-classes</phase>
-								<goals>
-									<goal>transform</goal>
-								</goals>
-								<configuration>									
-									<transformationSets>
-										<transformationSet>
-											<dir>${jboss.as.home}/standalone/configuration/</dir>
-											<outputDir>${jboss.as.home}/standalone/configuration</outputDir>
-											<includes>
-												<include>standalone.xml</include>
-											</includes>
-											<stylesheet>src/test/resources/xslt/addSecurityDomain.xslt</stylesheet>
-										</transformationSet>
-<!-- 										<transformationSet> -->
-<!-- 											<dir>${jboss.as.home}/standalone/configuration/</dir> -->
-<!-- 											<outputDir>${jboss.as.home}/standalone/configuration</outputDir> -->
-<!-- 											<includes> -->
-<!-- 												<include>standalone.xml</include> -->
-<!-- 											</includes> -->
-<!-- 											<stylesheet>src/test/resources/xslt/changeBindingPorts.xslt</stylesheet> -->
-<!-- 										</transformationSet> -->
-		 								<transformationSet>
-											<dir>${jboss.as.home}/modules/org/picketlink/main</dir>
-											<outputDir>${jboss.as.home}/modules/org/picketlink/main</outputDir>
-											<includes>
-												<include>module.xml</include>
-											</includes>
-											<stylesheet>src/test/resources/xslt/changePicketLinkModule.xslt</stylesheet>
-											<parameters>
-												<parameter>
-													<name>picketlink_version</name>
-													<value>${version.picketlink}</value>
-												</parameter>
-											</parameters>
-										</transformationSet>
-										This should be removed when AS7 is updated the jbossxacml module 
-											is updated with 2.0.8
-										<transformationSet>
-											<dir>${jboss.as.home}/modules/org/jboss/security/xacml/main</dir>
-											<outputDir>${jboss.as.home}/modules/org/jboss/security/xacml/main</outputDir>
-											<includes>
-												<include>module.xml</include>
-											</includes>
-											<stylesheet>src/test/resources/xslt/changeJBossXACMLModule.xslt</stylesheet>
-										</transformationSet>
-										<transformationSet>
-											<dir>${jboss.as.home}/modules/org/apache/xalan/main</dir>
-											<outputDir>${jboss.as.home}/modules/org/apache/xalan/main</outputDir>
-											<includes>
-												<include>module.xml</include>
-											</includes>
-											<stylesheet>src/test/resources/xslt/changeXalanModule.xslt</stylesheet>
-										</transformationSet>		
-									</transformationSets>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>			
-			</build>
-		</profile>
-		<profile>
-			<id>eap6.profile</id>
-			<activation>
-			      	<property>
-					<name>eap6</name>
-			      	</property>
-    			</activation>
-			<build>
-				<plugins>
-					<!-- This plugin execute some transformations in the standalone.xml fo 
-						the JBoss AS7 installation in order to run the integration tests. -->
-					<plugin>
-						<groupId>org.codehaus.mojo</groupId>
-						<artifactId>xml-maven-plugin</artifactId>
-						<version>1.0</version>
-						<executions>
-							<execution>
-								<phase>process-test-classes</phase>
-								<goals>
-									<goal>transform</goal>
-								</goals>
-								<configuration>
-									<transformationSets>
-										<transformationSet>
-											<dir>${jboss.as.home}/standalone/configuration/</dir>
-											<outputDir>${jboss.as.home}/standalone/configuration</outputDir>
-											<includes>
-												<include>standalone.xml</include>
-											</includes>
-											<stylesheet>src/test/resources/xslt/addSecurityDomain.xslt</stylesheet>
-										</transformationSet>
-									</transformationSets>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>			
-			</build>
-		</profile>
-	</profiles>
 </project>
