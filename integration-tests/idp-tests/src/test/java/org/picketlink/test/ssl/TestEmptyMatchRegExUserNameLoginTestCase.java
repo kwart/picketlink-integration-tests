@@ -105,7 +105,7 @@ public class TestEmptyMatchRegExUserNameLoginTestCase extends AbstractIdpSslCert
         URI address = getPrintPrincipalUri(uri);
         HttpGet get = new HttpGet(address);
 
-        expextedException.expect(SSLPeerUnverifiedException.class);
+        expextedException.expect(Exception.class);
         httpClient.execute(get);
     }
 

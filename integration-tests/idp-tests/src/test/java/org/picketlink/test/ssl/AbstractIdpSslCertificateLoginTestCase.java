@@ -174,8 +174,8 @@ public abstract class AbstractIdpSslCertificateLoginTestCase {
         // This is just plain wrong - SAML POST binding should be received only once. We do
         // this only because it is currently implemented so, it is working yet not efficient
 
-        response = performPostBinding(responseBody, httpClient);
-        EntityUtils.consume(response.getEntity());
+//        response = performPostBinding(responseBody, httpClient);
+//        EntityUtils.consume(response.getEntity());
 
         // This should have been already performed by the redirection above,
         // however it redirects to the context root.
