@@ -56,7 +56,7 @@ public class IdPInitiatedSsoTestCase extends AbstractIdPInitiatedSsoTestCase {
 
         res.delete("WEB-INF/jboss-web.xml");
 
-        res.add(JBoss7Util.getJBossWebXmlAsset("sp", "org.picketlink.identity.federation.bindings.tomcat.sp.SAML11SPRedirectFormAuthenticator"), "WEB-INF/jboss-web.xml")
+        res.add(JBoss7Util.getJBossWebXmlAsset("sp", "org.picketlink.identity.federation.bindings.tomcat.sp.SPRedirectSignatureFormAuthenticator"), "WEB-INF/jboss-web.xml")
           .add(new StringAsset(HELLO_WORLD_FROM_WITHIN_CONTEXT_TEXT), HELLO_WORLD_ADDR);
 
         return res;

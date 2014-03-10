@@ -75,9 +75,14 @@ public abstract class AbstractIdPInitiatedSsoTestCase {
     public static final String LINK_NAME_NAME_EMPLOYEE_UNSPECIFIED = QS_NAME_EMPLOYEE;
     public static final String LINK_NAME_NAME_EMPLOYEE_11 = QS_NAME_EMPLOYEE + "-1.1";
     public static final String LINK_NAME_NAME_EMPLOYEE_20 = QS_NAME_EMPLOYEE + "-2.0";
+
     public static final String LINK_NAME_NAME_EMPLOYEE_HELLO_WORLD_UNSPECIFIED = QS_NAME_EMPLOYEE + "-hw";
     public static final String LINK_NAME_NAME_EMPLOYEE_HELLO_WORLD_11 = QS_NAME_EMPLOYEE + "-hw-1.1";
     public static final String LINK_NAME_NAME_EMPLOYEE_HELLO_WORLD_20 = QS_NAME_EMPLOYEE + "-hw-2.0";
+
+    public static final String LINK_NAME_NAME_EMPLOYEE_NO_TERMINATING_SLASH_UNSPECIFIED = QS_NAME_EMPLOYEE + "-ns";
+    public static final String LINK_NAME_NAME_EMPLOYEE_NO_TERMINATING_SLASH_11 = QS_NAME_EMPLOYEE + "-ns-1.1";
+    public static final String LINK_NAME_NAME_EMPLOYEE_NO_TERMINATING_SLASH_20 = QS_NAME_EMPLOYEE + "-ns-2.0";
 
     public static final String HELLO_WORLD_FROM_WITHIN_CONTEXT_TEXT = "Hello World from within context";
     public static final String INDEX_TEXT_IN_EMPLOYEE_ROOT_TEXT = "Employee Tool, <b>tomcat</b>";
@@ -102,9 +107,13 @@ public abstract class AbstractIdPInitiatedSsoTestCase {
         idp.delete("hosted/index.jsp");
         idp.add(new StringAsset("<html><body>Welcome to IdP hosted"
 
-          + getIdPAnchor(null, QS_NAME_EMPLOYEE, LINK_NAME_NAME_EMPLOYEE_UNSPECIFIED)
-          + getIdPAnchor("1.1", QS_NAME_EMPLOYEE, LINK_NAME_NAME_EMPLOYEE_11)
-          + getIdPAnchor("2.0", QS_NAME_EMPLOYEE, LINK_NAME_NAME_EMPLOYEE_20)
+          + getIdPAnchor(null, QS_NAME_EMPLOYEE, LINK_NAME_NAME_EMPLOYEE_NO_TERMINATING_SLASH_UNSPECIFIED)
+          + getIdPAnchor("1.1", QS_NAME_EMPLOYEE, LINK_NAME_NAME_EMPLOYEE_NO_TERMINATING_SLASH_11)
+          + getIdPAnchor("2.0", QS_NAME_EMPLOYEE, LINK_NAME_NAME_EMPLOYEE_NO_TERMINATING_SLASH_20)
+
+          + getIdPAnchor(null, QS_NAME_EMPLOYEE + "/", LINK_NAME_NAME_EMPLOYEE_UNSPECIFIED)
+          + getIdPAnchor("1.1", QS_NAME_EMPLOYEE + "/", LINK_NAME_NAME_EMPLOYEE_11)
+          + getIdPAnchor("2.0", QS_NAME_EMPLOYEE + "/", LINK_NAME_NAME_EMPLOYEE_20)
 
           + getIdPAnchor(null, QS_NAME_EMPLOYEE + "/" + HELLO_WORLD_ADDR, LINK_NAME_NAME_EMPLOYEE_HELLO_WORLD_UNSPECIFIED)
           + getIdPAnchor("1.1", QS_NAME_EMPLOYEE + "/" + HELLO_WORLD_ADDR, LINK_NAME_NAME_EMPLOYEE_HELLO_WORLD_11)
@@ -226,6 +235,7 @@ public abstract class AbstractIdPInitiatedSsoTestCase {
         checkIdPFirstConversation(idpUri, LINK_NAME_NAME_EMPLOYEE_20, INDEX_TEXT_IN_EMPLOYEE_ROOT_TEXT);
     }
 
+
     @Test
     public void testSpInitiatedSsoSubContext(
       @ArquillianResource @OperateOnDeployment(QS_NAME_EMPLOYEE) URI spUri
@@ -253,5 +263,27 @@ public abstract class AbstractIdPInitiatedSsoTestCase {
       @ArquillianResource @OperateOnDeployment(QS_NAME_IDP) URI idpUri
     ) throws Exception {
         checkIdPFirstConversation(idpUri, LINK_NAME_NAME_EMPLOYEE_HELLO_WORLD_20, HELLO_WORLD_FROM_WITHIN_CONTEXT_TEXT);
+    }
+
+
+    @Test
+    public void testIdPInitiatedSAMLUnspecifiedVersionNoTerminatingSlash(
+      @ArquillianResource @OperateOnDeployment(QS_NAME_IDP) URI idpUri
+    ) throws Exception {
+        checkIdPFirstConversation(idpUri, LINK_NAME_NAME_EMPLOYEE_NO_TERMINATING_SLASH_UNSPECIFIED, INDEX_TEXT_IN_EMPLOYEE_ROOT_TEXT);
+    }
+
+    @Test
+    public void testIdPInitiatedSAML11NoTerminatingSlash(
+      @ArquillianResource @OperateOnDeployment(QS_NAME_IDP) URI idpUri
+    ) throws Exception {
+        checkIdPFirstConversation(idpUri, LINK_NAME_NAME_EMPLOYEE_NO_TERMINATING_SLASH_11, INDEX_TEXT_IN_EMPLOYEE_ROOT_TEXT);
+    }
+
+    @Test
+    public void testIdPInitiatedSAML20NoTerminatingSlash(
+      @ArquillianResource @OperateOnDeployment(QS_NAME_IDP) URI idpUri
+    ) throws Exception {
+        checkIdPFirstConversation(idpUri, LINK_NAME_NAME_EMPLOYEE_NO_TERMINATING_SLASH_20, INDEX_TEXT_IN_EMPLOYEE_ROOT_TEXT);
     }
 }
