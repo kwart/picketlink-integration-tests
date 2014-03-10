@@ -54,7 +54,7 @@ import static org.picketlink.test.ssl.AbstractIdpSslCertificateLoginTestCase.PRE
  *
  * @author Hynek Mlnarik <hmlnarik@redhat.com>
  */
-@TargetContainers ({"jbas7"})
+@TargetContainers ({"jbas7","eap6"})
 @ServerSetup({
     AbstractIdpSslCertificateLoginTestCase.PrepareSsl.class,
     TestIdpSslCertificateLoginTestCase.SecurityDomainsServerSetupTask.class
