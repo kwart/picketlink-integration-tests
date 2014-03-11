@@ -35,8 +35,8 @@ import org.picketlink.test.integration.util.TargetContainers;
 
 /**
  * Test case for testing unsolicited IdP response SSO.
- * This testcase uses {@link SAML11SPRedirectFormAuthenticator} valve to interpret
- * SAML assertions.
+ * This testcase uses {@link ServiceProviderAuthenticator} valve to interpret
+ * SAML assertions, as described in PicketLink guide.
  *
  * @see https://issues.jboss.org/browse/EAP6-92
  * @see https://issues.jboss.org/browse/PLINK-363
@@ -47,7 +47,7 @@ import org.picketlink.test.integration.util.TargetContainers;
 @TargetContainers ({"jbas7","eap6"})
 @RunWith(PicketLinkIntegrationTests.class)
 @RunAsClient
-public class IdPInitiatedSsoTestCase extends AbstractIdPInitiatedSsoTestCase {
+public class IdPInitiatedSsoPicketLinkGuideTestCase extends AbstractIdPInitiatedSsoTestCase {
 
     @Deployment(name = QS_NAME_EMPLOYEE, testable = false)
     @TargetsContainer(value = "jboss")
@@ -56,7 +56,7 @@ public class IdPInitiatedSsoTestCase extends AbstractIdPInitiatedSsoTestCase {
 
         res.delete("WEB-INF/jboss-web.xml");
 
-        res.add(JBoss7Util.getJBossWebXmlAsset("sp", "org.picketlink.identity.federation.bindings.tomcat.sp.SPRedirectSignatureFormAuthenticator"), "WEB-INF/jboss-web.xml")
+        res.add(JBoss7Util.getJBossWebXmlAsset("sp", "org.picketlink.identity.federation.bindings.tomcat.sp.ServiceProviderAuthenticator"), "WEB-INF/jboss-web.xml")
           .add(new StringAsset(HELLO_WORLD_FROM_WITHIN_CONTEXT_TEXT), HELLO_WORLD_ADDR);
 
         return res;

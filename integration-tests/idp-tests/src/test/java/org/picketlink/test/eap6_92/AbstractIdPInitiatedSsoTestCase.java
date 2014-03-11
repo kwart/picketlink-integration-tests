@@ -232,12 +232,13 @@ public abstract class AbstractIdPInitiatedSsoTestCase {
     public void testIdPInitiatedSAML20(
       @ArquillianResource @OperateOnDeployment(QS_NAME_IDP) URI idpUri
     ) throws Exception {
+        // this fails, see https://bugzilla.redhat.com/show_bug.cgi?id=1071288
         checkIdPFirstConversation(idpUri, LINK_NAME_NAME_EMPLOYEE_20, INDEX_TEXT_IN_EMPLOYEE_ROOT_TEXT);
     }
 
 
     @Test
-    public void testSpInitiatedSsoSubContext(
+    public void testSpInitiatedSsoHelloWorld(
       @ArquillianResource @OperateOnDeployment(QS_NAME_EMPLOYEE) URI spUri
     ) throws Exception {
         // this fails, see https://bugzilla.redhat.com/show_bug.cgi?id=1072387
