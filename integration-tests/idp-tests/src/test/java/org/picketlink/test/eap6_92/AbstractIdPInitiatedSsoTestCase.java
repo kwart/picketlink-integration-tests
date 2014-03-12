@@ -21,22 +21,19 @@
  */
 package org.picketlink.test.eap6_92;
 
-import com.meterware.httpunit.GetMethodWebRequest;
-import com.meterware.httpunit.SubmitButton;
-import com.meterware.httpunit.WebConversation;
-import com.meterware.httpunit.WebForm;
-import com.meterware.httpunit.WebLink;
-import com.meterware.httpunit.WebRequest;
-import com.meterware.httpunit.WebResponse;
-import java.io.FileNotFoundException;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
+import static org.junit.internal.matchers.StringContains.containsString;
+import static org.picketlink.test.integration.util.PicketLinkConfigurationUtil.addTrustedDomain;
+import static org.picketlink.test.integration.util.TestUtil.getServerAddress;
+import static org.picketlink.test.integration.util.TestUtil.getTargetURL;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.security.GeneralSecurityException;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
+
 import org.hamcrest.CoreMatchers;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
@@ -44,18 +41,18 @@ import org.jboss.arquillian.container.test.api.TargetsContainer;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
 import org.junit.Ignore;
 import org.junit.Test;
-import static org.junit.internal.matchers.StringContains.containsString;
-import org.picketbox.util.StringUtil;
-import org.picketlink.test.integration.util.JBoss7Util;
 import org.picketlink.test.integration.util.MavenArtifactUtil;
-import static org.picketlink.test.integration.util.PicketLinkConfigurationUtil.addTrustedDomain;
-import static org.picketlink.test.integration.util.TestUtil.getServerAddress;
-import static org.picketlink.test.integration.util.TestUtil.getTargetURL;
 import org.xml.sax.SAXException;
+
+import com.meterware.httpunit.GetMethodWebRequest;
+import com.meterware.httpunit.SubmitButton;
+import com.meterware.httpunit.WebConversation;
+import com.meterware.httpunit.WebForm;
+import com.meterware.httpunit.WebLink;
+import com.meterware.httpunit.WebRequest;
+import com.meterware.httpunit.WebResponse;
 
 /**
  * Abstract test case for EAP6-92 feature: Configuration of IDP indicated SSO.
@@ -237,12 +234,12 @@ public abstract class AbstractIdPInitiatedSsoTestCase {
         checkIdPFirstConversation(idpUri, LINK_NAME_NAME_EMPLOYEE_20, INDEX_TEXT_IN_EMPLOYEE_ROOT_TEXT);
     }
 
-
     @Test
+    @Ignore("https://bugzilla.redhat.com/show_bug.cgi?id=1072387")
     public void testSpInitiatedSsoHelloWorld(
       @ArquillianResource @OperateOnDeployment(QS_NAME_EMPLOYEE) URI spUri
     ) throws Exception {
-        // this fails, see https://bugzilla.redhat.com/show_bug.cgi?id=1072387
+
         checkSpFirstConversation(spUri.resolve(HELLO_WORLD_ADDR), HELLO_WORLD_FROM_WITHIN_CONTEXT_TEXT);
     }
 
@@ -261,6 +258,7 @@ public abstract class AbstractIdPInitiatedSsoTestCase {
     }
 
     @Test
+    @Ignore("https://bugzilla.redhat.com/show_bug.cgi?id=1072387")
     public void testIdPInitiatedSAML20HelloWorld(
       @ArquillianResource @OperateOnDeployment(QS_NAME_IDP) URI idpUri
     ) throws Exception {

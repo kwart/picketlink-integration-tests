@@ -27,6 +27,7 @@ import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.container.test.api.TargetsContainer;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.picketlink.test.integration.util.JBoss7Util;
 import org.picketlink.test.integration.util.MavenArtifactUtil;
@@ -47,6 +48,7 @@ import org.picketlink.test.integration.util.TargetContainers;
 @TargetContainers ({"jbas7","eap6"})
 @RunWith(PicketLinkIntegrationTests.class)
 @RunAsClient
+@Ignore("Wrong vault in documentation: BZ-1074994 ")
 public class IdPInitiatedSsoEapSecurityGuideTestCase extends AbstractIdPInitiatedSsoTestCase {
 
     @Deployment(name = QS_NAME_EMPLOYEE, testable = false)

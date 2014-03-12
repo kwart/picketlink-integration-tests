@@ -22,32 +22,33 @@
 
 package org.picketlink.test.ssl;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+
 import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
-import javax.net.ssl.SSLPeerUnverifiedException;
+
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
-import static org.hamcrest.CoreMatchers.*;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.as.arquillian.api.ServerSetup;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.picketlink.test.integration.util.PicketLinkIntegrationTests;
-import org.picketlink.test.integration.util.TargetContainers;
-
 import org.jboss.as.security.Constants;
-import static org.junit.Assert.*;
+import org.junit.Ignore;
 import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.runner.RunWith;
 import org.picketlink.test.integration.security.as7.AbstractSecurityDomainsServerSetupTask;
 import org.picketlink.test.integration.security.as7.JSSE;
 import org.picketlink.test.integration.security.as7.SecureStore;
 import org.picketlink.test.integration.security.as7.SecurityDomain;
 import org.picketlink.test.integration.security.as7.SecurityModule;
-import static org.picketlink.test.ssl.AbstractIdpSslCertificateLoginTestCase.PREPARE_SSL_TASK;
+import org.picketlink.test.integration.util.PicketLinkIntegrationTests;
+import org.picketlink.test.integration.util.TargetContainers;
 
 /**
  * Tests a IdP using a certificate and RegExUserNameLoginModule.
@@ -72,6 +73,7 @@ public class TestIdpSslCertificateAndRegExUserNameLoginTestCase extends Abstract
      */
     @OperateOnDeployment(SERVICE_PROVIDER_NAME)
     @Test
+    @Ignore("https://bugzilla.redhat.com/show_bug.cgi?id=1075667")
     public void testTrustedCert(@ArquillianResource URI uri) throws Exception {
         assertThat(uri, notNullValue());
         assertThat(uri.getScheme(), equalTo("http"));
@@ -91,6 +93,7 @@ public class TestIdpSslCertificateAndRegExUserNameLoginTestCase extends Abstract
      */
     @OperateOnDeployment(SERVICE_PROVIDER_NAME)
     @Test
+    @Ignore("https://bugzilla.redhat.com/show_bug.cgi?id=1075667")
     public void testTrustedCertRoles(@ArquillianResource URI uri) throws Exception {
         assertThat(uri, notNullValue());
         assertThat(uri.getScheme(), equalTo("http"));
