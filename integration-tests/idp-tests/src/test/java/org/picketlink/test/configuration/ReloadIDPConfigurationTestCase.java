@@ -61,7 +61,7 @@ import com.meterware.httpunit.WebResponse;
  * 
  * @author Filip Bogyai
  */
-@Ignore("PLINK-356")
+
 @TargetContainers({ "jbas7" })
 public class ReloadIDPConfigurationTestCase extends AbstractExternalConfigurationTestCase {
 
