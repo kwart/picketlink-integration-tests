@@ -1,0 +1,5 @@
+// Grant all to AS.
+grant {
+  permission java.security.AllPermission;
+};
+
