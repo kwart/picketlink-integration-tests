@@ -6,11 +6,18 @@
 
 package org.picketlink.test.ssl;
 
-import org.picketlink.test.integration.util.CertUtils;
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.notNullValue;
+import static org.junit.Assert.assertThat;
+import static org.picketlink.test.ssl.RolePrintingServlet.PARAM_ROLE_NAME;
+
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.UnknownHostException;
 import java.security.GeneralSecurityException;
 import java.security.Key;
 import java.security.KeyStore;
@@ -19,7 +26,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.net.ssl.SSLSocket;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
 import org.apache.http.NameValuePair;
@@ -35,8 +45,8 @@ import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.BasicClientConnectionManager;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.params.HttpParams;
 import org.apache.http.util.EntityUtils;
-import static org.hamcrest.CoreMatchers.*;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.TargetsContainer;
@@ -46,10 +56,9 @@ import org.jboss.logging.Logger;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import static org.junit.Assert.*;
 import org.junit.Test;
+import org.picketlink.test.integration.util.CertUtils;
 import org.picketlink.test.integration.util.JBoss7Util;
-import static org.picketlink.test.ssl.RolePrintingServlet.PARAM_ROLE_NAME;
 
 /**
  *
@@ -245,9 +254,36 @@ public abstract class AbstractIdpSslCertificateLoginTestCase {
           clientKeyStore,
           PrepareKeyAndTrustStoresServerSetupTask.GENERIC_PASSWORD,
           PREPARE_SSL_TASK.getClientTrustStore(),
-          null,
-          SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER
-        );
+          null, SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER) {
+            @Override
+            public Socket createSocket() throws IOException {
+
+                SSLSocket socket = (SSLSocket) super.createSocket();
+                socket.setEnabledProtocols(new String[] { "TLSv1" });
+
+                return socket;
+            }
+
+            @Override
+            public Socket createSocket(HttpParams params) throws IOException {
+
+                SSLSocket socket = (SSLSocket) super.createSocket(params);
+                socket.setEnabledProtocols(new String[] { "TLSv1" });
+
+                return socket;
+            }
+
+            @Override
+            public Socket createSocket(Socket socket, String host, int port, boolean autoClose) throws IOException, UnknownHostException {
+
+                SSLSocket sslSocket = (SSLSocket) super.createSocket(socket, host, port, autoClose);
+                sslSocket.setEnabledProtocols(new String[] { "TLSv1" });
+                getHostnameVerifier().verify(host, sslSocket);
+
+                return sslSocket;
+            }
+
+        };
 
         SchemeRegistry schemeRegistry = new SchemeRegistry();
         schemeRegistry.register(new Scheme("http", 80, PlainSocketFactory.getSocketFactory()));

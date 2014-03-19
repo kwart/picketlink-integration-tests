@@ -22,10 +22,17 @@
 
 package org.picketlink.test.ssl;
 
+import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.ALLOW_RESOURCE_SERVICE_RESTART;
+import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.ENABLED;
+import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.OPERATION_HEADERS;
+import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.PROTOCOL;
+import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.ROLLBACK_ON_RUNTIME_FAILURE;
+import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.SOCKET_BINDING;
+import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.SOCKET_BINDING_GROUP;
+import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.SUBSYSTEM;
+
 import java.io.File;
 import java.security.KeyStore;
-import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.*;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -106,7 +113,7 @@ public class AddHttpsConnectorServerSetupTask implements ServerSetupTask {
         ssl.get("certificate-key-file").set(keyStoreTask.getServerKeystoreFile().getAbsolutePath());
         ssl.get("protocol").set("TLSv1");
         ssl.get("ca-certificate-file").set(keyStoreTask.getServerTruststoreFile().getAbsolutePath());
-        ssl.get("verify-client").set("want");
+        ssl.get("verify-client").set("true");
 
         ModelNode ops = ModelUtil.createCompositeNode(
           allowServiceRestart(binding),
