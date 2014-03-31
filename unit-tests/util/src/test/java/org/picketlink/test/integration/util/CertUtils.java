@@ -107,7 +107,11 @@ public class CertUtils {
             certAndKeyGenClass = Class.forName("com.ibm.security.x509.CertAndKeyGen");
             x500NameClass = Class.forName("com.ibm.security.x509.X500Name");
         } else {
-            certAndKeyGenClass = Class.forName("sun.security.x509.CertAndKeyGen");
+            try {
+                certAndKeyGenClass = Class.forName("sun.security.x509.CertAndKeyGen");
+            } catch (ClassNotFoundException e) {
+                certAndKeyGenClass = Class.forName("sun.security.tools.keytool.CertAndKeyGen");
+            }
             x500NameClass = Class.forName("sun.security.x509.X500Name");
         }
         certAndKeyGen_constructor = certAndKeyGenClass.getConstructor(CERTANDKEYGEN_CONSTRUCTOR_PARAMETERS);
