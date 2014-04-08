@@ -37,7 +37,6 @@ import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.as.arquillian.api.ServerSetup;
 import org.jboss.as.security.Constants;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -73,7 +72,6 @@ public class TestIdpSslCertificateAndRegExUserNameLoginTestCase extends Abstract
      */
     @OperateOnDeployment(SERVICE_PROVIDER_NAME)
     @Test
-    @Ignore("https://bugzilla.redhat.com/show_bug.cgi?id=1075667")
     public void testTrustedCert(@ArquillianResource URI uri) throws Exception {
         assertThat(uri, notNullValue());
         assertThat(uri.getScheme(), equalTo("http"));
@@ -84,8 +82,9 @@ public class TestIdpSslCertificateAndRegExUserNameLoginTestCase extends Abstract
           PrepareKeyAndTrustStoresServerSetupTask.TRUSTED_CLIENT_KEY_ALIAS,
           PrepareKeyAndTrustStoresServerSetupTask.GENERIC_PASSWORD_CHARS
         );
-
-        testSuccessfulOutput(httpClient, address, "Unexpected principal name.", "\"" + PrepareKeyAndTrustStoresServerSetupTask.COMMON_NAME_TRUSTED_CLIENT + "\"");
+        
+        //The name of principal coming from JAAS stack is same as SubjectDN from certificate
+        testSuccessfulOutput(httpClient, address, "Unexpected principal name.", PrepareKeyAndTrustStoresServerSetupTask.TRUSTED_CERT_NAME);
     }
 
     /**
@@ -93,7 +92,6 @@ public class TestIdpSslCertificateAndRegExUserNameLoginTestCase extends Abstract
      */
     @OperateOnDeployment(SERVICE_PROVIDER_NAME)
     @Test
-    @Ignore("https://bugzilla.redhat.com/show_bug.cgi?id=1075667")
     public void testTrustedCertRoles(@ArquillianResource URI uri) throws Exception {
         assertThat(uri, notNullValue());
         assertThat(uri.getScheme(), equalTo("http"));
@@ -105,9 +103,8 @@ public class TestIdpSslCertificateAndRegExUserNameLoginTestCase extends Abstract
           PrepareKeyAndTrustStoresServerSetupTask.GENERIC_PASSWORD_CHARS
         );
 
-        testSuccessfulOutput(httpClient, address, "Unexpected roles.",  ",TheDuke,User,R1,");
+        testSuccessfulOutput(httpClient, address, "Unexpected roles.", ",TheDuke,R1,User,");
     }
-
 
     /**
      * Test that it is not possible to authenticate using a non-trusted client certificate.
@@ -143,7 +140,7 @@ public class TestIdpSslCertificateAndRegExUserNameLoginTestCase extends Abstract
               .cacheType("default")
               .loginModules(
                 new SecurityModule.Builder()
-                .name("CertificateRoles")
+                .name("Certificate")
                 .flag(Constants.REQUIRED)
                 .putOption("password-stacking", "useFirstPass")
                 .putOption("securityDomain", IDP_SSL_SECURITY_DOMAIN)
