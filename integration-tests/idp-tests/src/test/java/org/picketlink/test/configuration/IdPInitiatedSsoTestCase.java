@@ -19,7 +19,7 @@
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
  */
-package org.picketlink.test.eap6_92;
+package org.picketlink.test.configuration;
 
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
@@ -37,13 +37,18 @@ import java.security.GeneralSecurityException;
 import org.hamcrest.CoreMatchers;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
+import org.jboss.arquillian.container.test.api.RunAsClient;
 import org.jboss.arquillian.container.test.api.TargetsContainer;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.picketlink.test.integration.util.JBoss7Util;
 import org.picketlink.test.integration.util.MavenArtifactUtil;
+import org.picketlink.test.integration.util.PicketLinkIntegrationTests;
+import org.picketlink.test.integration.util.TargetContainers;
 import org.xml.sax.SAXException;
 
 import com.meterware.httpunit.GetMethodWebRequest;
@@ -55,16 +60,21 @@ import com.meterware.httpunit.WebRequest;
 import com.meterware.httpunit.WebResponse;
 
 /**
- * Abstract test case for EAP6-92 feature: Configuration of IDP indicated SSO.
- *
- *
+ * Test case for configuration of IDP indicated SSO. Testing unsolicited IdP
+ * response SSO. This testcase uses {@link ServiceProviderAuthenticator} valve
+ * to interpret SAML assertions.
+ * 
  * @see https://issues.jboss.org/browse/EAP6-92
  * @see https://issues.jboss.org/browse/PLINK-363
  * @see https://issues.jboss.org/browse/PLINK-364
  * 
  * @author Hynek Mlnarik <hmlnarik@redhat.com>
  */
-public abstract class AbstractIdPInitiatedSsoTestCase {
+
+@TargetContainers({ "jbas7", "eap6" })
+@RunWith(PicketLinkIntegrationTests.class)
+@RunAsClient
+public class IdPInitiatedSsoTestCase {
 
     public static final String QS_NAME_IDP = "idp";
     public static final String QS_NAME_EMPLOYEE = "employee";
@@ -118,7 +128,21 @@ public abstract class AbstractIdPInitiatedSsoTestCase {
           + getIdPAnchor("2.0", QS_NAME_EMPLOYEE + "/" + HELLO_WORLD_ADDR, LINK_NAME_NAME_EMPLOYEE_HELLO_WORLD_20)
 
           + "</body></html>"), "hosted/index.jsp");
+
         return idp;
+    }
+
+    @Deployment(name = QS_NAME_EMPLOYEE, testable = false)
+    @TargetsContainer(value = "jboss")
+    public static WebArchive createEmployeeDeployment() throws IOException {
+        WebArchive res = MavenArtifactUtil.getQuickstartsMavenArchive(QS_NAME_EMPLOYEE);
+
+        res.delete("WEB-INF/jboss-web.xml");
+
+        res.add(JBoss7Util.getJBossWebXmlAsset("sp", "org.picketlink.identity.federation.bindings.tomcat.sp.ServiceProviderAuthenticator"),
+                "WEB-INF/jboss-web.xml").add(new StringAsset(HELLO_WORLD_FROM_WITHIN_CONTEXT_TEXT), HELLO_WORLD_ADDR);
+
+        return res;
     }
 
     /**
@@ -230,16 +254,14 @@ public abstract class AbstractIdPInitiatedSsoTestCase {
     public void testIdPInitiatedSAML20(
       @ArquillianResource @OperateOnDeployment(QS_NAME_IDP) URI idpUri
     ) throws Exception {
-        // this fails, see https://bugzilla.redhat.com/show_bug.cgi?id=1071288
+
         checkIdPFirstConversation(idpUri, LINK_NAME_NAME_EMPLOYEE_20, INDEX_TEXT_IN_EMPLOYEE_ROOT_TEXT);
     }
 
     @Test
-    @Ignore("https://bugzilla.redhat.com/show_bug.cgi?id=1072387")
-    public void testSpInitiatedSsoHelloWorld(
-      @ArquillianResource @OperateOnDeployment(QS_NAME_EMPLOYEE) URI spUri
-    ) throws Exception {
+    public void testSpInitiatedSsoHelloWorld() throws Exception {
 
+        URI spUri = new URI(getTargetURL("/" + QS_NAME_EMPLOYEE + "/")); 
         checkSpFirstConversation(spUri.resolve(HELLO_WORLD_ADDR), HELLO_WORLD_FROM_WITHIN_CONTEXT_TEXT);
     }
 
@@ -258,10 +280,8 @@ public abstract class AbstractIdPInitiatedSsoTestCase {
     }
 
     @Test
-    @Ignore("https://bugzilla.redhat.com/show_bug.cgi?id=1072387")
-    public void testIdPInitiatedSAML20HelloWorld(
-      @ArquillianResource @OperateOnDeployment(QS_NAME_IDP) URI idpUri
-    ) throws Exception {
+    @Ignore("https://bugzilla.redhat.com/show_bug.cgi?id=1071288")
+    public void testIdPInitiatedSAML20HelloWorld(@ArquillianResource @OperateOnDeployment(QS_NAME_IDP) URI idpUri) throws Exception {
         checkIdPFirstConversation(idpUri, LINK_NAME_NAME_EMPLOYEE_HELLO_WORLD_20, HELLO_WORLD_FROM_WITHIN_CONTEXT_TEXT);
     }
 
