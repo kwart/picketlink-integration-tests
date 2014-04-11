@@ -55,7 +55,6 @@ import org.picketlink.test.trust.servlet.ServiceServlet;
  * @since Aug 29, 2012
  */
 
-@ServerSetup({})
 @RunWith(PicketLinkIntegrationTests.class)
 @TargetContainers({"jbas7","eap6"})
 public class Gateway2ServiceHttpUnitAS7TestCase extends Gateway2ServiceHttpUnitCommon {
