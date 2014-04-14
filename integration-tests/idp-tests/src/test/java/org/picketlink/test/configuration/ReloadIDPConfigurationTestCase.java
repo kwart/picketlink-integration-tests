@@ -21,7 +21,8 @@
  */
 package org.picketlink.test.configuration;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThat;
+import static org.junit.internal.matchers.StringContains.containsString;
 import static org.picketlink.test.integration.util.PicketLinkConfigurationUtil.addKeyStoreAlias;
 import static org.picketlink.test.integration.util.PicketLinkConfigurationUtil.addTrustedDomain;
 import static org.picketlink.test.integration.util.PicketLinkConfigurationUtil.addValidatingAlias;
@@ -41,7 +42,6 @@ import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.TargetsContainer;
 import org.jboss.arquillian.junit.InSequence;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.picketlink.test.integration.util.MavenArtifactUtil;
 import org.picketlink.test.integration.util.TargetContainers;
@@ -87,12 +87,12 @@ public class ReloadIDPConfigurationTestCase extends AbstractExternalConfiguratio
 
         // Check Sales Application
         webResponse = webConversation.getCurrentPage();
-        assertTrue(" Not reached the sales index page ", webResponse.getText().contains("SalesTool"));
+        assertThat(" Not reached the sales index page ", webResponse.getText(), containsString("SalesTool"));
 
         // Check Employee Application
         System.out.println("Trying " + getEmployeeURL());
         webResponse = webConversation.getResponse(getEmployeeURL());
-        assertTrue(" Not reached the employee index page ", webResponse.getText().contains("EmployeeDashboard"));
+        assertThat(" Not reached the employee index page ", webResponse.getText(), containsString("EmployeeDashboard"));
 
         webConversation.clearContents();
     }
@@ -126,14 +126,14 @@ public class ReloadIDPConfigurationTestCase extends AbstractExternalConfiguratio
 
         // Check Sales Application
         webResponse = webConversation.getCurrentPage();
-        assertTrue(" Reached the sales index page ",
-                webResponse.getText().contains("The Identity Provider could not process the authentication request."));
+        assertThat(" Reached the sales index page ", webResponse.getText(),
+                containsString("The Identity Provider could not process the authentication request"));
 
         // Check Employee Application
         System.out.println("Trying " + getEmployeeURL());
         webResponse = webConversation.getResponse(getEmployeeURL());
-        assertTrue(" Reached the employee index page ",
-                webResponse.getText().contains("The Identity Provider could not process the authentication request."));
+        assertThat(" Reached the employee index page ", webResponse.getText(),
+                containsString("The Identity Provider could not process the authentication request"));
 
         webConversation.clearContents();
     }

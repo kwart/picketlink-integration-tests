@@ -21,11 +21,12 @@
  */
 package org.picketlink.test.configuration;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertThat;
+import static org.junit.internal.matchers.StringContains.containsString;
 import static org.picketlink.test.integration.util.PicketLinkConfigurationUtil.addKeyStoreAlias;
-import static org.picketlink.test.integration.util.PicketLinkConfigurationUtil.addValveParameter;
 import static org.picketlink.test.integration.util.PicketLinkConfigurationUtil.addTrustedDomain;
 import static org.picketlink.test.integration.util.PicketLinkConfigurationUtil.addValidatingAlias;
+import static org.picketlink.test.integration.util.PicketLinkConfigurationUtil.addValveParameter;
 import static org.picketlink.test.integration.util.TestUtil.getServerAddress;
 
 import java.io.File;
@@ -87,12 +88,12 @@ public class ReloadSPConfigurationTestCase extends AbstractExternalConfiguration
 
         // Check Sales Application
         webResponse = webConversation.getCurrentPage();
-        assertTrue(" Reached the sales index page ", webResponse.getText().contains("SalesTool"));
+        assertThat(" Not reached the sales index page ", webResponse.getText(), containsString("SalesTool"));
 
         // Check Employee Application
         System.out.println("Trying " + getEmployeeURL());
         webResponse = webConversation.getResponse(getEmployeeURL());
-        assertTrue(" Reached the employee index page ", webResponse.getText().contains("EmployeeDashboard"));
+        assertThat(" Not reached the employee index page ", webResponse.getText(), containsString("EmployeeDashboard"));
 
         webConversation.clearContents();
     }
@@ -126,13 +127,13 @@ public class ReloadSPConfigurationTestCase extends AbstractExternalConfiguration
 
         // Check Employee Application
         webResponse = webConversation.getCurrentPage();
-        assertTrue(" Not reached the employee index page ", webResponse.getText().contains("EmployeeDashboard"));
+        assertThat(" Not Reached the employee index page ", webResponse.getText(), containsString("EmployeeDashboard"));
 
         // Check Sales Application
         System.out.println("Trying " + getSalesURL());
         webResponse = webConversation.getResponse(getSalesURL());
-        assertTrue(" Reached the sales index page ",
-                webResponse.getText().contains("The Identity Provider could not process the authentication request"));
+        assertThat(" Reached the sales index page ", webResponse.getText(),
+                containsString("The Identity Provider could not process the authentication request"));
 
         webConversation.clearContents();
     }
@@ -171,56 +172,15 @@ public class ReloadSPConfigurationTestCase extends AbstractExternalConfiguration
 
         // Check Sales Application
         webResponse = webConversation.getCurrentPage();
-        assertTrue(" Reached the sales index page ", webResponse.getText().contains("SalesTool"));
+        assertThat(" Not reached the sales index page ", webResponse.getText(), containsString("SalesTool"));
         
         // Check Employee Application
         System.out.println("Trying " + getEmployeeURL());
         webResponse = webConversation.getResponse(getEmployeeURL());
-        assertTrue(" Reached the employee index page ",
-                webResponse.getText().contains("The Identity Provider could not process the authentication request."));
+        assertThat(" Reached the employee index page ", webResponse.getText(),
+                containsString("The Identity Provider could not process the authentication request"));
 
         webConversation.clearContents();
-    }
-
-    public void testSAMLSignatureAuthentization() throws IOException, SAXException {
-
-        System.out.println("Trying " + getSalesURL());
-        // Sales post Application Login
-        WebRequest serviceRequest1 = new GetMethodWebRequest(getSalesURL());
-        WebConversation webConversation = new WebConversation();
-
-        WebResponse webResponse = webConversation.getResponse(serviceRequest1);
-        WebForm loginForm = webResponse.getForms()[0];
-        loginForm.setParameter("j_username", "tomcat");
-        loginForm.setParameter("j_password", "tomcat");
-        SubmitButton submitButton = loginForm.getSubmitButtons()[0];
-        submitButton.click();
-
-        webResponse = webConversation.getCurrentPage();
-        assertTrue(" Reached the sales index page ", webResponse.getText().contains("SalesTool"));
-
-        // Employee post Application Login
-        System.out.println("Trying " + getEmployeeURL());
-        webResponse = webConversation.getResponse(getEmployeeURL());
-        assertTrue(" Reached the employee index page ", webResponse.getText().contains("EmployeeDashboard"));
-
-        // Logout from sales
-        System.out.println("Trying " + getSalesURL() + LOGOUT_URL);
-        webResponse = webConversation.getResponse(getSalesURL() + LOGOUT_URL);
-        assertTrue("Reached logged out page", webResponse.getText().contains("Logout"));
-
-        // Hit the Sales Apps again
-        System.out.println("Trying " + getSalesURL());
-        webResponse = webConversation.getResponse(getSalesURL());
-        assertTrue(" Reached the Login page ", webResponse.getText().contains("Login"));
-
-        // Hit the Employee Apps again
-        System.out.println("Trying " + getEmployeeURL());
-        webResponse = webConversation.getResponse(getEmployeeURL());
-        assertTrue(" Reached the Login page ", webResponse.getText().contains("Login"));
-
-        webConversation.clearContents();
-
     }
 
     @Deployment(name = "idp-sig", testable = false)
