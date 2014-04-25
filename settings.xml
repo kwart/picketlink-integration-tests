@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<settings>
+	<profiles>
+		<profile>
+			<id>jboss.repository</id>
+
+			<!--
+			    This profile must be active by default, otherwise the tests will fail using it. 
+			    See http://stackoverflow.com/questions/5309379/ why not to use activeByDefault
+			 -->
+			<activation> 
+				<property>
+					<name>!skipJbossRepository</name>
+				</property>
+			</activation>
+
+			<repositories>
+				<repository>
+					<id>jboss-public-repository-releases</id>
+					<name>JBoss Public Maven Repository Releases Group</name>
+					<url>https://repository.jboss.org/nexus/content/repositories/releases/</url>
+					<layout>default</layout>
+					<releases>
+						<enabled>true</enabled>
+						<updatePolicy>never</updatePolicy>
+						<checksumPolicy>ignore</checksumPolicy>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+						<updatePolicy>never</updatePolicy>
+						<checksumPolicy>ignore</checksumPolicy>
+					</snapshots>
+				</repository>	
+				<repository>
+                                        <id>public-repository-group</id>
+                                        <name>Public Repository Group</name>
+                                        <url>http://repository.jboss.org/nexus/content/groups/public/</url>
+                                        <layout>default</layout>
+                                        <releases>
+                                                <enabled>true</enabled>
+                                                <updatePolicy>never</updatePolicy>
+						<checksumPolicy>ignore</checksumPolicy>
+                                        </releases>
+                                        <snapshots>
+                                                <enabled>true</enabled>
+                                                <updatePolicy>never</updatePolicy>
+						<checksumPolicy>ignore</checksumPolicy>
+                                        </snapshots>
+                                </repository>
+			</repositories>
+			<pluginRepositories>
+				<pluginRepository>
+					<id>public-repository-group-plugin</id>
+					<name>Public Repository Group</name>
+					<url>http://repository.jboss.org/nexus/content/groups/public/</url>
+					<layout>default</layout>
+					<releases>
+						<enabled>true</enabled>
+						<updatePolicy>never</updatePolicy>
+						<checksumPolicy>ignore</checksumPolicy>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+						<updatePolicy>never</updatePolicy>
+						<checksumPolicy>ignore</checksumPolicy>
+					</snapshots>
+				</pluginRepository>
+			</pluginRepositories>
+		</profile>		
+	</profiles>
+</settings>
