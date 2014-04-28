@@ -39,7 +39,7 @@ import org.jboss.shrinkwrap.api.asset.StringAsset;
  * Class containing utility methods for JBoss 7/EAP 6.
  * @author hmlnarik
  */
-public class JBoss7Util {
+public class JBoss7Util {	
 
     private static final Logger LOGGER = Logger.getLogger(JBoss7Util.class);
 
@@ -97,16 +97,7 @@ public class JBoss7Util {
 	 */
 	public static String propertiesReplacer(InputStream stream, String deploymentName, String bindingType, String idpContextPath) {
 
-		String hostname = System.getProperty("node0");
-
-		//expand possible IPv6 address
-		try {
-			hostname = NetworkUtils.formatPossibleIpv6Address(InetAddress.getByName(hostname).getHostAddress());
-		} catch(UnknownHostException ex) {
-			String message = "Cannot resolve host address: "+ hostname + " , error : " + ex.getMessage();
-			LOGGER.error(message);
-			throw new RuntimeException(ex);
-		}
+		String hostname = getHostname();
 
 		final Map<String, String> map = new HashMap<String, String>();
 		String content = "";
@@ -123,6 +114,26 @@ public class JBoss7Util {
 			throw new RuntimeException(ex);
 		}
 		return content;
+	}
+	
+	/**
+	 * Set ${hostname} variable from system property: node0
+	 * 
+	 * @return Value of hostname
+	 */
+	public static String getHostname() {
+		String hostname = System.getProperty("node0");
+
+		//expand possible IPv6 address
+		try {
+			hostname = NetworkUtils.formatPossibleIpv6Address(InetAddress.getByName(hostname).getHostAddress());
+		} catch(UnknownHostException ex) {
+			String message = "Cannot resolve host address: "+ hostname + " , error : " + ex.getMessage();
+			LOGGER.error(message);
+			throw new RuntimeException(ex);
+		}
+		
+		return hostname;
 	}
 
 }

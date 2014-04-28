@@ -7,6 +7,14 @@
 /subsystem=security/security-domain=idp/authentication=classic:add
 /subsystem=security/security-domain=idp/authentication=classic/login-module=UsersRoles:add(code=UsersRoles, flag=required, module-options=[("usersProperties"=>"users.properties"), ("rolesProperties"=>"roles.properties")])
 
+/subsystem=security/security-domain=idp1:add(cache-type=default)
+/subsystem=security/security-domain=idp1/authentication=classic:add
+/subsystem=security/security-domain=idp1/authentication=classic/login-module=UsersRoles:add(code=UsersRoles, flag=required, module-options=[("usersProperties"=>"users.properties"), ("rolesProperties"=>"roles.properties")])
+
+/subsystem=security/security-domain=idp2:add(cache-type=default)
+/subsystem=security/security-domain=idp2/authentication=classic:add
+/subsystem=security/security-domain=idp2/authentication=classic/login-module=UsersRoles:add(code=UsersRoles, flag=required, module-options=[("usersProperties"=>"users.properties"), ("rolesProperties"=>"roles.properties")])
+
 /subsystem=security/security-domain=picketlink-sts:add(cache-type=default)
 /subsystem=security/security-domain=picketlink-sts/authentication=classic:add
 /subsystem=security/security-domain=picketlink-sts/authentication=classic/login-module=UsersRoles:add(code=UsersRoles, flag=required, module-options=[("usersProperties"=>"users.properties"), ("rolesProperties"=>"roles.properties")])
