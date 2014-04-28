@@ -18,7 +18,6 @@ import org.junit.runner.RunWith;
 import org.picketlink.test.integration.util.JBoss7Util;
 import org.picketlink.test.integration.util.PicketLinkIntegrationTests;
 import org.picketlink.test.integration.util.TargetContainers;
-import org.picketlink.test.integration.util.TestUtil;
 
 import com.meterware.httpunit.GetMethodWebRequest;
 import com.meterware.httpunit.HttpException;
@@ -173,7 +172,7 @@ public class AccountChooserTestCase {
     }
 
     private static String getHostnameForWar() {
-        return TestUtil.getServerAddress();
+        return JBoss7Util.getHostname();
     }
 
     /**

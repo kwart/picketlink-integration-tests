@@ -36,9 +36,7 @@ public class TestUtil {
     }
 
     public static String getServerAddress() {
-        // return System.getProperty(TEST_CONTAINER_BIND_ADDRESS, "localhost");
-    	String hostname = JBoss7Util.getHostname();
-    	return (hostname!=null) ? hostname : "localhost";
+        return System.getProperty(TEST_CONTAINER_BIND_ADDRESS, "localhost");
     }
 
 }
