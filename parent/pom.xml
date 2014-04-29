@@ -8,7 +8,7 @@
 	<properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<version.picketlink>2.5.3.Final</version.picketlink>
+		<version.picketlink>2.5.3.SP4</version.picketlink>
 		<version.picketlink.quickstarts>2.1.9.Final</version.picketlink.quickstarts>
 		<version.picketbox>4.0.17.Final</version.picketbox>
 
@@ -176,6 +176,14 @@
 			<version>3.1.1.GA</version>
             <scope>provided</scope>
 		</dependency>
+
+        <dependency>
+            <groupId>org.jboss.web</groupId>
+            <artifactId>jbossweb</artifactId>
+            <version>${version.jboss_as7}</version>
+            <scope>provided</scope>
+            <type>jar</type>
+        </dependency>
 		
 		<dependency>
     		<groupId>org.apache.httpcomponents</groupId>

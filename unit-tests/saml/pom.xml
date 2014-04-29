@@ -29,5 +29,13 @@
 			<type>test-jar</type>
 			<scope>test</scope>
 		</dependency>
+
+        <dependency>
+            <groupId>org.jboss.as</groupId>
+            <artifactId>jboss-as-arquillian-common</artifactId>
+            <version>7.2.0.Final</version>
+            <scope>test</scope>
+            <type>jar</type>
+        </dependency>
 	</dependencies>
 </project>
