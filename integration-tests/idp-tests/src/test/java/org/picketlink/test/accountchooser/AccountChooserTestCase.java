@@ -25,6 +25,9 @@ import com.meterware.httpunit.SubmitButton;
 import com.meterware.httpunit.WebConversation;
 import com.meterware.httpunit.WebForm;
 import com.meterware.httpunit.WebResponse;
+import org.apache.http.HttpStatus;
+import static org.junit.Assert.assertThat;
+import org.junit.matchers.JUnitMatchers;
 
 /**
  * Test case for Account Chooser functionality in PicketLink Service Provider.
@@ -345,7 +348,7 @@ public class AccountChooserTestCase {
                 submitButton.click();
                 fail("Access should be denied for user without needed role.");
             } catch (HttpException ex) {
-                if (ex.getResponseCode() != 403) {
+                if (ex.getResponseCode() != HttpStatus.SC_FORBIDDEN) {
                     throw ex;
                 }
             }
@@ -357,7 +360,7 @@ public class AccountChooserTestCase {
                 webConversation.getResponse(new GetMethodWebRequest(sp1Url.toString() + DOMAINA_URL));
                 fail("Access should be denied for user without needed role.");
             } catch (HttpException ex) {
-                if (ex.getResponseCode() != 403) {
+                if (ex.getResponseCode() != HttpStatus.SC_FORBIDDEN) {
                     throw ex;
                 }
             }
@@ -435,8 +438,7 @@ public class AccountChooserTestCase {
      */
     private WebResponse makeCall(String url, WebConversation webConversation, String expectedText) throws Exception {
         WebResponse webResponse = webConversation.getResponse(new GetMethodWebRequest(url));
-        assertTrue("Unexpected page was displayed (according to expectedText). " + webResponse.getText(), webResponse.getText()
-                .contains(expectedText));
+        assertThat("Unexpected page was displayed (according to expectedText).", webResponse.getText(),  JUnitMatchers.containsString(expectedText));
         return webResponse;
     }
 
@@ -455,7 +457,7 @@ public class AccountChooserTestCase {
             String password, String expectedFinalText) throws Exception {
         WebResponse webResponse = makeCall(url, webConversation, expectedText);
         webResponse = loginToIdp(webConversation, webResponse, user, password);
-        assertTrue("Unexpected service provider page was displayed.", webResponse.getText().contains(expectedFinalText));
+        assertThat("Unexpected service provider page was displayed.", webResponse.getText(), JUnitMatchers.containsString(expectedFinalText));
     }
 
     /**
