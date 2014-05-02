@@ -280,7 +280,6 @@ public class IdPInitiatedSsoTestCase {
     }
 
     @Test
-    @Ignore("https://bugzilla.redhat.com/show_bug.cgi?id=1071288")
     public void testIdPInitiatedSAML20HelloWorld(@ArquillianResource @OperateOnDeployment(QS_NAME_IDP) URI idpUri) throws Exception {
         checkIdPFirstConversation(idpUri, LINK_NAME_NAME_EMPLOYEE_HELLO_WORLD_20, HELLO_WORLD_FROM_WITHIN_CONTEXT_TEXT);
     }
