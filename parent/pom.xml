@@ -84,6 +84,12 @@
 				<scope>provided</scope>
 			</dependency>
 
+			<dependency>
+				<groupId>org.picketlink</groupId>
+				<artifactId>picketlink-tomcat-common</artifactId>
+				<version>${version.picketlink}</version>
+			</dependency>
+
 			<!-- Test dependencies -->
 			<dependency>
 				<groupId>org.jboss.arquillian</groupId>

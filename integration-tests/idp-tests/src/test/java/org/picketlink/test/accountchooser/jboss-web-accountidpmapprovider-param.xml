@@ -1,0 +1,11 @@
+<jboss-web>
+	<security-domain>sp</security-domain>
+	<valve>
+		<class-name>org.picketlink.identity.federation.bindings.tomcat.sp.AccountChooserValve</class-name>		
+		<param>
+		        <param-name>AccountIdpMapProvider</param-name>
+		        <param-value>org.picketlink.test.accountchooser.NewPropertiesAccountMapProvider</param-value>
+		</param>
+	</valve>
+	<valve><class-name>org.picketlink.identity.federation.bindings.tomcat.sp.ServiceProviderAuthenticator</class-name></valve>
+</jboss-web>

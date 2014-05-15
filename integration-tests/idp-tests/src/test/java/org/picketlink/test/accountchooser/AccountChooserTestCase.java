@@ -1,10 +1,12 @@
 package org.picketlink.test.accountchooser;
 
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.net.URL;
 
+import org.apache.http.HttpStatus;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.container.test.api.OperateOnDeployment;
 import org.jboss.arquillian.container.test.api.RunAsClient;
@@ -13,7 +15,9 @@ import org.jboss.logging.Logger;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.matchers.JUnitMatchers;
 import org.junit.runner.RunWith;
 import org.picketlink.test.integration.util.JBoss7Util;
 import org.picketlink.test.integration.util.PicketLinkIntegrationTests;
@@ -25,9 +29,8 @@ import com.meterware.httpunit.SubmitButton;
 import com.meterware.httpunit.WebConversation;
 import com.meterware.httpunit.WebForm;
 import com.meterware.httpunit.WebResponse;
-import org.apache.http.HttpStatus;
-import static org.junit.Assert.assertThat;
-import org.junit.matchers.JUnitMatchers;
+import com.meterware.httpunit.cookies.Cookie;
+import org.picketlink.identity.federation.bindings.tomcat.sp.AbstractAccountChooserValve;
 
 /**
  * Test case for Account Chooser functionality in PicketLink Service Provider.
@@ -54,6 +57,9 @@ public class AccountChooserTestCase {
     private static final String IDP2 = "idp2";
     private static final String SP1 = "sp1";
     private static final String SP2 = "sp2";
+    private static final String SP3 = "sp3";
+    private static final String SP4 = "sp4";
+    private static final String SP5 = "sp5";
 
     private static final String HELLO_FROM = "Hello from ";
     private static final String HELLO_FROM_LOGIN_PAGE = HELLO_FROM + "idp";
@@ -63,14 +69,24 @@ public class AccountChooserTestCase {
     private static final String HELLO_FROM_IDP2 = HELLO_FROM + IDP2;
     private static final String HELLO_FROM_SP1 = HELLO_FROM + SP1;
     private static final String HELLO_FROM_SP2 = HELLO_FROM + SP2;
+    private static final String HELLO_FROM_SP3 = HELLO_FROM + SP3;
+    private static final String HELLO_FROM_SP4 = HELLO_FROM + SP4;
+    private static final String HELLO_FROM_SP5 = HELLO_FROM + SP5;
     private static final String HELLO_FROM_AC1 = HELLO_FROM + "accountchooser " + SP1;
     private static final String HELLO_FROM_AC2 = HELLO_FROM + "accountchooser " + SP2;
+    private static final String HELLO_FROM_AC3 = HELLO_FROM + "accountchooser " + SP3;
+    private static final String HELLO_FROM_AC4 = HELLO_FROM + "accountchooser " + SP4;
+    private static final String HELLO_FROM_AC5 = HELLO_FROM + "accountchooser " + SP5;
+    private static final String HELLO_FROM_NEW_AC3 = HELLO_FROM + " new accountchooser " + SP3
+            + " set from AccountChooserValve parameter";
 
     private static final String DOMAINA_URL = "?idp=DomainA";
     private static final String DOMAINB_URL = "?idp=DomainB";
     private static final String LOGOUT = "?GLO=true";
 
     private static final String REALM = "TestRealm";
+
+    private static final String COOKIE_NAME = AbstractAccountChooserValve.ACCOUNT_CHOOSER_COOKIE_NAME;
 
     @ArquillianResource
     @OperateOnDeployment(IDP1)
@@ -87,6 +103,18 @@ public class AccountChooserTestCase {
     @ArquillianResource
     @OperateOnDeployment(SP2)
     private URL sp2Url;
+
+    @ArquillianResource
+    @OperateOnDeployment(SP3)
+    private URL sp3Url;
+
+    @ArquillianResource
+    @OperateOnDeployment(SP4)
+    private URL sp4Url;
+
+    @ArquillianResource
+    @OperateOnDeployment(SP5)
+    private URL sp5Url;
 
     @Deployment(name = IDP1)
     public static WebArchive deploymentIdP1() {
@@ -170,6 +198,72 @@ public class AccountChooserTestCase {
         war.add(new StringAsset(HELLO_FROM_LOGOUT_PAGE), "logout.jsp");
         war.addAsWebInfResource(new StringAsset("DomainA=http://" + getHostnameForWar() + ":8080/" + IDP1 + "/"),
                 "idpmap.properties");
+
+        return war;
+    }
+
+    @Deployment(name = SP3)
+    public static WebArchive deploymentSP3() {
+        LOGGER.info("Start deployment " + SP3);
+        final WebArchive war = ShrinkWrap.create(WebArchive.class, SP3 + ".war");
+        war.addAsWebInfResource(AccountChooserTestCase.class.getPackage(), "web.xml", "web.xml");
+        war.addAsWebInfResource(AccountChooserTestCase.class.getPackage(), "jboss-web-accountchooserpage-param.xml",
+                "jboss-web.xml");
+        war.addAsManifestResource(JBoss7Util.getJBossDeploymentStructure("org.picketlink"), "jboss-deployment-structure.xml");
+        war.addAsWebInfResource(
+                new StringAsset(JBoss7Util.propertiesReplacer(
+                        AccountChooserTestCase.class.getResourceAsStream("picketlink-sp.xml"), SP3, "REDIRECT", "whateverHere")),
+                "picketlink.xml");
+        war.add(new StringAsset(HELLO_FROM_SP3), "index.jsp");
+        war.add(new StringAsset(HELLO_FROM_AC3), "accountChooser.html");
+        war.add(new StringAsset(HELLO_FROM_NEW_AC3), "newAccountChooser.html");
+        war.add(new StringAsset(HELLO_FROM_LOGOUT_PAGE), "logout.jsp");
+        war.addAsWebInfResource(new StringAsset("DomainA=http://" + getHostnameForWar() + ":8080/" + IDP1 + "/"),
+                "idpmap.properties");
+        war.addClass(NewPropertiesAccountMapProvider.class);
+
+        return war;
+    }
+
+    @Deployment(name = SP4)
+    public static WebArchive deploymentSP4() {
+        LOGGER.info("Start deployment " + SP4);
+        final WebArchive war = ShrinkWrap.create(WebArchive.class, SP4 + ".war");
+        war.addAsWebInfResource(AccountChooserTestCase.class.getPackage(), "web.xml", "web.xml");
+        war.addAsWebInfResource(AccountChooserTestCase.class.getPackage(), "jboss-web-cookieexpiry-param.xml", "jboss-web.xml");
+        war.addAsManifestResource(JBoss7Util.getJBossDeploymentStructure("org.picketlink"), "jboss-deployment-structure.xml");
+        war.addAsWebInfResource(
+                new StringAsset(JBoss7Util.propertiesReplacer(
+                        AccountChooserTestCase.class.getResourceAsStream("picketlink-sp.xml"), SP4, "REDIRECT", "whateverHere")),
+                "picketlink.xml");
+        war.add(new StringAsset(HELLO_FROM_SP4), "index.jsp");
+        war.add(new StringAsset(HELLO_FROM_AC4), "accountChooser.html");
+        war.add(new StringAsset(HELLO_FROM_LOGOUT_PAGE), "logout.jsp");
+        war.addAsWebInfResource(new StringAsset("DomainA=http://" + getHostnameForWar() + ":8080/" + IDP1 + "/"),
+                "idpmap.properties");
+        war.addClass(NewPropertiesAccountMapProvider.class);
+
+        return war;
+    }
+
+    @Deployment(name = SP5)
+    public static WebArchive deploymentSP5() {
+        LOGGER.info("Start deployment " + SP5);
+        final WebArchive war = ShrinkWrap.create(WebArchive.class, SP5 + ".war");
+        war.addAsWebInfResource(AccountChooserTestCase.class.getPackage(), "web.xml", "web.xml");
+        war.addAsWebInfResource(AccountChooserTestCase.class.getPackage(), "jboss-web-accountidpmapprovider-param.xml",
+                "jboss-web.xml");
+        war.addAsManifestResource(JBoss7Util.getJBossDeploymentStructure("org.picketlink"), "jboss-deployment-structure.xml");
+        war.addAsWebInfResource(
+                new StringAsset(JBoss7Util.propertiesReplacer(
+                        AccountChooserTestCase.class.getResourceAsStream("picketlink-sp.xml"), SP5, "REDIRECT", "whateverHere")),
+                "picketlink.xml");
+        war.add(new StringAsset(HELLO_FROM_SP5), "index.jsp");
+        war.add(new StringAsset(HELLO_FROM_AC5), "accountChooser.html");
+        war.add(new StringAsset(HELLO_FROM_LOGOUT_PAGE), "logout.jsp");
+        war.addAsWebInfResource(new StringAsset("DomainA=http://" + getHostnameForWar() + ":8080/" + IDP1 + "/"),
+                "newidpmap.properties");
+        war.addClass(NewPropertiesAccountMapProvider.class);
 
         return war;
     }
@@ -398,7 +492,8 @@ public class AccountChooserTestCase {
     }
 
     /**
-     * Tests whether account chooser page is displayed if cookies are deleted and user was successfully authenticated before.
+     * Tests whether account chooser page is displayed if picketlink.account.name cookie are deleted and user was successfully
+     * authenticated before.
      * 
      * @throws Exception
      */
@@ -414,12 +509,116 @@ public class AccountChooserTestCase {
 
             makeCall(sp1Url.toString(), webConversation, HELLO_FROM_SP1);
 
-            String[] str = webConversation.getCookieNames();
-            for (int i = 0; i < str.length; i++) {
-                webConversation.putCookie(str[i], null);
+            if (webConversation.getCookieValue(COOKIE_NAME) != null) {
+                webConversation.putCookie(COOKIE_NAME, null);
+            } else {
+                fail("Cookie wasn't set.");
             }
 
             makeCall(sp1Url.toString(), webConversation, HELLO_FROM_AC1);
+
+        } finally {
+            webConversation.clearContents();
+        }
+
+    }
+
+    /**
+     * Tests whether picketlink.account.name cookie is not set before authentication
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testCookieIsNotSetBeforeAuthentication() throws Exception {
+
+        WebConversation webConversation = new WebConversation();
+        try {
+            makeCall(sp1Url.toString(), webConversation, HELLO_FROM_AC1);
+
+            makeCall(sp1Url.toString() + DOMAINA_URL, webConversation, HELLO_FROM_LOGIN_PAGE);
+
+            if (webConversation.getCookieValue(COOKIE_NAME) != null) {
+                fail("Cookie was set before authentication.");
+            }
+
+            // uncomment following line when https://bugzilla.redhat.com/show_bug.cgi?id=1075985 will work fine
+            // makeCall(sp1Url.toString(), webConversation, HELLO_FROM_AC1);
+
+        } finally {
+            webConversation.clearContents();
+        }
+
+    }
+
+    /**
+     * Test parameter AccountChooserPage of AccountChooserValve
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testAccountChooserValveAccountChooserPageParameter() throws Exception {
+
+        WebConversation webConversation = new WebConversation();
+        try {
+            makeCall(sp3Url.toString(), webConversation, HELLO_FROM_NEW_AC3);
+        } finally {
+            webConversation.clearContents();
+        }
+
+    }
+
+    /**
+     * Test parameter CookieExpiry of AccountChooserValve
+     * 
+     * @throws Exception
+     */
+    @Test
+    public void testAccountChooserValveCookieExpiryParameter() throws Exception {
+
+        WebConversation webConversation = new WebConversation();
+        try {
+            makeCall(sp4Url.toString(), webConversation, HELLO_FROM_AC4);
+
+            makeCallAndTryToAuthenticate(sp4Url.toString() + DOMAINA_URL, webConversation, HELLO_FROM_LOGIN_PAGE, USERA, USERA,
+                    HELLO_FROM_SP4);
+
+            if (webConversation.getCookieValue(COOKIE_NAME) != null) {
+
+                Cookie cookie = webConversation.getCookieDetails(COOKIE_NAME);
+
+                long currentTime = System.currentTimeMillis();
+                long downBorder = currentTime + 9 * 60 * 1000;
+                long upBorder = currentTime + 11 * 60 * 1000;
+
+                assertTrue("Expiry time wasn't set correct for cookie. Cookie expire: " + cookie.getExpiredTime()
+                        + ", expected between " + downBorder + " and " + upBorder, (cookie.getExpiredTime() > downBorder)
+                        && (cookie.getExpiredTime() < upBorder));
+
+            } else {
+                fail("Cookie wasn't set.");
+            }
+
+        } finally {
+            webConversation.clearContents();
+        }
+
+    }
+
+    /**
+     * Test parameter AccountIdpMapProvider of AccountChooserValve
+     * 
+     * @throws Exception
+     */
+    @Ignore("bz-1098074, then maybe some changes will be needed")
+    @Test
+    public void testAccountChooserValveAccountIdpMapProviderParameter() throws Exception {
+
+        WebConversation webConversation = new WebConversation();
+        try {
+            makeCall(sp5Url.toString(), webConversation, HELLO_FROM_AC5);
+
+            makeCallAndTryToAuthenticate(sp5Url.toString() + DOMAINA_URL, webConversation, HELLO_FROM_LOGIN_PAGE, USERA, USERA,
+                    HELLO_FROM_SP5);
 
         } finally {
             webConversation.clearContents();

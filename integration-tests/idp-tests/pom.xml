@@ -95,6 +95,12 @@
 			<type>test-jar</type>
             <scope>test</scope>
         </dependency>
+
+	<dependency>
+	  <groupId>org.picketlink</groupId>
+	  <artifactId>picketlink-tomcat-common</artifactId>
+	</dependency>
+
     </dependencies>
 
 </project>
