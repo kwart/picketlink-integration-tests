@@ -330,8 +330,7 @@ public class AccountChooserTestCase {
             makeCall(sp2Url.toString(), webConversation, HELLO_FROM_AC2);
             makeCall(sp2Url.toString() + DOMAINA_URL, webConversation, HELLO_FROM_LOGIN_PAGE);
 
-            // uncomment following line when https://bugzilla.redhat.com/show_bug.cgi?id=1075985 will work fine
-            // makeCall(sp2Url.toString(),webConversation,HELLO_FROM_AC2);
+            makeCall(sp2Url.toString(),webConversation,HELLO_FROM_AC2);
             makeCallAndTryToAuthenticate(sp2Url.toString() + DOMAINA_URL, webConversation, HELLO_FROM_LOGIN_PAGE, USERA, USERA,
                     HELLO_FROM_SP2);
 
@@ -364,8 +363,7 @@ public class AccountChooserTestCase {
             makeCallAndTryToAuthenticate(sp2Url.toString() + DOMAINA_URL, webConversation, HELLO_FROM_LOGIN_PAGE, USERA, USERA,
                     HELLO_FROM_SP2);
 
-            // uncomment following line when https://bugzilla.redhat.com/show_bug.cgi?id=1075985 will work fine
-            // makeCall(sp1Url.toString(),webConversation,HELLO_FROM_AC1);
+            makeCall(sp1Url.toString(),webConversation,HELLO_FROM_AC1);
             makeCall(sp1Url.toString() + DOMAINA_URL, webConversation, HELLO_FROM_SP1);
 
         } finally {
@@ -394,8 +392,7 @@ public class AccountChooserTestCase {
             makeCallAndTryToAuthenticate(sp2Url.toString() + DOMAINA_URL, webConversation, HELLO_FROM_LOGIN_PAGE, USERA, USERA,
                     HELLO_FROM_SP2);
 
-            // uncomment following line when https://bugzilla.redhat.com/show_bug.cgi?id=1075985 will work fine
-            // makeCall(sp1Url.toString(),webConversation,HELLO_FROM_AC1);
+            makeCall(sp1Url.toString(),webConversation,HELLO_FROM_AC1);
             makeCall(sp1Url.toString() + DOMAINB_URL, webConversation, HELLO_FROM_LOGIN_PAGE);
 
         } finally {
@@ -424,14 +421,12 @@ public class AccountChooserTestCase {
             makeCallAndTryToAuthenticate(sp1Url.toString() + DOMAINA_URL, webConversation, HELLO_FROM_LOGIN_PAGE, "", "",
                     HELLO_FROM_ERROR_LOGIN_PAGE);
 
-            // uncomment following line when https://bugzilla.redhat.com/show_bug.cgi?id=1075985 will work fine
-            // makeCall(sp1Url.toString(),webConversation,HELLO_FROM_AC1);
+            makeCall(sp1Url.toString(),webConversation,HELLO_FROM_AC1);
 
             makeCallAndTryToAuthenticate(sp1Url.toString() + DOMAINA_URL, webConversation, HELLO_FROM_LOGIN_PAGE, "wrong",
                     "wrong", HELLO_FROM_ERROR_LOGIN_PAGE);
 
-            // uncomment following line when https://bugzilla.redhat.com/show_bug.cgi?id=1075985 will work fine
-            // makeCall(sp1Url.toString(),webConversation,HELLO_FROM_AC1);
+            makeCall(sp1Url.toString(),webConversation,HELLO_FROM_AC1);
 
             WebResponse webResponse = makeCall(sp1Url.toString() + DOMAINA_URL, webConversation, HELLO_FROM_LOGIN_PAGE);
             WebForm loginForm = webResponse.getForms()[0];
@@ -447,8 +442,7 @@ public class AccountChooserTestCase {
                 }
             }
 
-            // uncomment following line when https://bugzilla.redhat.com/show_bug.cgi?id=1075985 will work fine
-            // makeCall(sp1Url.toString(),webConversation,HELLO_FROM_AC1);
+            makeCall(sp1Url.toString(),webConversation,HELLO_FROM_AC1);
 
             try {
                 webConversation.getResponse(new GetMethodWebRequest(sp1Url.toString() + DOMAINA_URL));
@@ -541,8 +535,7 @@ public class AccountChooserTestCase {
                 fail("Cookie was set before authentication.");
             }
 
-            // uncomment following line when https://bugzilla.redhat.com/show_bug.cgi?id=1075985 will work fine
-            // makeCall(sp1Url.toString(), webConversation, HELLO_FROM_AC1);
+            makeCall(sp1Url.toString(), webConversation, HELLO_FROM_AC1);
 
         } finally {
             webConversation.clearContents();
