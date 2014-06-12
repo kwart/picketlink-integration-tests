@@ -4,11 +4,10 @@
 		<profile>
 			<id>jboss.repository</id>
 
-			<!--
-			    This profile must be active by default, otherwise the tests will fail using it. 
-			    See http://stackoverflow.com/questions/5309379/ why not to use activeByDefault
-			 -->
-			<activation> 
+			<!-- This profile must be active by default, otherwise the tests will 
+				fail using it. See http://stackoverflow.com/questions/5309379/ why not to 
+				use activeByDefault -->
+			<activation>
 				<property>
 					<name>!skipJbossRepository</name>
 				</property>
@@ -18,7 +17,8 @@
 				<repository>
 					<id>jboss-public-repository-releases</id>
 					<name>JBoss Public Maven Repository Releases Group</name>
-					<url>https://repository.jboss.org/nexus/content/repositories/releases/</url>
+					<url>https://repository.jboss.org/nexus/content/repositories/releases/
+					</url>
 					<layout>default</layout>
 					<releases>
 						<enabled>true</enabled>
@@ -30,23 +30,37 @@
 						<updatePolicy>never</updatePolicy>
 						<checksumPolicy>ignore</checksumPolicy>
 					</snapshots>
-				</repository>	
+				</repository>
 				<repository>
-                                        <id>public-repository-group</id>
-                                        <name>Public Repository Group</name>
-                                        <url>http://repository.jboss.org/nexus/content/groups/public/</url>
-                                        <layout>default</layout>
-                                        <releases>
-                                                <enabled>true</enabled>
-                                                <updatePolicy>never</updatePolicy>
+					<id>public-repository-group</id>
+					<name>Public Repository Group</name>
+					<url>http://repository.jboss.org/nexus/content/groups/public/</url>
+					<layout>default</layout>
+					<releases>
+						<enabled>true</enabled>
+						<updatePolicy>never</updatePolicy>
 						<checksumPolicy>ignore</checksumPolicy>
-                                        </releases>
-                                        <snapshots>
-                                                <enabled>true</enabled>
-                                                <updatePolicy>never</updatePolicy>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+						<updatePolicy>never</updatePolicy>
 						<checksumPolicy>ignore</checksumPolicy>
-                                        </snapshots>
-                                </repository>
+					</snapshots>
+				</repository>
+				<repository>
+					<id>eap6x-maven</id>
+					<name>EAP repo</name>
+					<url>http://download.lab.bos.redhat.com/brewroot/repos/jb-eap-6-rhel-6-build/latest/maven/</url>
+					<layout>default</layout>
+					<releases>
+						<enabled>true</enabled>
+						<updatePolicy>never</updatePolicy>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+						<updatePolicy>never</updatePolicy>
+					</snapshots>
+				</repository>
 			</repositories>
 			<pluginRepositories>
 				<pluginRepository>
@@ -65,7 +79,20 @@
 						<checksumPolicy>ignore</checksumPolicy>
 					</snapshots>
 				</pluginRepository>
+				<pluginRepository>
+					<id>eap6x-maven-plugin</id>
+					<name>EAP repo</name>
+					<url>http://download.lab.bos.redhat.com/brewroot/repos/jb-eap-6-rhel-6-build/latest/maven/</url>
+					<releases>
+						<enabled>true</enabled>
+						<updatePolicy>never</updatePolicy>
+					</releases>
+					<snapshots>
+						<enabled>true</enabled>
+						<updatePolicy>never</updatePolicy>
+					</snapshots>
+				</pluginRepository>
 			</pluginRepositories>
-		</profile>		
+		</profile>
 	</profiles>
 </settings>
