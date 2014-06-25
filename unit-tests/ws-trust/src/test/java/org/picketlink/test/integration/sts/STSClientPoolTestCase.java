@@ -23,12 +23,14 @@
 package org.picketlink.test.integration.sts;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.fail;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.picketlink.identity.federation.core.wstrust.STSClient;
@@ -147,7 +149,8 @@ public class STSClientPoolTestCase extends AbstractWSTrustIntegrationTests {
 
         final STSClientConfig stsClientConfig = createSTSClientConfig();
         final STSClientFactory fact = STSClientFactory.getInstance(poolSize);
-
+        fact.createPool(poolSize, stsClientConfig);
+        
         Set<STSClient> overAllSTSClientSet = new HashSet<STSClient>();
 
         for (int i = 0; i < 10; i++) {
@@ -167,6 +170,7 @@ public class STSClientPoolTestCase extends AbstractWSTrustIntegrationTests {
      * Expected result: it's possible to have more pools
      */
     @Test
+//    @Ignore("a single instance is used")
     public void testMorePools() {
         STSClientFactory.getInstance().resetFactory();
         assertNotSame(STSClientFactory.getInstance(10), STSClientFactory.getInstance(20));
@@ -205,7 +209,7 @@ public class STSClientPoolTestCase extends AbstractWSTrustIntegrationTests {
         final STSClientConfig stsClientConfig = createSTSClientConfig();
         // get not pooled instance
         final STSClientFactory fact = STSClientFactory.getInstance(0);
-        fact.createPool(stsClientConfig);
+//        fact.createPool(stsClientConfig);
         final STSClient stsc = fact.getClient(stsClientConfig);
         // try to return the STSClient instance to a pool
         try {
@@ -217,6 +221,16 @@ public class STSClientPoolTestCase extends AbstractWSTrustIntegrationTests {
         fail("Returning STSClient to the pool should fail, because it was not retrieved from the pool");
     }
 
+    /**
+     * Get an STSClient with pooling disabled<br/>
+     * Expected result: The call of <code>STSClientFactory.getInstance().getClient()</code> returns not-null client.
+     */
+    @Test
+    public void testSimpleGetClientCall() {
+        STSClientFactory.getInstance().resetFactory();
+        assertNotNull("STSClientFactory.getInstance().getClient() should not be empty",STSClientFactory.getInstance().getClient(createSTSClientConfig()));
+    }
+    
     // TODO: Check if there could be synchronization issues in the STSClientPool
 
     private STSClientConfig createSTSClientConfig() {
