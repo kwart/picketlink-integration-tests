@@ -8,7 +8,7 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 
-		<version.picketlink>2.5.3.SP7-redhat-1</version.picketlink>
+		<version.picketlink>2.5.3.SP8-redhat-1</version.picketlink>
 		<version.picketlink.quickstarts>2.1.9.Final</version.picketlink.quickstarts>
 		<version.picketbox>4.0.19.SP8-redhat-1</version.picketbox>
 

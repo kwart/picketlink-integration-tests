@@ -29,7 +29,6 @@ import static org.junit.Assert.fail;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.picketlink.identity.federation.core.wstrust.STSClient;
@@ -46,7 +45,7 @@ import org.picketlink.test.integration.util.TargetContainers;
  */
 @RunWith(PicketLinkIntegrationTests.class)
 @TargetContainers({ "jbas5", "jbas7", "eap5" })
-@Ignore("bz-1069126")
+//@Ignore("bz-1069126")
 public class STSClientPoolTestCase extends AbstractWSTrustIntegrationTests {
 
     private static int CLIENTS_NR = 10000;
@@ -57,6 +56,7 @@ public class STSClientPoolTestCase extends AbstractWSTrustIntegrationTests {
      */
     @Test
     public void testNegativePoolSize() {
+        STSClientFactory.getInstance().resetFactory();
         try {
             STSClientFactory.getInstance(-1);
         } catch (Exception e) {
@@ -72,6 +72,7 @@ public class STSClientPoolTestCase extends AbstractWSTrustIntegrationTests {
      */
     @Test
     public void testPoolDisabled() {
+        STSClientFactory.getInstance().resetFactory();
         final STSClientConfig stsClientConfig = createSTSClientConfig();
         final STSClientFactory fact = STSClientFactory.getInstance();
         Set<STSClient> stsClientSet = new HashSet<STSClient>();
@@ -87,13 +88,15 @@ public class STSClientPoolTestCase extends AbstractWSTrustIntegrationTests {
      */
     @Test
     public void testExceedingPoolLimit() {
+        STSClientFactory.getInstance().resetFactory();
         final int poolSize = 10;
 
         final STSClientConfig stsClientConfig = createSTSClientConfig();
         final STSClientFactory fact = STSClientFactory.getInstance(poolSize);
         Set<STSClient> stsClientSet = new HashSet<STSClient>();
+        fact.createPool(stsClientConfig);
         for (int i = 0; i < poolSize; i++) {
-            stsClientSet.add(fact.createPool(stsClientConfig));
+            stsClientSet.add(fact.getClient(stsClientConfig));
         }
         assertEquals("Wrong number of STS clients created", poolSize, stsClientSet.size());
         try {
@@ -111,6 +114,7 @@ public class STSClientPoolTestCase extends AbstractWSTrustIntegrationTests {
      */
     @Test
     public void testInitialPoolBiggerThanMaxSize() {
+        STSClientFactory.getInstance().resetFactory();
         final int maxPoolSize = 10;
         final int initClientSize = 100;
 
@@ -118,8 +122,8 @@ public class STSClientPoolTestCase extends AbstractWSTrustIntegrationTests {
         final STSClientFactory fact = STSClientFactory.getInstance(maxPoolSize);
 
         Set<STSClient> stsClientSet = new HashSet<STSClient>();
-        stsClientSet.add(fact.createPool(initClientSize, stsClientConfig));
-        for (int i = 1; i < maxPoolSize; i++) {
+        fact.createPool(initClientSize, stsClientConfig);
+        for (int i = 0; i < maxPoolSize; i++) {
             stsClientSet.add(fact.getClient(stsClientConfig));
         }
         assertEquals("Wrong number of STS clients created", maxPoolSize, stsClientSet.size());
@@ -138,6 +142,7 @@ public class STSClientPoolTestCase extends AbstractWSTrustIntegrationTests {
      */
     @Test
     public void testClientsReuse() {
+        STSClientFactory.getInstance().resetFactory();
         final int poolSize = 10;
 
         final STSClientConfig stsClientConfig = createSTSClientConfig();
@@ -163,6 +168,7 @@ public class STSClientPoolTestCase extends AbstractWSTrustIntegrationTests {
      */
     @Test
     public void testMorePools() {
+        STSClientFactory.getInstance().resetFactory();
         assertNotSame(STSClientFactory.getInstance(10), STSClientFactory.getInstance(20));
         // TODO more tests here
     }
@@ -173,9 +179,11 @@ public class STSClientPoolTestCase extends AbstractWSTrustIntegrationTests {
      */
     @Test
     public void testReturnClientMoreTimes() {
+        STSClientFactory.getInstance().resetFactory();
         final STSClientConfig stsClientConfig = createSTSClientConfig();
         final STSClientFactory factory = STSClientFactory.getInstance(2);
-        final STSClient stsc = factory.createPool(stsClientConfig);
+        factory.createPool(stsClientConfig);
+        final STSClient stsc = factory.getClient(stsClientConfig);
 
         factory.returnClient(stsc);
         try {
@@ -193,9 +201,12 @@ public class STSClientPoolTestCase extends AbstractWSTrustIntegrationTests {
      */
     @Test
     public void testReturnNotPooledClient() {
+        STSClientFactory.getInstance().resetFactory();
         final STSClientConfig stsClientConfig = createSTSClientConfig();
         // get not pooled instance
-        final STSClient stsc = STSClientFactory.getInstance(0).createPool(stsClientConfig);
+        final STSClientFactory fact = STSClientFactory.getInstance(0);
+        fact.createPool(stsClientConfig);
+        final STSClient stsc = fact.getClient(stsClientConfig);
         // try to return the STSClient instance to a pool
         try {
             STSClientFactory.getInstance(10).returnClient(stsc);
