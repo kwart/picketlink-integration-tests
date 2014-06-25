@@ -99,7 +99,8 @@ public class MavenArtifactUtil {
         MavenDependencyResolver res = DependencyResolvers.use(MavenDependencyResolver.class);
         String settings = System.getProperty("picketlink.ts.maven.user.settings");
         if (settings != null && ! settings.isEmpty()) {
-            res = res.configureFrom(System.getProperty("picketlink.ts.maven.user.settings"));
+            System.out.println("Configuring MavenDependencyResolver to use custom settings: " + settings);
+            res = res.configureFrom(settings);
         }
         return res;
     }

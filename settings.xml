@@ -95,4 +95,8 @@
 			</pluginRepositories>
 		</profile>
 	</profiles>
+
+	<activeProfiles>
+		<activeProfile>jboss.repository</activeProfile>
+	</activeProfiles>
 </settings>
