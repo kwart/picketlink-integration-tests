@@ -33,7 +33,6 @@
 
                 <!-- Server projects -->
 				<module>integration-tests/jboss-as7</module>
-				<module>integration-tests/tomcat-6</module>
 			</modules>
 		</profile>
 		<profile>
