@@ -26,6 +26,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import java.util.HashSet;
@@ -246,6 +247,8 @@ public class STSClientPoolTestCase extends AbstractWSTrustIntegrationTests {
         // get a first factory with pooling enabled
         final STSClientFactory fact = STSClientFactory.getInstance(10);
         fact.createPool(config);
+        assertTrue("Destroyed ClientPool should not be available from STSClientFactory", STSClientFactory.getInstance(10)
+                .configExists(config));
 
         // get the second factory with pooling disabled (simulate call from another application for instance)
         STSClientFactory.getInstance(0);
@@ -255,6 +258,40 @@ public class STSClientPoolTestCase extends AbstractWSTrustIntegrationTests {
 
         assertFalse("Destroyed ClientPool should not be available from STSClientFactory", STSClientFactory.getInstance(10)
                 .configExists(config));
+    }
+
+    /**
+     * Test behavior of configExists method<br/>
+     * Expected result: depends on pool config
+     */
+    @Test
+    public void testConfigExists() {
+        final STSClientConfig config = createSTSClientConfig();
+        STSClientFactory fact = null;
+
+        STSClientFactory.getInstance().resetFactory();
+        fact = STSClientFactory.getInstance(10);
+        fact.createPool(config);
+        assertTrue("STSClientFactory.configExists should return true when pooling is enabled and createPool is called",
+                STSClientFactory.getInstance(10).configExists(config));
+
+        STSClientFactory.getInstance().resetFactory();
+        fact = STSClientFactory.getInstance(10);
+        assertFalse(
+                "STSClientFactory.configExists should return false when pooling is enabled and createPool was not yet called",
+                STSClientFactory.getInstance(10).configExists(config));
+
+        STSClientFactory.getInstance().resetFactory();
+        fact = STSClientFactory.getInstance(0);
+        assertFalse("STSClientFactory.configExists should return false when pooling is disabled (createPool not called)",
+                STSClientFactory.getInstance(10).configExists(config));
+
+        STSClientFactory.getInstance().resetFactory();
+        fact = STSClientFactory.getInstance(0);
+        fact.createPool(config);
+        assertFalse("STSClientFactory.configExists should return false when pooling is disabled (createPool called)",
+                STSClientFactory.getInstance(10).configExists(config));
+
     }
 
     // TODO: Check if there could be synchronization issues in the STSClientPool
