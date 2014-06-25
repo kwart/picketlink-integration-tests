@@ -4,7 +4,7 @@
             <configuration>
                 <property name="jbossHome">${jboss.as.home}</property>
                 <property name="serverConfig">standalone.xml</property>
-                <property name="outputToConsole">false</property>
+                <property name="outputToConsole">true</property>
                 <property name="managementAddress">localhost</property>
                 <property name="managementPort">9999</property>
                 <property name="javaVmArguments">-Djboss.bind.address=localhost -Djboss.bind.address.management=localhost -Didp.url=http://localhost:8080/idp/ ${JAVA_OPTS} ${smproperty}
@@ -26,7 +26,7 @@
             <configuration>
                 <property name="jbossHome">${jboss.as.home}</property>
                 <property name="serverConfig">standalone.xml</property>
-                <property name="outputToConsole">false</property>
+                <property name="outputToConsole">true</property>
                 <property name="managementAddress">localhost</property>
                 <property name="managementPort">19999</property>
                 <property name="javaVmArguments">-Djboss.socket.binding.port-offset=10000

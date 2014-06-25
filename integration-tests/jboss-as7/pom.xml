@@ -33,7 +33,7 @@
         <picketlink.ts.maven.user.settings></picketlink.ts.maven.user.settings>
 
         <!-- Name of the EAP zip distribution file -->
-		<jbas7.dist.zip>jboss-eap-6.3.0.ER7.zip</jbas7.dist.zip>
+		<jbas7.dist.zip>jboss-eap-6.3.0.ER8.zip</jbas7.dist.zip>
 
         <!-- Root of the extracted EAP installation -->
 		<jboss.as.home>${integration.tests.containers.dir}/jboss-eap-6.3</jboss.as.home>
